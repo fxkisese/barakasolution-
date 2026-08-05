@@ -6,7 +6,7 @@ export default function Navbar() {
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="sticky top-0 z-50 bg-silk border-b hairline">
+        <header className="sticky top-0 z-50 bg-white border-b hairline">
             <nav className="mx-auto max-w-[1400px] px-6 lg:px-12 h-20 flex items-center justify-between">
                 <a
                     href="#top"
