@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 0 0% 96%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96%;
+        --muted-foreground: 0 0% 45%;
+        --accent: 0 0% 9%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 72% 51%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 90%;
+        --input: 0 0% 90%;
+        --ring: 0 0% 9%;
+        --chart-1: 0 0% 9%;
+        --chart-2: 0 0% 30%;
+        --chart-3: 0 0% 55%;
+        --chart-4: 0 0% 75%;
+        --chart-5: 0 0% 90%;
+        --radius: 0.125rem;
+        --font-heading: 'Cormorant Garamond', ui-serif, Georgia, serif;
+        --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+        --sidebar-background: 0 0% 100%;
+        --sidebar-foreground: 0 0% 9%;
+        --sidebar-primary: 0 0% 9%;
+        --sidebar-primary-foreground: 0 0% 100%;
+        --sidebar-accent: 0 0% 96%;
+        --sidebar-accent-foreground: 0 0% 9%;
+        --sidebar-border: 0 0% 90%;
+        --sidebar-ring: 0 0% 9%;
+    }
+
+    .dark {
+        --background: 0 0% 9%;
+        --foreground: 0 0% 100%;
+        --card: 0 0% 12%;
+        --card-foreground: 0 0% 100%;
+        --popover: 0 0% 12%;
+        --popover-foreground: 0 0% 100%;
+        --primary: 0 0% 100%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 18%;
+        --secondary-foreground: 0 0% 100%;
+        --muted: 0 0% 18%;
+        --muted-foreground: 0 0% 70%;
+        --accent: 0 0% 100%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 62% 40%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 20%;
+        --input: 0 0% 20%;
+        --ring: 0 0% 100%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background text-foreground font-body antialiased;
+    }
+
+    ::selection {
+        background-color: #1A1A1A;
+        color: #FFFFFF;
+    }
+}
+
+@layer utilities {
+    .font-mono-price {
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+    }
+
+    .hairline {
+        border-color: rgba(26, 26, 26, 0.12);
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
