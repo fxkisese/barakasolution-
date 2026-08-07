@@ -72,3 +72,25 @@ export function sendCreditReminderWhatsApp(credit) {
         `— Baraka Solution, Nairobi`;
     openWA(credit.phone, msg);
 }
+
+export function sendAddToCartWhatsApp(product) {
+    const msg =
+        `🛒 *New Order Inquiry — Baraka Solution*\n\n` +
+        `Hello! I would like to order:\n\n` +
+        `*Item:* ${product.name}\n` +
+        `*Category:* ${product.category || 'N/A'}\n` +
+        `*Price:* ${fmt(product.price || 0)}\n\n` +
+        `Please let me know the next steps.`;
+    openWA(ADMIN_PHONE, msg);
+}
+
+export function sendProductInquiryWhatsApp(product) {
+    const msg =
+        `❓ *Product Inquiry — Baraka Solution*\n\n` +
+        `Hello! I have a question about this product:\n\n` +
+        `*Item:* ${product.name}\n` +
+        `*Category:* ${product.category || 'N/A'}\n` +
+        `*Price:* ${fmt(product.price || 0)}\n\n` +
+        `Could you provide more details?`;
+    openWA(ADMIN_PHONE, msg);
+}

@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
-import { ArrowUpRight, Plus } from "lucide-react";
+import { ArrowUpRight, Plus, MessageCircle, ShoppingBag } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { formatPrice } from "@/lib/siteData";
 import { supabase } from "@/api/supabaseClient";
 import { motion } from "framer-motion";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { sendAddToCartWhatsApp, sendProductInquiryWhatsApp } from "@/utils/whatsapp";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -21,6 +28,13 @@ const itemVariants = {
 export default function NewArrivals() {
     const [liveProducts, setLiveProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openProductModal = (product) => {
+        setSelectedProduct(product);
+        setIsModalOpen(true);
+    };
 
     useEffect(() => {
         async function fetchProducts() {
@@ -69,7 +83,7 @@ export default function NewArrivals() {
                         className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-14"
                     >
                         {liveProducts.map((p) => (
-                            <motion.article variants={itemVariants} key={p.id || p.name} className="group cursor-pointer">
+                            <motion.article variants={itemVariants} key={p.id || p.name} className="group cursor-pointer" onClick={() => openProductModal(p)}>
                                 <div className="relative overflow-hidden aspect-[4/5] bg-secondary rounded-sm">
                                     <Image
                                         src={p.image}
@@ -84,7 +98,7 @@ export default function NewArrivals() {
                                     <button
                                         className="absolute bottom-0 inset-x-0 h-12 bg-obsidian/95 backdrop-blur-sm text-silk text-[12px] uppercase tracking-[0.18em] translate-y-full group-hover:translate-y-0 transition-transform duration-500 flex items-center justify-center gap-2"
                                     >
-                                        <Plus className="w-4 h-4" strokeWidth={1.6} /> Quick Add
+                                        <Plus className="w-4 h-4" strokeWidth={1.6} /> Options
                                     </button>
                                     
                                     <span className="absolute top-4 left-4 font-mono-price text-[10px] uppercase tracking-[0.2em] text-white drop-shadow-md">
@@ -120,6 +134,50 @@ export default function NewArrivals() {
                         <ArrowUpRight className="w-4 h-4" strokeWidth={1.6} />
                     </a>
                 </div>
+
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                    <DialogContent className="sm:max-w-md">
+                        {selectedProduct && (
+                            <>
+                                <DialogHeader>
+                                    <DialogTitle className="font-heading font-light text-2xl text-obsidian">
+                                        {selectedProduct.name}
+                                    </DialogTitle>
+                                </DialogHeader>
+                                <div className="mt-4 flex flex-col gap-6">
+                                    <div className="relative aspect-square w-full bg-secondary rounded-sm overflow-hidden">
+                                        <Image
+                                            src={selectedProduct.image}
+                                            alt={selectedProduct.name}
+                                            className="w-full h-full object-cover"
+                                            fittingType="fill"
+                                        />
+                                    </div>
+                                    <div className="flex justify-between items-center px-1">
+                                        <span className="text-basalt text-sm uppercase tracking-wider">{selectedProduct.category}</span>
+                                        <span className="font-mono-price text-lg text-obsidian">{formatPrice(selectedProduct.price || 0)}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-3 mt-2">
+                                        <button 
+                                            onClick={() => sendAddToCartWhatsApp(selectedProduct)}
+                                            className="w-full h-12 bg-obsidian text-silk text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 hover:bg-obsidian/90 transition-colors"
+                                        >
+                                            <ShoppingBag className="w-4 h-4" />
+                                            Order via WhatsApp
+                                        </button>
+                                        <button 
+                                            onClick={() => sendProductInquiryWhatsApp(selectedProduct)}
+                                            className="w-full h-12 border border-obsidian text-obsidian text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 hover:bg-obsidian/5 transition-colors"
+                                        >
+                                            <MessageCircle className="w-4 h-4" />
+                                            Inquire via WhatsApp
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </DialogContent>
+                </Dialog>
             </div>
         </section>
     );
