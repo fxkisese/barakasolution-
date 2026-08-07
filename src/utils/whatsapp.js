@@ -94,3 +94,25 @@ export function sendProductInquiryWhatsApp(product) {
         `Could you provide more details?`;
     openWA(ADMIN_PHONE, msg);
 }
+
+export function sendGeneralInquiryWhatsApp() {
+    const msg = `Hello Baraka Solution! I have a general inquiry...`;
+    openWA(ADMIN_PHONE, msg);
+}
+
+export function sendCartCheckoutWhatsApp(cartItems, total, details) {
+    let msg = `🛍️ *New Store Order — Baraka Solution*\n\n`;
+    msg += `*Customer:* ${details.name}\n`;
+    msg += `*Phone:* ${details.phone}\n`;
+    msg += `*Address:* ${details.address}\n\n`;
+    msg += `*Items:*\n`;
+    
+    cartItems.forEach(item => {
+        msg += `- ${item.quantity}x ${item.name} (${fmt(item.price || 0)})\n`;
+    });
+    
+    msg += `\n*Total Amount:* ${fmt(total)}\n\n`;
+    msg += `I would like to complete my payment for this order.`;
+    
+    openWA(ADMIN_PHONE, msg);
+}

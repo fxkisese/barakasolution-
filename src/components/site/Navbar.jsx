@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { NAV_LINKS } from "@/lib/siteData";
+import { useCart } from "@/lib/CartContext";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const { openCart, cartCount } = useCart();
 
     return (
         <header className="sticky top-0 z-50 bg-white border-b hairline">
@@ -17,10 +19,16 @@ export default function Navbar() {
 
                 <div className="flex items-center gap-5">
                     <button
+                        onClick={openCart}
                         aria-label="Cart"
-                        className="grid place-items-center w-10 h-10 text-obsidian hover:text-obsidian/70 transition-colors"
+                        className="relative grid place-items-center w-10 h-10 text-obsidian hover:text-obsidian/70 transition-colors"
                     >
                         <ShoppingBag className="w-5 h-5" strokeWidth={1.4} />
+                        {cartCount > 0 && (
+                            <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-obsidian text-[10px] text-white">
+                                {cartCount}
+                            </span>
+                        )}
                     </button>
                     <a
                         href="#collections"

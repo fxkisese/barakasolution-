@@ -5,6 +5,8 @@ import NewArrivals from "@/components/site/NewArrivals";
 import ShopByCategory from "@/components/site/ShopByCategory";
 import Newsletter from "@/components/site/Newsletter";
 import Footer from "@/components/site/Footer";
+import WhatsAppFloat from "@/components/site/WhatsAppFloat";
+import CartDrawer from "@/components/site/CartDrawer";
 
 export default function Home() {
     return (
@@ -18,6 +20,8 @@ export default function Home() {
                 <Newsletter />
             </main>
             <Footer />
+            <WhatsAppFloat />
+            <CartDrawer />
         </div>
     );
 }

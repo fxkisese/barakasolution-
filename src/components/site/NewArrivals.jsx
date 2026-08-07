@@ -11,6 +11,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { sendAddToCartWhatsApp, sendProductInquiryWhatsApp } from "@/utils/whatsapp";
+import { useCart } from "@/lib/CartContext";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -30,6 +31,7 @@ export default function NewArrivals() {
     const [loading, setLoading] = useState(true);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { addToCart } = useCart();
 
     const openProductModal = (product) => {
         setSelectedProduct(product);
@@ -159,11 +161,14 @@ export default function NewArrivals() {
                                     </div>
                                     <div className="flex flex-col gap-3 mt-2">
                                         <button 
-                                            onClick={() => sendAddToCartWhatsApp(selectedProduct)}
+                                            onClick={() => {
+                                                addToCart(selectedProduct);
+                                                setIsModalOpen(false);
+                                            }}
                                             className="w-full h-12 bg-obsidian text-silk text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 hover:bg-obsidian/90 transition-colors"
                                         >
                                             <ShoppingBag className="w-4 h-4" />
-                                            Order via WhatsApp
+                                            Add to Cart
                                         </button>
                                         <button 
                                             onClick={() => sendProductInquiryWhatsApp(selectedProduct)}
