@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { Menu, X, ShoppingBag, Search } from "lucide-react";
 import { NAV_LINKS } from "@/lib/siteData";
 import { useCart } from "@/lib/CartContext";
+import SearchDialog from "./SearchDialog";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
     const { openCart, cartCount } = useCart();
 
     return (
@@ -17,7 +19,14 @@ export default function Navbar() {
                     <img src="/logo.png" alt="Luxe Craft Furniture" className="h-16 w-auto object-contain" />
                 </a>
 
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2 sm:gap-5">
+                    <button
+                        onClick={() => setSearchOpen(true)}
+                        aria-label="Search"
+                        className="grid place-items-center w-10 h-10 text-silk hover:text-silk/70 transition-colors"
+                    >
+                        <Search className="w-5 h-5" strokeWidth={1.4} />
+                    </button>
                     <button
                         onClick={openCart}
                         aria-label="Cart"
@@ -70,6 +79,8 @@ export default function Navbar() {
                     ))}
                 </ul>
             </div>
+            
+            <SearchDialog open={searchOpen} setOpen={setSearchOpen} />
         </header>
     );
 }
