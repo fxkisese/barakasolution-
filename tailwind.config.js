@@ -61,12 +61,12 @@ module.exports = {
                     ring: 'hsl(var(--sidebar-ring))'
                 },
                 clay: {
-                    DEFAULT: '#1A1A1A',
+                    DEFAULT: '#0f1712',
                     foreground: '#FFFFFF'
                 },
                 silk: '#FFFFFF',
-                obsidian: '#1A1A1A',
-                basalt: '#5A5A5A',
+                obsidian: '#0f1712',
+                basalt: '#4A5F52',
             },
             fontFamily: {
                 heading: ['var(--font-heading)'],
