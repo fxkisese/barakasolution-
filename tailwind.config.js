@@ -59,15 +59,15 @@ module.exports = {
                     'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
                     border: 'hsl(var(--sidebar-border))',
                     ring: 'hsl(var(--sidebar-ring))'
-                }
+                },
+                clay: {
+                    DEFAULT: '#1A1A1A',
+                    foreground: '#FFFFFF'
+                },
+                silk: '#FFFFFF',
+                obsidian: '#1A1A1A',
+                basalt: '#5A5A5A',
             },
-            clay: {
-                DEFAULT: '#1A1A1A',
-                foreground: '#FFFFFF'
-            },
-            silk: '#FFFFFF',
-            obsidian: '#1A1A1A',
-            basalt: '#5A5A5A',
             fontFamily: {
                 heading: ['var(--font-heading)'],
                 body: ['var(--font-body)'],
