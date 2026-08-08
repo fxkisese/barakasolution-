@@ -30,12 +30,17 @@ export default function Navbar() {
                             </span>
                         )}
                     </button>
-                    <a
-                        href="#collections"
-                        className="hidden sm:inline-flex items-center justify-center h-10 px-4 text-silk text-[12px] uppercase tracking-[0.2em] font-medium hover:text-silk/70 transition-colors"
-                    >
-                        Discover
-                    </a>
+                    <div className="hidden sm:flex items-center gap-6 mr-2">
+                        {NAV_LINKS.slice(0, 3).map((l) => (
+                            <a
+                                key={l.href}
+                                href={l.href}
+                                className="text-silk text-[12px] uppercase tracking-[0.18em] font-medium hover:text-silk/70 transition-colors"
+                            >
+                                {l.label}
+                            </a>
+                        ))}
+                    </div>
                     <button
                         aria-label="Menu"
                         onClick={() => setOpen((v) => !v)}
