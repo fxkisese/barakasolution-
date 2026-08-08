@@ -22,7 +22,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="md:col-span-4">
                         <p className="font-heading text-2xl tracking-[0.16em] uppercase">
-                            Baraka<span className="text-silk">.</span>Solution
+                            Luxe Craft Furniture
                         </p>
                         <p className="mt-5 text-silk/60 text-sm leading-relaxed max-w-xs">
                             A design decoration store based in Nairobi, Kenya — specialising in
@@ -88,7 +88,7 @@ export default function Footer() {
                             </li>
                             <li className="flex items-start gap-3">
                                 <Mail className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />
-                                <a href="mailto:hello@barakasolution.com" className="hover:text-silk transition-colors">hello@barakasolution.com</a>
+                                <a href="mailto:hello@luxecraftfurniture.com" className="hover:text-silk transition-colors">hello@luxecraftfurniture.com</a>
                             </li>
                         </ul>
                     </div>
@@ -96,7 +96,7 @@ export default function Footer() {
 
                 <div className="mt-16 pt-8 border-t border-silk/10 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-silk/40 text-xs">
-                        © {new Date().getFullYear()} Baraka Solution. All rights reserved.
+                        © {new Date().getFullYear()} Luxe Craft Furniture. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-silk/40 text-xs">
                         <a href="#top" className="hover:text-silk transition-colors">Privacy Policy</a>

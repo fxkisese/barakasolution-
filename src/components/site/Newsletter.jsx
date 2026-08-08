@@ -35,7 +35,7 @@ export default function Newsletter() {
                         aria-live="polite"
                         className="mt-10 inline-flex items-center gap-2 text-white text-sm uppercase tracking-[0.15em]"
                     >
-                        <Check className="w-4 h-4" strokeWidth={2} /> Welcome to Baraka Solution
+                        <Check className="w-4 h-4" strokeWidth={2} /> Welcome to Luxe Craft Furniture
                     </p>
                 ) : (
                     <form

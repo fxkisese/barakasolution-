@@ -4,7 +4,7 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState(() => {
-        const saved = localStorage.getItem('baraka_cart');
+        const saved = localStorage.getItem('luxecraft_cart');
         if (saved) {
             try {
                 return JSON.parse(saved);
@@ -18,7 +18,7 @@ export function CartProvider({ children }) {
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     useEffect(() => {
-        localStorage.setItem('baraka_cart', JSON.stringify(cartItems));
+        localStorage.setItem('luxecraft_cart', JSON.stringify(cartItems));
     }, [cartItems]);
 
     const addToCart = (product) => {

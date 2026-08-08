@@ -16,7 +16,7 @@ const fmt = (n) => `KSh ${Number(n || 0).toLocaleString()}`;
 
 export function sendOrderToAdminWhatsApp(order) {
     const msg =
-        `🛋️ *New Order — Baraka Solution*\n` +
+        `🛋️ *New Order — Luxe Craft Furniture*\n` +
         `Customer: ${order.customer}\n` +
         `Phone: ${order.phone || 'N/A'}\n` +
         `Item: ${order.item}\n` +
@@ -29,7 +29,7 @@ export function sendOrderToAdminWhatsApp(order) {
 
 export function sendSaleReceiptWhatsApp(sale) {
     const msg =
-        `✅ *Payment Receipt — Baraka Solution*\n\n` +
+        `✅ *Payment Receipt — Luxe Craft Furniture*\n\n` +
         `Dear ${sale.customer},\n\n` +
         `Thank you for your purchase!\n\n` +
         `*Item:* ${sale.item}\n` +
@@ -38,14 +38,14 @@ export function sendSaleReceiptWhatsApp(sale) {
         `*Date:* ${sale.date}\n` +
         `*Branch:* ${sale.branch}\n\n` +
         `We appreciate your business. 🙏\n` +
-        `— Baraka Solution, Nairobi`;
+        `— Luxe Craft Furniture, Nairobi`;
     openWA(sale.phone, msg);
 }
 
 export function sendNewCreditReceiptWhatsApp(credit) {
     const balance = credit.total - credit.paid;
     const msg =
-        `🪑 *Credit Sale Receipt — Baraka Solution*\n\n` +
+        `🪑 *Credit Sale Receipt — Luxe Craft Furniture*\n\n` +
         `Dear ${credit.customer},\n\n` +
         `*Item:* ${credit.item}\n` +
         `*Total Price:* ${fmt(credit.total)}\n` +
@@ -54,14 +54,14 @@ export function sendNewCreditReceiptWhatsApp(credit) {
         `*Due Date:* ${credit.due_date}\n` +
         `*Branch:* ${credit.branch}\n\n` +
         `Please clear your balance by the due date. Thank you! 🙏\n` +
-        `— Baraka Solution`;
+        `— Luxe Craft Furniture`;
     openWA(credit.phone, msg);
 }
 
 export function sendCreditReminderWhatsApp(credit) {
     const balance = credit.total - credit.paid;
     const msg =
-        `🔔 *Balance Reminder — Baraka Solution*\n\n` +
+        `🔔 *Balance Reminder — Luxe Craft Furniture*\n\n` +
         `Dear ${credit.customer},\n\n` +
         `This is a friendly reminder that you have an outstanding balance:\n\n` +
         `*Item:* ${credit.item}\n` +
@@ -69,13 +69,13 @@ export function sendCreditReminderWhatsApp(credit) {
         `*Due Date:* ${credit.due_date}\n\n` +
         `Please contact us to arrange payment.\n` +
         `📞 Call/WhatsApp: ${ADMIN_PHONE}\n\n` +
-        `— Baraka Solution, Nairobi`;
+        `— Luxe Craft Furniture, Nairobi`;
     openWA(credit.phone, msg);
 }
 
 export function sendAddToCartWhatsApp(product) {
     const msg =
-        `🛒 *New Order Inquiry — Baraka Solution*\n\n` +
+        `🛒 *New Order Inquiry — Luxe Craft Furniture*\n\n` +
         `Hello! I would like to order:\n\n` +
         `*Item:* ${product.name}\n` +
         `*Category:* ${product.category || 'N/A'}\n` +
@@ -86,7 +86,7 @@ export function sendAddToCartWhatsApp(product) {
 
 export function sendProductInquiryWhatsApp(product) {
     const msg =
-        `❓ *Product Inquiry — Baraka Solution*\n\n` +
+        `❓ *Product Inquiry — Luxe Craft Furniture*\n\n` +
         `Hello! I have a question about this product:\n\n` +
         `*Item:* ${product.name}\n` +
         `*Category:* ${product.category || 'N/A'}\n` +
@@ -96,12 +96,12 @@ export function sendProductInquiryWhatsApp(product) {
 }
 
 export function sendGeneralInquiryWhatsApp() {
-    const msg = `Hello Baraka Solution! I have a general inquiry...`;
+    const msg = `Hello Luxe Craft Furniture! I have a general inquiry...`;
     openWA(ADMIN_PHONE, msg);
 }
 
 export function sendCartCheckoutWhatsApp(cartItems, total, details) {
-    let msg = `🛍️ *New Store Order — Baraka Solution*\n\n`;
+    let msg = `🛍️ *New Store Order — Luxe Craft Furniture*\n\n`;
     msg += `*Customer:* ${details.name}\n`;
     msg += `*Phone:* ${details.phone}\n`;
     msg += `*Address:* ${details.address}\n\n`;

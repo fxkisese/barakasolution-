@@ -14,7 +14,7 @@ export default function Navbar() {
                     href="#top"
                     className="font-body font-semibold text-lg md:text-xl tracking-[0.2em] text-obsidian uppercase"
                 >
-                    Baraka.Solution
+                    Luxe Craft Furniture
                 </a>
 
                 <div className="flex items-center gap-5">

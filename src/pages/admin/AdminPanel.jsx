@@ -1220,7 +1220,7 @@ export default function AdminPanel() {
                 <LogoMark />
                 {sidebarOpen && (
                     <div style={{ overflow: 'hidden' }}>
-                        <div style={{ color: '#fff', fontFamily: fontDisplay, fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>Baraka Admin</div>
+                        <div style={{ color: '#fff', fontFamily: fontDisplay, fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>Luxe Craft Admin</div>
                         <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 2 }}>Management</div>
                     </div>
                 )}
@@ -1306,7 +1306,7 @@ export default function AdminPanel() {
                     {/* Top bar */}
                     <header style={{ background: COLORS.surface, borderBottom: `1px solid ${COLORS.border}`, padding: '0 24px', display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0, height: 60 }}>
                         <button onClick={() => setSidebarOpen(o => !o)} style={{ ...iconBtnStyle, background: COLORS.surface2, borderRadius: 8, padding: 7 }}><IconMenu /></button>
-                        <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, fontWeight: 500 }}>Baraka Solution — Admin Console</span>
+                        <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, fontWeight: 500 }}>Luxe Craft Furniture — Admin Console</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <span style={{ fontSize: 11, fontFamily: fontMono, color: COLORS.muted, letterSpacing: '0.05em' }}>{new Date().toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
                             <div style={{ width: 32, height: 32, borderRadius: '50%', background: `linear-gradient(135deg, ${COLORS.goldBright}, ${COLORS.gold})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 13 }}>B</div>

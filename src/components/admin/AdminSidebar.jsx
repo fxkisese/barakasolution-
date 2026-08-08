@@ -32,7 +32,7 @@ export default function AdminSidebar() {
         <aside className="w-64 shrink-0 bg-white border-r border-[#EAEBED] sticky top-0 h-screen overflow-y-auto">
             <div className="px-6 h-20 flex items-center border-b border-[#EAEBED]">
                 <Link to="/admin" className="font-heading text-xl tracking-[0.12em] uppercase text-[#1A1A1A]">
-                    Baraka Admin
+                    Luxe Craft Admin
                 </Link>
             </div>
             <nav className="p-3 flex flex-col gap-1">

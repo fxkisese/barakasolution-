@@ -1,4 +1,4 @@
-// Centralised content + generated imagery for the Baraka Solution flagship.
+// Centralised content + generated imagery for the Luxe Craft Furniture flagship.
 
 export const IMAGES = {
     hero: "https://media.base44.com/images/public/6a6d9931404d2ed792b9761d/8bf6ece01_generated_40ce79b9.png",
@@ -63,7 +63,7 @@ export const TESTIMONIALS = [
         name: "Thomas Smith",
         location: "San Francisco",
         rating: 4,
-        quote: "We stumbled across Baraka Solution and are so glad we did. Really buzzing vibe with a quirky, considered selection. The craftsmanship is superb — so much so we shipped pieces home.",
+        quote: "We stumbled across Luxe Craft Furniture and are so glad we did. Really buzzing vibe with a quirky, considered selection. The craftsmanship is superb — so much so we shipped pieces home.",
     },
     {
         name: "Joan Berg",
