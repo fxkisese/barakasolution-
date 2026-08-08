@@ -3,6 +3,8 @@ import Hero from "@/components/site/Hero";
 import Features from "@/components/site/Features";
 import NewArrivals from "@/components/site/NewArrivals";
 import ShopByCategory from "@/components/site/ShopByCategory";
+import InstagramFeed from "@/components/site/InstagramFeed";
+import Location from "@/components/site/Location";
 import Newsletter from "@/components/site/Newsletter";
 import Footer from "@/components/site/Footer";
 import WhatsAppFloat from "@/components/site/WhatsAppFloat";
@@ -17,6 +19,8 @@ export default function Home() {
                 <Features />
                 <NewArrivals />
                 <ShopByCategory />
+                <InstagramFeed />
+                <Location />
                 <Newsletter />
             </main>
             <Footer />
