@@ -30,8 +30,8 @@ export default function Navbar() {
                             </span>
                         )}
                     </button>
-                    <div className="hidden sm:flex items-center gap-6 mr-2">
-                        {NAV_LINKS.slice(0, 3).map((l) => (
+                    <div className="hidden sm:flex items-center gap-6 mr-4">
+                        {NAV_LINKS.map((l) => (
                             <a
                                 key={l.href}
                                 href={l.href}
@@ -44,7 +44,7 @@ export default function Navbar() {
                     <button
                         aria-label="Menu"
                         onClick={() => setOpen((v) => !v)}
-                        className="grid place-items-center w-10 h-10 text-silk hover:text-silk/70 transition-colors"
+                        className="sm:hidden grid place-items-center w-10 h-10 text-silk hover:text-silk/70 transition-colors"
                     >
                         {open ? <X className="w-6 h-6" strokeWidth={1.4} /> : <Menu className="w-6 h-6" strokeWidth={1.4} />}
                     </button>
@@ -53,7 +53,7 @@ export default function Navbar() {
 
             {/* Mobile drawer */}
             <div
-                className={`overflow-hidden bg-obsidian border-t border-silk/10 transition-[max-height] duration-500 ease-out ${open ? "max-h-40" : "max-h-0"
+                className={`sm:hidden overflow-hidden bg-obsidian border-t border-silk/10 transition-[max-height] duration-500 ease-out ${open ? "max-h-40" : "max-h-0"
                     }`}
             >
                 <ul className="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 px-6 py-5">
