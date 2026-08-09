@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Twitter, MapPin, Phone, Mail } from "lucide-react";
+import { Instagram, Facebook, Twitter, MapPin, Phone } from "lucide-react";
 
 const SHOP_LINKS = [
     { label: "New Arrivals", href: "#arrivals" },
@@ -88,10 +88,6 @@ export default function Footer() {
                                     <a href="tel:+254797624196" className="hover:text-silk transition-colors">+254 797 624 196</a>
                                     <a href="https://wa.me/254797624196" target="_blank" rel="noreferrer" className="text-xs text-silk/50 hover:text-silk transition-colors">WhatsApp us →</a>
                                 </div>
-                            </li>
-                            <li className="flex items-start gap-3">
-                                <Mail className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />
-                                <a href="mailto:hello@luxecraftfurniture.com" className="hover:text-silk transition-colors">hello@luxecraftfurniture.com</a>
                             </li>
                         </ul>
                     </div>
