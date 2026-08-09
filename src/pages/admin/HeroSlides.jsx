@@ -57,8 +57,8 @@ export default function HeroSlides() {
     };
 
     const save = async () => {
-        if (!form.title || !form.image_url) {
-            toast({ title: "Title and image are required", variant: "destructive" });
+        if (!form.image_url) {
+            toast({ title: "Image is required", variant: "destructive" });
             return;
         }
         const payload = { ...form, order: Number(form.order) || 0, active: !!form.active };
@@ -143,11 +143,11 @@ export default function HeroSlides() {
 
             <Modal open={!!editing} onClose={() => setEditing(null)} title={editing?.new ? "Add slide" : "Edit slide"}>
                 <div className="space-y-4">
-                    <Field label="Title">
-                        <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                    <Field label="Title (Optional)">
+                        <Input placeholder="e.g. Durable. Stylish." value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
                     </Field>
-                    <Field label="Subtitle">
-                        <Input value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} />
+                    <Field label="Subtitle (Optional)">
+                        <Input placeholder="e.g. Discover the perfect design" value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} />
                     </Field>
                     <Field label="Image">
                         <div className="flex items-center gap-3">
