@@ -3,7 +3,7 @@
  * All functions are fire-and-forget (open a new tab); nothing is saved.
  */
 
-const ADMIN_PHONE = import.meta.env.VITE_ADMIN_WHATSAPP || '254700000000';
+const ADMIN_PHONE = import.meta.env.VITE_ADMIN_WHATSAPP || '254797624196';
 
 function openWA(phone, message) {
     const cleaned = String(phone || '').replace(/\D/g, '');

@@ -27,6 +27,23 @@ export default function Location() {
                         <div>
                             <h4 className="text-obsidian font-medium mb-1">Address</h4>
                             <p>Luxe Craft Furniture<br />Nairobi, Kenya</p>
+                            <a
+                                href="https://maps.app.goo.gl/uYyVcHY41nMA3KuMA"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1.5 mt-2 text-sm text-obsidian font-medium hover:underline transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                Get Directions →
+                            </a>
+                        </div>
+                        <div>
+                            <h4 className="text-obsidian font-medium mb-1">Phone / WhatsApp</h4>
+                            <a href="tel:+254797624196" className="block hover:text-obsidian transition-colors">+254 797 624 196</a>
+                            <a href="https://wa.me/254797624196" target="_blank" rel="noreferrer" className="text-sm hover:text-obsidian transition-colors">Chat on WhatsApp →</a>
                         </div>
                         <div>
                             <h4 className="text-obsidian font-medium mb-1">Opening Hours</h4>

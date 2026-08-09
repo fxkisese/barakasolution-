@@ -149,14 +149,29 @@ export default function HeroSlides() {
                     <Field label="Subtitle (Optional)">
                         <Input placeholder="e.g. Discover the perfect design" value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} />
                     </Field>
-                    <Field label="Image">
-                        <div className="flex items-center gap-3">
+                    <Field label="Slide Image">
+                        <div className="space-y-3">
+                            {/* Option 1: Upload file */}
                             <label className="inline-flex items-center gap-2 h-10 px-4 rounded-lg border border-[#EAEBED] text-sm cursor-pointer hover:border-[#1A1A1A]">
-                                <Upload className="w-4 h-4" /> {uploading ? "Uploading…" : "Upload"}
+                                <Upload className="w-4 h-4" />
+                                {uploading ? "Uploading… please wait" : "Upload from computer"}
                                 <input type="file" accept="image/*" className="hidden" onChange={upload} />
                             </label>
+                            {/* Option 2: Paste URL */}
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    placeholder="Or paste an image URL here…"
+                                    value={form.image_url}
+                                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                                    className="text-sm"
+                                />
+                            </div>
+                            {/* Preview */}
                             {form.image_url && (
-                                <Image src={form.image_url} alt="" className="w-20 h-12 rounded-md object-cover" fittingType="fill" />
+                                <div className="flex items-center gap-3 mt-1">
+                                    <Image src={form.image_url} alt="Preview" className="w-32 h-20 rounded-md object-cover border border-[#EAEBED]" fittingType="fill" />
+                                    <span className="text-xs text-green-600 font-medium">✓ Image ready</span>
+                                </div>
                             )}
                         </div>
                     </Field>
