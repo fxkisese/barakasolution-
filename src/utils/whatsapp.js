@@ -79,8 +79,9 @@ export function sendAddToCartWhatsApp(product) {
         `Hello! I would like to order:\n\n` +
         `*Item:* ${product.name}\n` +
         `*Category:* ${product.category || 'N/A'}\n` +
-        `*Price:* ${fmt(product.price || 0)}\n\n` +
-        `Please let me know the next steps.`;
+        `*Price:* ${fmt(product.price || 0)}\n` +
+        (product.image ? `*Product Image:* ${product.image}\n` : '') +
+        `\nPlease let me know the next steps.`;
     openWA(ADMIN_PHONE, msg);
 }
 
@@ -90,8 +91,9 @@ export function sendProductInquiryWhatsApp(product) {
         `Hello! I have a question about this product:\n\n` +
         `*Item:* ${product.name}\n` +
         `*Category:* ${product.category || 'N/A'}\n` +
-        `*Price:* ${fmt(product.price || 0)}\n\n` +
-        `Could you provide more details?`;
+        `*Price:* ${fmt(product.price || 0)}\n` +
+        (product.image ? `*Product Image:* ${product.image}\n` : '') +
+        `\nCould you provide more details?`;
     openWA(ADMIN_PHONE, msg);
 }
 
