@@ -24,6 +24,7 @@ const NAV = [
     { to: "/admin/reports", label: "Reports", icon: BarChart3 },
     { to: "/admin/messages", label: "Messages", icon: MessageSquare },
     { to: "/admin/quotes", label: "Quotes", icon: FileText },
+    { to: "/admin/inquiries", label: "Inquiries (AI)", icon: MessageSquare },
     { to: "/admin/hero-slides", label: "Hero Slides", icon: ImageIcon },
 ];
 

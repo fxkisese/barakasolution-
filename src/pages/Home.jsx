@@ -8,7 +8,7 @@ import Location from "@/components/site/Location";
 import ContactForm from "@/components/site/ContactForm";
 import Newsletter from "@/components/site/Newsletter";
 import Footer from "@/components/site/Footer";
-import WhatsAppFloat from "@/components/site/WhatsAppFloat";
+import AIChatFloat from "@/components/site/AIChatFloat";
 import CartDrawer from "@/components/site/CartDrawer";
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
                 <Newsletter />
             </main>
             <Footer />
-            <WhatsAppFloat />
+            <AIChatFloat />
             <CartDrawer />
         </div>
     );
