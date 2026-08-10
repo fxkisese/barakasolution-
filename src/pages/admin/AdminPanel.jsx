@@ -9,6 +9,7 @@ import {
     sendSaleReceiptWhatsApp,
 } from '@/utils/whatsapp';
 import Cropper from 'react-easy-crop';
+import InquiriesPage from '@/components/admin/InquiriesPage';
 
 /* ---------- Constants ---------- */
 const CATEGORIES = ['Living Room', 'Bedroom', 'Dining', 'Office', 'Storage', 'Combo Items'];
@@ -1017,6 +1018,7 @@ const NAV = [
     { id: 'credit', label: 'Credit Book', icon: IconCard },
     { id: 'expenses', label: 'Expenses', icon: IconReceipt },
     { id: 'messages', label: 'WhatsApp', icon: IconChat },
+    { id: 'inquiries', label: 'Inquiries (AI)', icon: IconChat },
     { id: 'hero', label: 'Hero Slides', icon: IconImage },
 ];
 
@@ -1259,6 +1261,7 @@ export default function AdminPanel() {
             case 'credit': return <CreditPage credit={credit} openModal={t => setModal(t)} handleDeleteCredit={handleDeleteCredit} handleRecordPayment={handleRecordPayment} />;
             case 'expenses': return <ExpensesPage expenses={expenses} openModal={t => setModal(t)} handleDeleteExpense={handleDeleteExpense} />;
             case 'messages': return <MessagesPage credit={credit} sales={sales} />;
+            case 'inquiries': return <InquiriesPage />;
             case 'hero': return (
                 <div>
                     <PageHeader eyebrow="Website" title="Hero Slides"

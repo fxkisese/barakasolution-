@@ -5,6 +5,7 @@ import NewArrivals from "@/components/site/NewArrivals";
 import ShopByCategory from "@/components/site/ShopByCategory";
 import InstagramFeed from "@/components/site/InstagramFeed";
 import Location from "@/components/site/Location";
+import ContactForm from "@/components/site/ContactForm";
 import Newsletter from "@/components/site/Newsletter";
 import Footer from "@/components/site/Footer";
 import WhatsAppFloat from "@/components/site/WhatsAppFloat";
@@ -21,6 +22,7 @@ export default function Home() {
                 <ShopByCategory />
                 <InstagramFeed />
                 <Location />
+                <ContactForm />
                 <Newsletter />
             </main>
             <Footer />
