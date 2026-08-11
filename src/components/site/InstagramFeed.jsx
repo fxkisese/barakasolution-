@@ -1,7 +1,20 @@
 import { Instagram } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function InstagramFeed() {
+    useEffect(() => {
+        // Load the Elfsight script dynamically when the component mounts
+        const scriptId = "elfsight-platform-script";
+        if (!document.getElementById(scriptId)) {
+            const script = document.createElement("script");
+            script.id = scriptId;
+            script.src = "https://elfsightcdn.com/platform.js";
+            script.async = true;
+            document.body.appendChild(script);
+        }
+    }, []);
+
     return (
         <section className="bg-silk py-24 md:py-32 border-t border-obsidian/10">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-12 text-center">
@@ -26,20 +39,11 @@ export default function InstagramFeed() {
                 </motion.div>
 
                 {/* Widget Placeholder */}
-                <div className="w-full min-h-[400px] bg-secondary border border-obsidian/10 rounded-sm flex items-center justify-center p-8">
-                    <div className="text-center">
-                        <p className="text-basalt text-sm uppercase tracking-[0.15em] mb-2">Instagram Feed Widget Placeholder</p>
-                        <p className="text-obsidian text-xs">Drop your Elfsight or custom widget embed code inside the `InstagramFeed.jsx` file.</p>
-                        
-                        {/* 
-                            =========================================================
-                            PASTE YOUR INSTAGRAM WIDGET CODE BELOW THIS COMMENT
-                            =========================================================
-                        */}
+                <div className="w-full min-h-[400px] flex items-center justify-center pt-8">
+                    <div className="w-full">
                         <div id="instagram-widget-container" className="mt-8 w-full">
-                            {/* Example: <div class="elfsight-app-xxxx-xxxx-xxxx-xxxx"></div> */}
+                            <div className="elfsight-app-7e8239dc-9dc7-460f-9d20-81ac54be4047" data-elfsight-app-lazy></div>
                         </div>
-                        {/* ========================================================= */}
                     </div>
                 </div>
             </div>
