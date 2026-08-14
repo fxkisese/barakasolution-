@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/api/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Users, MapPin, Trophy } from "lucide-react";
+import TiktokFeed from "@/components/site/TiktokFeed";
 
 export default function About() {
     const [slides, setSlides] = useState([]);
@@ -30,7 +31,8 @@ export default function About() {
     }, [slides]);
 
     return (
-        <div className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <>
+            <div className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -137,5 +139,7 @@ export default function About() {
                 </div>
             </motion.div>
         </div>
+        <TiktokFeed />
+        </>
     );
 }
