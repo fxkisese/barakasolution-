@@ -16,7 +16,7 @@ export default function ProductDetail() {
     const { id } = useParams();
     const product = products[id] || products["1"]; // Fallback to 1 if not found for mock
 
-    const orderMessage = encodeURIComponent(`Hi Baraka Solutions, I'm interested in ordering the ${product.name} priced at ${product.price}. Please provide more details.`);
+    const orderMessage = encodeURIComponent(`Hi Luxe Craft Furniture, I'm interested in ordering the ${product.name} priced at ${product.price}. Please provide more details.`);
     const whatsappUrl = `https://wa.me/254700000000?text=${orderMessage}`; // Replace with actual number
 
     return (

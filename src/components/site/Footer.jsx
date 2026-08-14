@@ -22,10 +22,10 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="md:col-span-4">
                         <p className="font-heading text-2xl tracking-[0.16em] uppercase">
-                            Baraka Solutions
+                            Luxe Craft Furniture
                         </p>
                         <p className="mt-5 text-silk/60 text-sm leading-relaxed max-w-xs">
-                            Elevating spaces with premium glass and mirror craftsmanship. We blend modern elegance with structural integrity for unmatched aesthetic solutions.
+                            Elevating spaces with premium furniture and decor. We blend modern elegance with structural integrity for unmatched aesthetic solutions.
                         </p>
                         <div className="mt-6 flex gap-3">
                             {[
@@ -94,7 +94,7 @@ export default function Footer() {
 
                 <div className="mt-16 pt-8 border-t border-silk/10 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-silk/40 text-xs">
-                        © {new Date().getFullYear()} Baraka Solutions. All rights reserved.
+                        © {new Date().getFullYear()} Luxe Craft Furniture. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-silk/40 text-xs">
                         <a href="/privacy" className="hover:text-silk transition-colors">Privacy Policy</a>

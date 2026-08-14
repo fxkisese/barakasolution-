@@ -6,7 +6,7 @@ export default function Services() {
         {
             icon: <PenTool className="w-8 h-8" />,
             title: "Custom Glass Solutions",
-            description: "From custom-cut mirrors to bespoke glass coffee tables, we bring your unique vision to life. Our precision cutting and polishing ensure a flawless finish for any custom requirement."
+            description: "From custom-cut mirrors to bespoke wooden coffee tables, we bring your unique vision to life. Our precision cutting and polishing ensure a flawless finish for any custom requirement."
         },
         {
             icon: <Wrench className="w-8 h-8" />,
@@ -21,7 +21,7 @@ export default function Services() {
         {
             icon: <ShieldCheck className="w-8 h-8" />,
             title: "Consultation & Measurement",
-            description: "Not sure what fits? We offer on-site consultation and accurate measurement services to guarantee that your glass partitions or mirrors fit perfectly into your space."
+            description: "Not sure what fits? We offer on-site consultation and accurate measurement services to guarantee that your furniture pieces fit perfectly into your space."
         }
     ];
 
@@ -41,7 +41,7 @@ export default function Services() {
                     transition={{ delay: 0.1 }}
                     className="text-lg text-slate-600 max-w-2xl mx-auto"
                 >
-                    Beyond supplying premium glass and mirrors, Baraka Solutions offers end-to-end services to ensure your project is completed flawlessly from concept to installation.
+                    Beyond supplying premium furniture and decor, Luxe Craft Furniture offers end-to-end services to ensure your project is completed flawlessly from concept to installation.
                 </motion.p>
             </div>
 

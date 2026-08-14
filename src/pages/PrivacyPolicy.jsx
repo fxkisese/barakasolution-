@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
                 <p>Last updated: August 2026</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">1. Information We Collect</h2>
-                <p>Baraka Solutions collects personal information such as your name, email address, phone number, and physical address when you request a quote, place an order, or fill out our contact forms. For custom installations, we may also retain project specifications and photographs of the installation space.</p>
+                <p>Luxe Craft Furniture collects personal information such as your name, email address, phone number, and physical address when you request a quote, place an order, or fill out our contact forms. For custom installations, we may also retain project specifications and photographs of the installation space.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">2. How We Use Your Information</h2>
                 <p>We use the information we collect to:</p>

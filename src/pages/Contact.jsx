@@ -35,7 +35,7 @@ export default function Contact() {
                                 <Mail className="w-6 h-6 text-slate-900 mt-1 mr-4" />
                                 <div>
                                     <p className="font-medium text-slate-900">Email</p>
-                                    <p className="text-slate-600 mt-1">info@barakasolutions.com</p>
+                                    <p className="text-slate-600 mt-1">info@luxecraftfurniture.com</p>
                                 </div>
                             </div>
 

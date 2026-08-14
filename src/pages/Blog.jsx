@@ -9,7 +9,7 @@ export default function Blog() {
             excerpt: "Discover how strategic placement of mirrors can completely transform the perception of space in your bathroom.",
             category: "Styling Tips",
             date: "Aug 12, 2026",
-            author: "Baraka Team",
+            author: "Luxe Craft Team",
             image: "https://images.unsplash.com/photo-1609590623253-125086d49861?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
@@ -27,7 +27,7 @@ export default function Blog() {
             excerpt: "A comprehensive guide to help you choose the right shower enclosure for your bathroom renovation project.",
             category: "Guides",
             date: "Jul 15, 2026",
-            author: "Baraka Team",
+            author: "Luxe Craft Team",
             image: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
@@ -36,7 +36,7 @@ export default function Blog() {
             excerpt: "Keep your office or home glass partitions looking crystal clear with these professional maintenance tips.",
             category: "Maintenance",
             date: "Jun 30, 2026",
-            author: "Baraka Team",
+            author: "Luxe Craft Team",
             image: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         }
     ];
@@ -46,7 +46,7 @@ export default function Blog() {
             <div className="text-center mb-16">
                 <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6">News & Inspiration</h1>
                 <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                    Expert tips, interior design inspiration, and the latest updates from the Baraka Solutions team.
+                    Expert tips, interior design inspiration, and the latest updates from the Luxe Craft Furniture team.
                 </p>
             </div>
 

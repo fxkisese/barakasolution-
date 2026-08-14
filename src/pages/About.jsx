@@ -10,9 +10,9 @@ export default function About() {
                 transition={{ duration: 0.6 }}
                 className="text-center mb-16"
             >
-                <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6">About Baraka Solutions</h1>
+                <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6">About Luxe Craft Furniture</h1>
                 <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                    Elevating spaces with premium glass and mirror craftsmanship. We blend modern elegance with structural integrity to deliver unmatched aesthetic solutions for residential and commercial projects.
+                    Elevating spaces with premium furniture and decor. We blend modern elegance with structural integrity to deliver unmatched aesthetic solutions for residential and commercial projects.
                 </p>
             </motion.div>
 
@@ -37,10 +37,10 @@ export default function About() {
                 >
                     <h2 className="text-3xl font-serif text-slate-900">Our Story</h2>
                     <p className="text-slate-600 leading-relaxed">
-                        What started as a passion for precision has grown into a leading name in bespoke glass and mirror installations. With over 300 successful projects, Baraka Solutions is synonymous with quality, reliability, and breathtaking design.
+                        What started as a passion for precision has grown into a leading name in bespoke furniture collections. With over 300 successful projects, Luxe Craft Furniture is synonymous with quality, reliability, and breathtaking design.
                     </p>
                     <p className="text-slate-600 leading-relaxed">
-                        Our team of experts handles everything from frameless glass partitions to custom LED mirrors, ensuring that every piece not only meets but exceeds expectations. We believe in transforming ordinary spaces into extraordinary experiences.
+                        Our team of experts handles everything from elegant sofas to custom oak dining tables, ensuring that every piece not only meets but exceeds expectations. We believe in transforming ordinary spaces into extraordinary experiences.
                     </p>
                     
                     <div className="grid grid-cols-2 gap-6 pt-6">

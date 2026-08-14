@@ -6,13 +6,13 @@ export default function TestimonialsPage() {
         {
             name: "Sarah Mwangi",
             role: "Homeowner",
-            content: "Baraka Solutions completely transformed my bathroom. The frameless shower cubicle they installed is not only beautiful but incredibly sturdy. Their team was professional and cleaned up perfectly after the job.",
+            content: "Luxe Craft Furniture completely transformed my bathroom. The frameless shower cubicle they installed is not only beautiful but incredibly sturdy. Their team was professional and cleaned up perfectly after the job.",
             rating: 5
         },
         {
             name: "David Ochieng",
             role: "Interior Designer",
-            content: "As a designer, I need partners I can trust. Baraka Solutions has been my go-to for custom mirrors and glass partitions for over two years. Their attention to detail and ability to execute complex custom designs is unmatched in Nairobi.",
+            content: "As a designer, I need partners I can trust. Luxe Craft Furniture has been my go-to for custom mirrors and glass partitions for over two years. Their attention to detail and ability to execute complex custom designs is unmatched in Nairobi.",
             rating: 5
         },
         {
@@ -24,13 +24,13 @@ export default function TestimonialsPage() {
         {
             name: "Kevin Mutua",
             role: "Gym Manager",
-            content: "We needed a full wall of mirrors for our new gym branch. The team from Baraka handled the large-scale installation seamlessly. Safe, perfectly aligned, and delivered exactly on time.",
+            content: "We needed a full wall of mirrors for our new gym branch. The team from Luxe Craft Furniture handled the large-scale installation seamlessly. Safe, perfectly aligned, and delivered exactly on time.",
             rating: 5
         },
         {
             name: "Grace Kariuki",
             role: "Office Manager",
-            content: "We hired Baraka to partition our open-plan office. The frosted glass solution they provided gave us the privacy we needed without losing natural light. Great service from start to finish.",
+            content: "We hired Luxe Craft Furniture to partition our open-plan office. The frosted glass solution they provided gave us the privacy we needed without losing natural light. Great service from start to finish.",
             rating: 4
         },
         {
@@ -65,7 +65,7 @@ export default function TestimonialsPage() {
                     transition={{ delay: 0.1 }}
                     className="text-lg text-slate-600 max-w-2xl mx-auto"
                 >
-                    Don't just take our word for it. Read about the experiences of homeowners and businesses who have chosen Baraka Solutions.
+                    Don't just take our word for it. Read about the experiences of homeowners and businesses who have chosen Luxe Craft Furniture.
                 </motion.p>
             </div>
 

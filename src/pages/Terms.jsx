@@ -6,13 +6,13 @@ export default function Terms() {
                 <p>Last updated: August 2026</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">1. Acceptance of Terms</h2>
-                <p>By accessing and using the Baraka Solutions website, you accept and agree to be bound by the terms and provision of this agreement. In addition, when using these particular services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
+                <p>By accessing and using the Luxe Craft Furniture website, you accept and agree to be bound by the terms and provision of this agreement. In addition, when using these particular services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">2. Orders and Custom Projects</h2>
                 <p>All custom glass and mirror projects require a minimum deposit of 60% before any cutting, polishing, or assembly begins. The remaining 40% is due upon successful delivery and/or installation. Custom orders cannot be canceled once production has commenced.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">3. Measurement Accuracy</h2>
-                <p>If you choose to provide your own measurements for custom cuts, Baraka Solutions is not liable if the glass does not fit. We highly recommend utilizing our professional consultation and measurement service to ensure absolute accuracy.</p>
+                <p>If you choose to provide your own measurements for custom cuts, Luxe Craft Furniture is not liable if the glass does not fit. We highly recommend utilizing our professional consultation and measurement service to ensure absolute accuracy.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">4. Warranty and Liability</h2>
                 <p>We provide a 1-year warranty on installation and electrical components (e.g., LED strips). We do not cover accidental damage, scratches, or breakages that occur after safe installation and handover to the client.</p>
