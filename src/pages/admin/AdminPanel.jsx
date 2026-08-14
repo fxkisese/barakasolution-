@@ -10,6 +10,7 @@ import {
 } from '@/utils/whatsapp';
 import Cropper from 'react-easy-crop';
 import InquiriesPage from '@/components/admin/InquiriesPage';
+import AboutSlides from '@/pages/admin/AboutSlides';
 
 /* ---------- Constants ---------- */
 const CATEGORIES = ['Living Room', 'Bedroom', 'Dining', 'Office', 'Storage', 'Combo Items'];
@@ -1020,6 +1021,7 @@ const NAV = [
     { id: 'messages', label: 'WhatsApp', icon: IconChat },
     { id: 'inquiries', label: 'Inquiries (AI)', icon: IconChat },
     { id: 'hero', label: 'Hero Slides', icon: IconImage },
+    { id: 'about_slides', label: 'About Slides', icon: IconImage },
 ];
 
 export default function AdminPanel() {
@@ -1262,6 +1264,7 @@ export default function AdminPanel() {
             case 'expenses': return <ExpensesPage expenses={expenses} openModal={t => setModal(t)} handleDeleteExpense={handleDeleteExpense} />;
             case 'messages': return <MessagesPage credit={credit} sales={sales} />;
             case 'inquiries': return <InquiriesPage />;
+            case 'about_slides': return <AboutSlides />;
             case 'hero': return (
                 <div>
                     <PageHeader eyebrow="Website" title="Hero Slides"
