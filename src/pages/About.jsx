@@ -3,6 +3,7 @@ import { supabase } from "@/api/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Users, MapPin, Trophy } from "lucide-react";
 import TiktokFeed from "@/components/site/TiktokFeed";
+import InstagramFeed from "@/components/site/InstagramFeed";
 
 export default function About() {
     const [slides, setSlides] = useState([]);
@@ -140,6 +141,7 @@ export default function About() {
             </motion.div>
         </div>
         <TiktokFeed />
+        <InstagramFeed />
         </>
     );
 }

@@ -34,7 +34,7 @@ export default function InstagramFeed() {
                         Join Our Community
                     </h2>
                     <p className="text-basalt text-base font-body">
-                        Follow <a href="https://instagram.com/luxecraft_furniture" target="_blank" rel="noreferrer" className="text-obsidian font-medium hover:underline">@luxecraft_furniture</a> for the latest arrivals, design inspiration, and a behind-the-scenes look at our craft.
+                        Follow <a href="https://instagram.com/barakasolutions" target="_blank" rel="noreferrer" className="text-obsidian font-medium hover:underline">@barakasolutions</a> for the latest arrivals, design inspiration, and a behind-the-scenes look at our craft.
                     </p>
                 </motion.div>
 
