@@ -8,7 +8,7 @@ export default function SiteLayout() {
     return (
         <div className="flex flex-col min-h-screen bg-silk">
             <Navbar />
-            <main className="flex-grow pt-16"> {/* Add top padding for fixed navbar if applicable */}
+            <main className="flex-grow">
                 <Outlet />
             </main>
             <Footer />
