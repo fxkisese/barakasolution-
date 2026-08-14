@@ -16,11 +16,12 @@ export const IMAGES = {
 };
 
 export const NAV_LINKS = [
-    { label: "Collections", href: "#collections" },
-    { label: "New Arrivals", href: "#arrivals" },
-    { label: "Shop", href: "#shop" },
-    { label: "Journal", href: "#blog" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Shop", href: "/shop" },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Services", href: "/services" },
+    { label: "Contact", href: "/contact" },
 ];
 
 export const CATEGORIES = [

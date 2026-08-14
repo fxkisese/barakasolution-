@@ -1,17 +1,17 @@
 import { Instagram, Facebook, Twitter, MapPin, Phone } from "lucide-react";
 
 const SHOP_LINKS = [
-    { label: "New Arrivals", href: "#arrivals" },
-    { label: "Collections", href: "#collections" },
-    { label: "Shop by Category", href: "#shop" },
-    { label: "Journal", href: "#blog" },
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Shop", href: "/shop" },
+    { label: "Our Services", href: "/services" },
 ];
 
 const CATEGORY_LINKS = [
-    { label: "Furniture", href: "#shop" },
-    { label: "Lighting", href: "#shop" },
-    { label: "Decor", href: "#shop" },
-    { label: "Plants & Planters", href: "#shop" },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Testimonials", href: "/testimonials" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Blog", href: "/blog" },
 ];
 
 export default function Footer() {
@@ -22,11 +22,10 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="md:col-span-4">
                         <p className="font-heading text-2xl tracking-[0.16em] uppercase">
-                            Luxe Craft Furniture
+                            Baraka Solutions
                         </p>
                         <p className="mt-5 text-silk/60 text-sm leading-relaxed max-w-xs">
-                            A design decoration store based in Nairobi, Kenya — specialising in
-                            furniture, decor, home accessories and more. Durable. Stylish. Affordable.
+                            Elevating spaces with premium glass and mirror craftsmanship. We blend modern elegance with structural integrity for unmatched aesthetic solutions.
                         </p>
                         <div className="mt-6 flex gap-3">
                             {[
@@ -46,9 +45,9 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* Shop links */}
+                    {/* Quick Links */}
                     <div className="md:col-span-2">
-                        <h4 className="font-mono-price text-[11px] uppercase tracking-[0.2em] text-clay">Shop</h4>
+                        <h4 className="font-mono-price text-[11px] uppercase tracking-[0.2em] text-clay">Company</h4>
                         <ul className="mt-5 space-y-3">
                             {SHOP_LINKS.map((l) => (
                                 <li key={l.label}>
@@ -60,9 +59,9 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Categories */}
+                    {/* Resources */}
                     <div className="md:col-span-2">
-                        <h4 className="font-mono-price text-[11px] uppercase tracking-[0.2em] text-clay">Categories</h4>
+                        <h4 className="font-mono-price text-[11px] uppercase tracking-[0.2em] text-clay">Resources</h4>
                         <ul className="mt-5 space-y-3">
                             {CATEGORY_LINKS.map((l) => (
                                 <li key={l.label}>
@@ -80,13 +79,13 @@ export default function Footer() {
                         <ul className="mt-5 space-y-4 text-sm text-silk/70">
                             <li className="flex items-start gap-3">
                                 <MapPin className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />
-                                <span>Nairobi, Kenya</span>
+                                <span>Kyumbi & Whitehouse Footbridge<br/>Nairobi, Kenya</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <Phone className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />
                                 <div className="flex flex-col gap-1">
-                                    <a href="tel:+254797624196" className="hover:text-silk transition-colors">+254 797 624 196</a>
-                                    <a href="https://wa.me/254797624196" target="_blank" rel="noreferrer" className="text-xs text-silk/50 hover:text-silk transition-colors">WhatsApp us →</a>
+                                    <a href="tel:+254700000000" className="hover:text-silk transition-colors">+254 700 000 000</a>
+                                    <a href="https://wa.me/254700000000" target="_blank" rel="noreferrer" className="text-xs text-silk/50 hover:text-silk transition-colors">WhatsApp us →</a>
                                 </div>
                             </li>
                         </ul>
@@ -95,12 +94,11 @@ export default function Footer() {
 
                 <div className="mt-16 pt-8 border-t border-silk/10 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-silk/40 text-xs">
-                        © {new Date().getFullYear()} Luxe Craft Furniture. All rights reserved.
+                        © {new Date().getFullYear()} Baraka Solutions. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-silk/40 text-xs">
-                        <a href="#top" className="hover:text-silk transition-colors">Privacy Policy</a>
-                        <a href="#top" className="hover:text-silk transition-colors">Terms of Service</a>
-                        <a href="#top" className="hover:text-silk transition-colors">Shipping</a>
+                        <a href="/privacy" className="hover:text-silk transition-colors">Privacy Policy</a>
+                        <a href="/terms" className="hover:text-silk transition-colors">Terms of Service</a>
                     </div>
                 </div>
             </div>

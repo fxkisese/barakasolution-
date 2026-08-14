@@ -1,4 +1,3 @@
-import Navbar from "@/components/site/Navbar";
 import Hero from "@/components/site/Hero";
 import Features from "@/components/site/Features";
 import NewArrivals from "@/components/site/NewArrivals";
@@ -8,28 +7,19 @@ import TiktokFeed from "@/components/site/TiktokFeed";
 import Location from "@/components/site/Location";
 import ContactForm from "@/components/site/ContactForm";
 import Newsletter from "@/components/site/Newsletter";
-import Footer from "@/components/site/Footer";
-import WhatsAppFloat from "@/components/site/WhatsAppFloat";
-import CartDrawer from "@/components/site/CartDrawer";
 
 export default function Home() {
     return (
-        <div className="scroll-smooth bg-silk">
-            <Navbar />
-            <main>
-                <Hero />
-                <Features />
-                <NewArrivals />
-                <ShopByCategory />
-                <InstagramFeed />
-                <TiktokFeed />
-                <Location />
-                <ContactForm />
-                <Newsletter />
-            </main>
-            <Footer />
-            <WhatsAppFloat />
-            <CartDrawer />
+        <div className="scroll-smooth">
+            <Hero />
+            <Features />
+            <NewArrivals />
+            <ShopByCategory />
+            <InstagramFeed />
+            <TiktokFeed />
+            <Location />
+            <ContactForm />
+            <Newsletter />
         </div>
     );
 }
