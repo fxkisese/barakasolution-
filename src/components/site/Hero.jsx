@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { supabase } from "@/api/supabaseClient";
@@ -101,13 +102,13 @@ export default function Hero() {
                         )}
 
                         <div className="mt-10 flex flex-wrap items-center gap-6">
-                            <a
-                                href="#collections"
+                            <Link
+                                to="/shop"
                                 className="group inline-flex items-center gap-3 h-14 px-8 bg-white text-obsidian text-[13px] uppercase tracking-[0.18em] hover:bg-obsidian hover:text-silk transition-colors duration-300"
                             >
                                 Discover Now
                                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.6} />
-                            </a>
+                            </Link>
                             <span className="font-mono-price text-silk/60 text-xs uppercase tracking-[0.2em] hidden sm:inline-block">
                                 Est. Nairobi · Curated Living
                             </span>
