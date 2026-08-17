@@ -18,6 +18,8 @@ import TestimonialsPage from '@/pages/TestimonialsPage';
 import Blog from '@/pages/Blog';
 import Terms from '@/pages/Terms';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
 import AdminPanel from '@/pages/admin/AdminPanel';
 import SiteLayout from '@/components/site/SiteLayout';
 
@@ -48,6 +50,8 @@ const AuthenticatedApp = () => {
                 <Route path="blog" element={<Blog />} />
                 <Route path="terms" element={<Terms />} />
                 <Route path="privacy" element={<PrivacyPolicy />} />
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
             </Route>
 
             {/* Full admin panel — handles all /admin/* routes internally */}

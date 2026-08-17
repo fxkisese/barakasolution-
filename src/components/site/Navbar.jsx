@@ -2,14 +2,17 @@ import { useState } from "react";
 import { Menu, X, Search, ShoppingCart, Facebook, Instagram, Youtube, ChevronDown } from "lucide-react";
 import { MEGA_MENU_LINKS } from "@/lib/siteData";
 import { useCart } from "@/lib/CartContext";
+import { useAuth } from "@/lib/AuthContext";
 import SearchDialog from "./SearchDialog";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const { openCart, cartCount } = useCart();
+    const { isAuthenticated } = useAuth();
 
-    const topBarButton = "rounded-full border border-silk/30 px-5 py-1.5 flex items-center gap-2 text-[11px] font-bold tracking-wider hover:bg-silk hover:text-obsidian transition-colors h-10 text-silk";
+    const topBarButton = "rounded-full border border-silk/30 px-5 py-1.5 flex items-center gap-2 text-[11px] font-bold tracking-wider hover:bg-silk hover:text-obsidian transition-colors h-10 text-silk whitespace-nowrap";
+
 
     return (
         <header className="sticky top-0 z-50 bg-obsidian border-b border-silk/10">
@@ -24,7 +27,11 @@ export default function Navbar() {
                         <button onClick={() => setSearchOpen(true)} className={`${topBarButton} w-56 justify-between text-silk/70 font-normal bg-transparent`}>
                             <span>Search for...</span> <Search size={16} className="text-silk shrink-0" />
                         </button>
-                        <a href="/login" className={topBarButton}>LOGIN / REGISTER</a>
+                        {isAuthenticated ? (
+                            <a href="/admin" className={topBarButton}>DASHBOARD</a>
+                        ) : (
+                            <a href="/login" className={topBarButton}>LOGIN / REGISTER</a>
+                        )}
                         <button onClick={openCart} className={topBarButton}>
                             CART <ShoppingCart size={14} /> 
                             {cartCount > 0 && <span className="ml-1 bg-silk text-obsidian text-[10px] px-1.5 rounded-full font-bold">{cartCount}</span>}
@@ -96,7 +103,11 @@ export default function Navbar() {
                 <div className="p-6 flex flex-col gap-6">
                     {/* Utilities */}
                     <div className="flex flex-col gap-3 pb-6 border-b border-silk/10">
-                        <a href="/login" className={`${topBarButton} w-full justify-center`}>LOGIN / REGISTER</a>
+                        {isAuthenticated ? (
+                            <a href="/admin" className={`${topBarButton} w-full justify-center`}>DASHBOARD</a>
+                        ) : (
+                            <a href="/login" className={`${topBarButton} w-full justify-center`}>LOGIN / REGISTER</a>
+                        )}
                         <a href="/about" className={`${topBarButton} w-full justify-center`}>OUR STORES</a>
                         <a href="/services" className={`${topBarButton} w-full justify-center`}>B2B SERVICES</a>
                     </div>
