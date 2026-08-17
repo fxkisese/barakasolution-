@@ -1,8 +1,37 @@
+import { useState, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Image } from "@/components/ui/image";
-import { CATEGORIES } from "@/lib/siteData";
+import { supabase } from "@/api/supabaseClient";
 
 export default function FeaturedCollections() {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        async function fetchCategories() {
+            // Fetch categories from admin-uploaded products
+            const { data } = await supabase.from('products').select('category, image');
+            if (data) {
+                const catMap = {};
+                data.forEach(p => {
+                    if (p.category && !catMap[p.category] && p.image) {
+                        catMap[p.category] = p.image;
+                    }
+                });
+                const formatted = Object.keys(catMap).map(name => ({
+                    name,
+                    image: catMap[name],
+                    tag: `/${name.toUpperCase()}`,
+                    blurb: `Browse our ${name.toLowerCase()} collection`,
+                }));
+                setCategories(formatted);
+            }
+        }
+        fetchCategories();
+    }, []);
+
+    // Hide entirely if admin has not uploaded any products yet
+    if (categories.length === 0) return null;
+
     return (
         <section id="collections" className="scroll-mt-24 bg-silk py-24 md:py-32">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
@@ -18,7 +47,7 @@ export default function FeaturedCollections() {
                         </h2>
                     </div>
                     <a
-                        href="#shop"
+                        href="/shop"
                         className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.2em] text-basalt hover:text-obsidian transition-colors"
                     >
                         View All <ArrowUpRight className="w-4 h-4" strokeWidth={1.6} />
@@ -27,10 +56,10 @@ export default function FeaturedCollections() {
 
                 {/* Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                    {CATEGORIES.map((cat, i) => (
+                    {categories.map((cat, i) => (
                         <a
                             key={cat.name}
-                            href="#shop"
+                            href="/shop"
                             className={`group relative overflow-hidden bg-secondary ${
                                 i === 0 ? "col-span-2 row-span-2" : ""
                             }`}
