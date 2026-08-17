@@ -37,7 +37,7 @@ export default function Navbar() {
 
                 <div className="flex items-center gap-5 shrink-0 pl-4">
                     <div className="text-[14px] text-obsidian font-medium tracking-wide">
-                        websales@luxecraftfurniture.com | +254 791 777 999
+                        info@barakasolutions.com | +254 797 624196
                     </div>
                     <div className="flex items-center gap-2 text-white">
                         <a href="https://facebook.com" target="_blank" rel="noreferrer" className="bg-[#3b5998] p-1.5 rounded-full hover:opacity-80 transition-opacity">
@@ -120,7 +120,7 @@ export default function Navbar() {
                     {/* Contact Info */}
                     <div className="pt-6 border-t border-obsidian/10 text-center flex flex-col gap-4 pb-12">
                         <div className="text-[13px] text-obsidian font-medium">
-                            websales@luxecraftfurniture.com <br/> +254 791 777 999
+                            info@barakasolutions.com <br/> +254 797 624196
                         </div>
                         <div className="flex items-center justify-center gap-4 text-white">
                             <a href="#" className="bg-[#3b5998] p-2 rounded-full"><Facebook size={16} fill="currentColor" /></a>

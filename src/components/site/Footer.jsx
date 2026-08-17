@@ -84,8 +84,8 @@ export default function Footer() {
                             <li className="flex items-start gap-3">
                                 <Phone className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />
                                 <div className="flex flex-col gap-1">
-                                    <a href="tel:+254700000000" className="hover:text-silk transition-colors">+254 700 000 000</a>
-                                    <a href="https://wa.me/254700000000" target="_blank" rel="noreferrer" className="text-xs text-silk/50 hover:text-silk transition-colors">WhatsApp us →</a>
+                                    <a href="tel:+254797624196" className="hover:text-silk transition-colors">+254 797 624196</a>
+                                    <a href="https://wa.me/254797624196" target="_blank" rel="noreferrer" className="text-xs text-silk/50 hover:text-silk transition-colors">WhatsApp us →</a>
                                 </div>
                             </li>
                         </ul>
