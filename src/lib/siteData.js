@@ -24,6 +24,24 @@ export const NAV_LINKS = [
     { label: "Contact", href: "/contact" },
 ];
 
+export const MEGA_MENU_LINKS = [
+    { label: "SOFAS", href: "/shop?category=sofas", hasDropdown: true },
+    { label: "BEDROOM", href: "/shop?category=bedroom", hasDropdown: true },
+    { label: "LIVING PACKAGES", href: "/shop?category=living-packages", hasDropdown: false },
+    { label: "COMING SOON", href: "/shop?category=coming-soon", hasDropdown: true },
+    { label: "OFFICE", href: "/shop?category=office", hasDropdown: true },
+    { label: "DINING", href: "/shop?category=dining", hasDropdown: true },
+    { label: "LIVING", href: "/shop?category=living", hasDropdown: true },
+    { label: "OUTDOOR", href: "/shop?category=outdoor", hasDropdown: true },
+    { label: "MATTRESSES", href: "/shop?category=mattresses", hasDropdown: true },
+    { label: "SOFT FURNISHINGS & OTTOMANS", href: "/shop?category=soft-furnishings", hasDropdown: true },
+    { label: "HOME DECOR", href: "/shop?category=decor", hasDropdown: true },
+    { label: "AVENUE 19 CLEARANCE", href: "/shop?category=clearance", hasDropdown: false },
+    { label: "ONLINE EXCLUSIVE", href: "/shop?category=exclusive", hasDropdown: false, isRed: true },
+    { label: "OFFICE CATALOGUE", href: "/shop?category=office-catalogue", hasDropdown: false },
+    { label: "B2B SERVICES", href: "/services", hasDropdown: false },
+];
+
 export const CATEGORIES = [
     { name: "Decor", tag: "/DECOR", image: IMAGES.decor, blurb: "Sculptural objects & vases" },
     { name: "Chair", tag: "/CHAIR", image: IMAGES.chair, blurb: "Lounge & accent chairs" },
