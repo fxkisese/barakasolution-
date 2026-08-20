@@ -44,7 +44,7 @@ export default function Hero() {
     };
 
     return (
-        <section id="top" className="relative h-screen min-h-[640px] w-full overflow-hidden bg-obsidian">
+        <section id="top" className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-obsidian">
             {/* Only render slide images when admin has uploaded them */}
             {hasSlides && (
                 <AnimatePresence mode="wait">
@@ -59,7 +59,8 @@ export default function Hero() {
                         <Image
                             src={currentSlide.image}
                             alt="Hero background"
-                            className="absolute inset-0 w-full h-full object-cover"
+                            className="block absolute inset-0 w-full h-full"
+                            style={{ display: 'block' }}
                             fittingType="fill"
                         />
                     </motion.div>
@@ -67,10 +68,11 @@ export default function Hero() {
             )}
 
             {/* Gradient overlays — shown always (darker when no image) */}
-            <div className={`absolute inset-0 bg-gradient-to-r from-obsidian/90 via-obsidian/60 to-obsidian/30 z-10 ${!hasSlides ? 'from-obsidian via-obsidian/90 to-obsidian/80' : ''}`} />
-            <div className="absolute inset-0 bg-gradient-to-t from-obsidian/70 to-transparent z-10" />
+            {/* Gradient: on mobile full dark overlay so text is readable; on md+ fade right */}
+            <div className={`absolute inset-0 z-10 ${hasSlides ? 'bg-gradient-to-b from-obsidian/70 via-obsidian/50 to-obsidian/80 md:bg-gradient-to-r md:from-obsidian/90 md:via-obsidian/60 md:to-obsidian/30' : 'bg-obsidian/80'}`} />
+            <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-transparent z-10" />
 
-            <div className="relative z-20 h-full mx-auto max-w-[1400px] px-6 lg:px-12 flex flex-col justify-center py-28 md:py-32">
+            <div className="relative z-20 h-full mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 flex flex-col justify-end md:justify-center pb-16 pt-28 md:py-32">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={hasSlides ? `content-${currentSlide.id}` : 'default-content'}
