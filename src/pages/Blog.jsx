@@ -1,109 +1,105 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Calendar, User, ArrowRight } from "lucide-react";
+import { supabase } from "@/api/supabaseClient";
 
 export default function Blog() {
-    const posts = [
-        {
-            id: 1,
-            title: "5 Ways to Make a Small Bathroom Look Bigger with Mirrors",
-            excerpt: "Discover how strategic placement of mirrors can completely transform the perception of space in your bathroom.",
-            category: "Styling Tips",
-            date: "Aug 12, 2026",
-            author: "Luxe Craft Team",
-            image: "https://images.unsplash.com/photo-1609590623253-125086d49861?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            id: 2,
-            title: "The Rise of LED Smart Mirrors in Modern Homes",
-            excerpt: "Why everyone is upgrading from traditional mirrors to smart LED mirrors. Exploring the benefits of built-in lighting and demisters.",
-            category: "New Trends",
-            date: "Jul 28, 2026",
-            author: "Interior Expert",
-            image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            id: 3,
-            title: "Frameless vs. Framed Shower Cubicles: Which is Better?",
-            excerpt: "A comprehensive guide to help you choose the right shower enclosure for your bathroom renovation project.",
-            category: "Guides",
-            date: "Jul 15, 2026",
-            author: "Luxe Craft Team",
-            image: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            id: 4,
-            title: "How to Clean and Maintain Your Glass Partitions",
-            excerpt: "Keep your office or home glass partitions looking crystal clear with these professional maintenance tips.",
-            category: "Maintenance",
-            date: "Jun 30, 2026",
-            author: "Luxe Craft Team",
-            image: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchPosts() {
+            const { data } = await supabase
+                .from("blog_posts")
+                .select("*")
+                .order("created_at", { ascending: false });
+            if (data) setPosts(data);
+            setLoading(false);
         }
-    ];
+        fetchPosts();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-[60vh]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-10 h-10 border-2 border-obsidian border-t-[#D4AF37] rounded-full animate-spin" />
+                    <p className="text-[11px] uppercase tracking-[0.3em] text-basalt">Loading articles…</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (posts.length === 0) {
+        return (
+            <div className="py-24 md:py-36 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-silk text-center">
+                <h1 className="font-heading font-light text-4xl md:text-5xl text-obsidian mb-6">News &amp; Inspiration</h1>
+                <p className="text-basalt text-lg max-w-xl mx-auto">
+                    No articles yet — check back soon for design tips, styling guides, and updates from the team.
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-silk">
             <div className="text-center mb-16">
-                <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6">News & Inspiration</h1>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                    Expert tips, interior design inspiration, and the latest updates from the Luxe Craft Furniture team.
+                <h1 className="font-heading font-light text-4xl md:text-5xl text-obsidian mb-6">News &amp; Inspiration</h1>
+                <p className="text-lg text-basalt max-w-2xl mx-auto">
+                    Expert tips, interior design inspiration, and the latest updates from the team.
                 </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
                 {posts.map((post, index) => (
-                    <motion.article 
+                    <motion.article
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.1 }}
-                        key={post.id} 
-                        className="group bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 flex flex-col"
+                        key={post.id}
+                        className="group bg-white overflow-hidden shadow-sm border border-border flex flex-col"
                     >
-                        <div className="relative aspect-video overflow-hidden bg-slate-100">
-                            <img 
-                                src={post.image} 
-                                alt={post.title} 
-                                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
-                            />
-                            <div className="absolute top-4 left-4">
-                                <span className="bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-medium text-slate-900 shadow-sm">
-                                    {post.category}
-                                </span>
+                        {post.image && (
+                            <div className="relative aspect-video overflow-hidden bg-secondary">
+                                <img
+                                    src={post.image}
+                                    alt={post.title}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                                />
+                                {post.category && (
+                                    <div className="absolute top-4 left-4">
+                                        <span className="bg-white/90 backdrop-blur-sm px-4 py-1.5 text-xs font-medium text-obsidian shadow-sm">
+                                            {post.category}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
-                        </div>
+                        )}
                         <div className="p-8 flex-grow flex flex-col">
-                            <div className="flex items-center text-sm text-slate-500 mb-4 gap-4">
-                                <div className="flex items-center">
-                                    <Calendar className="w-4 h-4 mr-1.5" />
-                                    {post.date}
-                                </div>
-                                <div className="flex items-center">
-                                    <User className="w-4 h-4 mr-1.5" />
-                                    {post.author}
-                                </div>
+                            <div className="flex items-center text-sm text-basalt mb-4 gap-4">
+                                {post.date && (
+                                    <div className="flex items-center">
+                                        <Calendar className="w-4 h-4 mr-1.5" />
+                                        {post.date}
+                                    </div>
+                                )}
+                                {post.author && (
+                                    <div className="flex items-center">
+                                        <User className="w-4 h-4 mr-1.5" />
+                                        {post.author}
+                                    </div>
+                                )}
                             </div>
-                            <h2 className="text-2xl font-serif text-slate-900 mb-4 group-hover:text-slate-600 transition-colors line-clamp-2">
+                            <h2 className="font-heading font-light text-2xl text-obsidian mb-4 group-hover:text-basalt transition-colors line-clamp-2">
                                 {post.title}
                             </h2>
-                            <p className="text-slate-600 mb-8 flex-grow line-clamp-3">
-                                {post.excerpt}
-                            </p>
-                            <a 
-                                href="#" 
-                                className="inline-flex items-center font-medium text-slate-900 hover:text-slate-600 transition-colors mt-auto"
-                            >
-                                Read Article <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                            </a>
+                            {post.excerpt && (
+                                <p className="text-basalt mb-8 flex-grow line-clamp-3">{post.excerpt}</p>
+                            )}
                         </div>
                     </motion.article>
                 ))}
-            </div>
-            
-            <div className="mt-16 text-center">
-                <button className="px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-full font-medium hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
-                    Load More Articles
-                </button>
             </div>
         </div>
     );

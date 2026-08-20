@@ -53,12 +53,12 @@ export default function About() {
                     viewport={{ once: true }}
                     className="relative aspect-square md:aspect-auto md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-slate-100"
                 >
-                    {slides.length > 0 ? (
+                    {slides.length > 0 && (
                         <AnimatePresence mode="popLayout">
                             <motion.img
                                 key={currentSlide}
                                 src={slides[currentSlide].image_url}
-                                alt="About Luxe Craft Furniture"
+                                alt="About Baraka Solutions"
                                 className="absolute inset-0 object-cover w-full h-full"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -66,12 +66,6 @@ export default function About() {
                                 transition={{ duration: 1 }}
                             />
                         </AnimatePresence>
-                    ) : (
-                        <img
-                            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                            alt="Luxe Craft installation"
-                            className="object-cover w-full h-full"
-                        />
                     )}
                 </motion.div>
                 <motion.div
