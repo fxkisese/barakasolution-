@@ -21,8 +21,8 @@ const contactDetails = [
 ];
 
 const branches = [
-    { name: "Whitehouse Footbridge", desc: "Main showroom and full consultation services.", href: "#" },
-    { name: "Kyumbi Branch", desc: "Quick orders and convenient pickups.", href: "#" },
+    { name: "Whitehouse Footbridge", desc: "Main showroom and full consultation services.", href: "https://www.google.com/maps/search/?api=1&query=Whitehouse+Footbridge,+Nairobi,+Kenya" },
+    { name: "Kyumbi Branch", desc: "Quick orders and convenient pickups.", href: "https://www.google.com/maps/search/?api=1&query=Kyumbi,+Machakos,+Kenya" },
 ];
 
 export default function Contact() {
@@ -83,6 +83,8 @@ export default function Contact() {
                                     <a
                                         key={b.name}
                                         href={b.href}
+                                        target="_blank"
+                                        rel="noreferrer"
                                         className="flex items-start gap-4 p-4 border border-silk/10 hover:border-silk/40 hover:bg-silk/5 transition-all group cursor-pointer text-left w-full"
                                     >
                                         <MapPin className="w-5 h-5 text-[#D4AF37] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
