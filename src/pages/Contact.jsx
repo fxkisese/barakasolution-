@@ -21,8 +21,8 @@ const contactDetails = [
 ];
 
 const branches = [
-    { name: "Kyumbi Branch", desc: "Main showroom and full consultation services." },
-    { name: "Whitehouse Footbridge", desc: "Quick orders and convenient pickups." },
+    { name: "Whitehouse Footbridge", desc: "Main showroom and full consultation services.", href: "#" },
+    { name: "Kyumbi Branch", desc: "Quick orders and convenient pickups.", href: "#" },
 ];
 
 export default function Contact() {
@@ -78,15 +78,19 @@ export default function Contact() {
                         {/* Branches */}
                         <div className="bg-obsidian p-8">
                             <h3 className="font-heading font-light text-silk text-xl mb-6">Our Branches</h3>
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {branches.map((b) => (
-                                    <div key={b.name} className="flex items-start gap-4">
-                                        <MapPin className="w-4 h-4 text-[#D4AF37] mt-1 shrink-0" strokeWidth={1.5} />
+                                    <a
+                                        key={b.name}
+                                        href={b.href}
+                                        className="flex items-start gap-4 p-4 border border-silk/10 hover:border-silk/40 hover:bg-silk/5 transition-all group cursor-pointer text-left w-full"
+                                    >
+                                        <MapPin className="w-5 h-5 text-[#D4AF37] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
                                         <div>
-                                            <p className="text-silk text-sm font-medium">{b.name}</p>
-                                            <p className="text-silk/50 text-xs mt-0.5">{b.desc}</p>
+                                            <p className="text-silk text-sm font-medium group-hover:text-white transition-colors">{b.name}</p>
+                                            <p className="text-silk/50 text-xs mt-1 group-hover:text-silk/70 transition-colors">{b.desc}</p>
                                         </div>
-                                    </div>
+                                    </a>
                                 ))}
                             </div>
                             <a
