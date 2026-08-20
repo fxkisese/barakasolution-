@@ -22,7 +22,7 @@ const contactDetails = [
 
 const branches = [
     { name: "Whitehouse Footbridge", desc: "Main showroom and full consultation services.", href: "https://maps.app.goo.gl/GqYhm6EgCxwCG8pm7" },
-    { name: "Kyumbi Branch", desc: "Quick orders and convenient pickups.", href: "https://www.google.com/maps/search/?api=1&query=Kyumbi,+Machakos,+Kenya" },
+    { name: "Kyumbi Branch", desc: "Quick orders and convenient pickups.", href: "https://maps.app.goo.gl/WqoaxCjCYw8jdpAJ6" },
 ];
 
 export default function Contact() {
