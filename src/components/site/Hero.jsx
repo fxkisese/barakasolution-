@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { Image } from "@/components/ui/image";
 import { supabase } from "@/api/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -56,12 +55,17 @@ export default function Hero() {
                         transition={{ duration: 1.2, ease: "easeInOut" }}
                         className="absolute inset-0 w-full h-full"
                     >
-                        <Image
+                        <img
                             src={currentSlide.image}
                             alt="Hero background"
-                            className="block absolute inset-0 w-full h-full"
-                            style={{ display: 'block' }}
-                            fittingType="fill"
+                            style={{
+                                position: 'absolute',
+                                inset: 0,
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                objectPosition: 'center',
+                            }}
                         />
                     </motion.div>
                 </AnimatePresence>
