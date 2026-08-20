@@ -79,7 +79,7 @@ export default function Footer() {
                         <ul className="mt-5 space-y-4 text-sm text-silk/70">
                             <li className="flex items-start gap-3">
                                 <MapPin className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />
-                                <span>Whitehouse Footbridge & Kyumbi<br/>Nairobi, Kenya</span>
+                                <span>Whitehouse Footbridge & Kyumvi<br/>Nairobi, Kenya</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <Phone className="w-4 h-4 mt-0.5 text-silk/70 shrink-0" strokeWidth={1.5} />

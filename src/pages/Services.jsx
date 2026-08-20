@@ -15,7 +15,7 @@ const services = [
     {
         icon: Truck,
         title: "Safe Delivery",
-        description: "Specialized delivery covering Nairobi, Kyumbi, and surrounding areas. Every item is packed and handled to arrive in perfect condition.",
+        description: "Specialized delivery covering Nairobi, Kyumvi, and surrounding areas. Every item is packed and handled to arrive in perfect condition.",
     },
     {
         icon: ShieldCheck,
@@ -27,7 +27,7 @@ const services = [
 const process = [
     { step: "01", title: "Consultation", body: "We discuss your vision, space, and budget in detail — in-store or on-site." },
     { step: "02", title: "Design & Quote", body: "We provide a detailed quote and technical drawings for your approval." },
-    { step: "03", title: "Crafting", body: "Our team fabricates your pieces with precision in our Kyumbi workshop." },
+    { step: "03", title: "Crafting", body: "Our team fabricates your pieces with precision in our Kyumvi workshop." },
     { step: "04", title: "Delivery & Install", body: "We deliver and professionally install everything, leaving your space ready to enjoy." },
 ];
 

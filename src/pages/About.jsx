@@ -121,7 +121,7 @@ export default function About() {
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="bg-slate-800 p-8 rounded-2xl flex flex-col items-center text-center">
                         <MapPin className="w-10 h-10 text-white mb-4" />
-                        <h3 className="text-xl font-medium mb-2">Kyumbi Branch</h3>
+                        <h3 className="text-xl font-medium mb-2">Kyumvi Branch</h3>
                         <p className="text-slate-400 mb-4">Our flagship showroom featuring our latest collections and full consultation services.</p>
                         <p className="text-sm font-medium text-slate-300">Open Mon-Sat, 8am - 5pm</p>
                     </div>

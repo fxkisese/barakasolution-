@@ -18,7 +18,7 @@ export default function Terms() {
                 <p>We provide a 1-year warranty on installation and electrical components (e.g., LED strips). We do not cover accidental damage, scratches, or breakages that occur after safe installation and handover to the client.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">5. Delivery Policy</h2>
-                <p>We offer delivery services around Nairobi, Kyumbi, and surrounding areas. It is the customer's responsibility to ensure that the delivery route at the destination is clear and safe for handling fragile materials.</p>
+                <p>We offer delivery services around Nairobi, Kyumvi, and surrounding areas. It is the customer's responsibility to ensure that the delivery route at the destination is clear and safe for handling fragile materials.</p>
                 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">6. Modifications</h2>
                 <p>We reserve the right to modify these Terms of Service at any time. We will notify our clients of any significant changes via our website or email.</p>

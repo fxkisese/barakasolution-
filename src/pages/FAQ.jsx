@@ -21,7 +21,7 @@ const faqs = [
     },
     {
         question: "Can I visit your showroom?",
-        answer: "Absolutely. Visit our main branch at Kyumbi or our pickup point at Whitehouse Footbridge. Our team is always ready to guide you through physical samples and product catalogs.",
+        answer: "Absolutely. Visit our main branch at Kyumvi or our pickup point at Whitehouse Footbridge. Our team is always ready to guide you through physical samples and product catalogs.",
     },
     {
         question: "Do you handle large commercial projects?",
