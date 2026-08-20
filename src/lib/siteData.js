@@ -1,6 +1,16 @@
 // Centralised content for the Luxe Craft Furniture flagship.
 // All product/category images come from the Supabase admin panel.
 
+export const MEGA_MENU_LINKS = [
+    { label: "Home",        href: "/",          hasDropdown: false },
+    { label: "Shop",        href: "/shop",       hasDropdown: false },
+    { label: "Collections", href: "/shop",       hasDropdown: true  },
+    { label: "About Us",    href: "/about",      hasDropdown: false },
+    { label: "Blog",        href: "/blog",       hasDropdown: false },
+    { label: "Contact",     href: "/contact",    hasDropdown: false },
+    { label: "SALE",        href: "/shop",       hasDropdown: false, isRed: true },
+];
+
 
 export const TESTIMONIALS = [
     {
