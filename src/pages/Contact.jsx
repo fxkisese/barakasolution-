@@ -21,7 +21,7 @@ const contactDetails = [
 ];
 
 const branches = [
-    { name: "Whitehouse Footbridge", desc: "Main showroom and full consultation services.", href: "https://www.google.com/maps/search/?api=1&query=Whitehouse+Footbridge,+Nairobi,+Kenya" },
+    { name: "Whitehouse Footbridge", desc: "Main showroom and full consultation services.", href: "https://maps.app.goo.gl/GqYhm6EgCxwCG8pm7" },
     { name: "Kyumbi Branch", desc: "Quick orders and convenient pickups.", href: "https://www.google.com/maps/search/?api=1&query=Kyumbi,+Machakos,+Kenya" },
 ];
 
