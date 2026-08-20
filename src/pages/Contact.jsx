@@ -7,16 +7,19 @@ const contactDetails = [
         icon: Phone,
         label: "Phone & WhatsApp",
         lines: ["+254 797 624 196"],
+        href: "tel:+254797624196",
     },
     {
         icon: Mail,
         label: "Email",
         lines: ["info@barakasolutions.com"],
+        href: "mailto:info@barakasolutions.com",
     },
     {
         icon: Clock,
         label: "Business Hours",
         lines: ["Mon – Sat: 8:00 AM – 6:00 PM", "Sunday: Closed"],
+        href: null,
     },
 ];
 
@@ -60,19 +63,28 @@ export default function Contact() {
                         {/* Contact Details */}
                         <div className="bg-white border border-border p-8 space-y-8">
                             <h3 className="font-heading font-light text-xl text-obsidian">Contact Information</h3>
-                            {contactDetails.map((item) => (
-                                <div key={item.label} className="flex items-start gap-4">
-                                    <div className="w-10 h-10 bg-obsidian flex items-center justify-center shrink-0">
-                                        <item.icon className="w-4 h-4 text-silk" strokeWidth={1.5} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[11px] uppercase tracking-[0.2em] text-basalt mb-1">{item.label}</p>
-                                        {item.lines.map((line) => (
-                                            <p key={line} className="text-obsidian text-sm font-medium">{line}</p>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
+                            <div className="space-y-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+                                {contactDetails.map((item) => {
+                                    const Wrapper = item.href ? "a" : "div";
+                                    return (
+                                        <Wrapper 
+                                            key={item.label} 
+                                            href={item.href}
+                                            className={`flex items-start gap-4 p-4 rounded border border-transparent hover:border-obsidian/10 hover:bg-slate-50 transition-all group ${item.href ? 'cursor-pointer' : ''}`}
+                                        >
+                                            <div className="w-10 h-10 bg-obsidian flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                                <item.icon className="w-4 h-4 text-silk" strokeWidth={1.5} />
+                                            </div>
+                                            <div>
+                                                <p className="text-[11px] uppercase tracking-[0.2em] text-basalt mb-1">{item.label}</p>
+                                                {item.lines.map((line) => (
+                                                    <p key={line} className="text-obsidian text-sm font-medium">{line}</p>
+                                                ))}
+                                            </div>
+                                        </Wrapper>
+                                    );
+                                })}
+                            </div>
                         </div>
 
                         {/* Branches */}
