@@ -22,6 +22,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import AdminPanel from '@/pages/admin/AdminPanel';
 import SiteLayout from '@/components/site/SiteLayout';
+import ProtectedAdminRoute from '@/components/ProtectedAdminRoute';
 
 const AuthenticatedApp = () => {
     const { isLoadingAuth } = useAuth();
@@ -54,8 +55,15 @@ const AuthenticatedApp = () => {
                 <Route path="register" element={<Register />} />
             </Route>
 
-            {/* Full admin panel — handles all /admin/* routes internally */}
-            <Route path="/admin/*" element={<AdminPanel />} />
+            {/* Full admin panel — protected: only admin email can access */}
+            <Route
+                path="/admin/*"
+                element={
+                    <ProtectedAdminRoute>
+                        <AdminPanel />
+                    </ProtectedAdminRoute>
+                }
+            />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     );

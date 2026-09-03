@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/api/supabaseClient';
+import { useAuth } from '@/lib/AuthContext';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
 import {
@@ -1303,6 +1304,15 @@ export default function AdminPanel() {
         }
     };
 
+    const { user } = useAuth();
+    const adminEmail = user?.email || '';
+    const adminInitial = adminEmail.charAt(0).toUpperCase() || 'A';
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        window.location.href = '/login';
+    };
+
     return (
         <>
             <Toaster position="top-right" richColors />
@@ -1312,10 +1322,23 @@ export default function AdminPanel() {
                     {/* Top bar */}
                     <header style={{ background: COLORS.surface, borderBottom: `1px solid ${COLORS.border}`, padding: '0 24px', display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0, height: 60 }}>
                         <button onClick={() => setSidebarOpen(o => !o)} style={{ ...iconBtnStyle, background: COLORS.surface2, borderRadius: 8, padding: 7 }}><IconMenu /></button>
-                        <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, fontWeight: 500 }}>Luxe Craft Furniture — Admin Console</span>
+                        <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, fontWeight: 500 }}>Baraka Solutions — Admin Console</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <span style={{ fontSize: 11, fontFamily: fontMono, color: COLORS.muted, letterSpacing: '0.05em' }}>{new Date().toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                            <div style={{ width: 32, height: 32, borderRadius: '50%', background: `linear-gradient(135deg, ${COLORS.goldBright}, ${COLORS.gold})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 13 }}>B</div>
+                            {/* Admin email badge */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: COLORS.surface2, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: '4px 12px 4px 6px' }}>
+                                <div style={{ width: 28, height: 28, borderRadius: '50%', background: `linear-gradient(135deg, ${COLORS.goldBright}, ${COLORS.gold})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{adminInitial}</div>
+                                <span style={{ fontSize: 12, color: COLORS.muted, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{adminEmail}</span>
+                            </div>
+                            {/* Logout button */}
+                            <button
+                                onClick={handleLogout}
+                                title="Sign out"
+                                style={{ ...iconBtnStyle, background: COLORS.rustSoft, color: COLORS.rust, borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6, border: `1px solid ${COLORS.rust}33` }}
+                            >
+                                <IconLogout />
+                                <span>Logout</span>
+                            </button>
                         </div>
                     </header>
                     {/* Content */}
