@@ -85,15 +85,18 @@ export function sendAddToCartWhatsApp(product) {
     openWA(ADMIN_PHONE, msg);
 }
 
-export function sendProductInquiryWhatsApp(product) {
+export function sendProductInquiryWhatsApp(product, productUrl) {
+    const formattedPrice = `KSh ${Number(product.price || 0).toLocaleString('en-KE', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`;
+    const url = productUrl || (typeof window !== 'undefined' ? window.location.href : '');
     const msg =
-        `❓ *Product Inquiry — Luxe Craft Furniture*\n\n` +
-        `Hello! I have a question about this product:\n\n` +
-        `*Item:* ${product.name}\n` +
-        `*Category:* ${product.category || 'N/A'}\n` +
-        `*Price:* ${fmt(product.price || 0)}\n` +
-        (product.image ? `*Product Image:* ${product.image}\n` : '') +
-        `\nCould you provide more details?`;
+        `Hello, I want to purchase:\n\n` +
+        `*${product.name}*\n` +
+        `*Price:* ${formattedPrice}\n` +
+        `*URL:* ${url}\n\n` +
+        `Thank you!`;
     openWA(ADMIN_PHONE, msg);
 }
 

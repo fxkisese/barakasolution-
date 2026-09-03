@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/api/supabaseClient";
-import { MessageSquare, X, Send, Bot, User } from "lucide-react";
+import { MessageSquare, X, Send, Bot } from "lucide-react";
 
 export default function AIChatFloat() {
     const [isOpen, setIsOpen] = useState(false);

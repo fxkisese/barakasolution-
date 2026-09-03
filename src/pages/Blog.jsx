@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { Calendar, User } from "lucide-react";
 import { supabase } from "@/api/supabaseClient";
 
 export default function Blog() {

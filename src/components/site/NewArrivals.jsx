@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { ArrowUpRight, Plus, MessageCircle, ShoppingBag, Eye, Sparkles } from "lucide-react";
+import { ArrowUpRight, ShoppingBag, Eye } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { formatPrice } from "@/lib/siteData";
 import { supabase } from "@/api/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
-import { sendAddToCartWhatsApp, sendProductInquiryWhatsApp } from "@/utils/whatsapp";
 import { useCart } from "@/lib/CartContext";
 import ProductModal from "./ProductModal";
 

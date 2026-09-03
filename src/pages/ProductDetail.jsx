@@ -109,7 +109,7 @@ export default function ProductDetail() {
                             Add to Cart
                         </button>
                         <button
-                            onClick={() => sendProductInquiryWhatsApp(product)}
+                            onClick={() => sendProductInquiryWhatsApp(product, window.location.href)}
                             className="flex items-center justify-center w-full border border-obsidian text-obsidian px-8 py-4 font-medium hover:bg-obsidian/5 transition-colors text-[13px] uppercase tracking-[0.15em]"
                         >
                             <MessageCircle className="w-5 h-5 mr-3" strokeWidth={1.5} />
