@@ -1424,8 +1424,23 @@ export default function AdminPanel() {
                 {modal === 'hero_slide' && (
                     <Modal title="Add Hero Slide" onClose={() => setModal(null)}>
                         <HeroSlideForm onClose={() => setModal(null)} onSave={async (data) => {
+                            // Try inserting with video_url first
                             const { data: saved, error } = await supabase.from('hero_slides').insert(data).select().single();
-                            if (error) { toast.error(error.message); return; }
+                            if (error) {
+                                if (error.message?.includes('video_url') || error.code === '42703') {
+                                    // Column doesn't exist yet — retry without video_url and warn
+                                    const { video_url, ...rest } = data;
+                                    const { data: saved2, error: error2 } = await supabase.from('hero_slides').insert(rest).select().single();
+                                    if (error2) { toast.error(error2.message); return; }
+                                    setHeroSlides(prev => [saved2, ...prev]);
+                                    toast.success('Slide added! ⚠️ Video not saved — run SQL migration first.');
+                                    toast.error('Run in Supabase SQL editor: ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS video_url text;', { duration: 10000 });
+                                    setModal(null);
+                                } else {
+                                    toast.error(error.message);
+                                }
+                                return;
+                            }
                             setHeroSlides(prev => [saved, ...prev]);
                             toast.success('Slide added!');
                             setModal(null);
