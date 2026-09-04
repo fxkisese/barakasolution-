@@ -464,23 +464,24 @@ function ProductForm({ onSubmit, onCancel, initialData = null }) {
     );
 }
 
-function HeroSlideForm({ onClose, onSave }) {
-    const [data, setData] = useState({ title: '', subtitle: '', image: '' });
-    const [uploading, setUploading] = useState(false);
 
-    const handleUpload = async (e) => {
+function HeroSlideForm({ onClose, onSave }) {
+    const [data, setData] = useState({ title: '', subtitle: '', image: '', video_url: '' });
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadingVideo, setUploadingVideo] = useState(false);
+
+    /* ── Image upload (auto-converts to optimised JPEG) ── */
+    const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        setUploading(true);
-
+        setUploadingImage(true);
         try {
-            // Helper to convert any image to an optimized JPEG
             const processImage = (file) => new Promise((resolve, reject) => {
                 const url = URL.createObjectURL(file);
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 1600; // slightly larger for hero images
+                    const MAX_SIZE = 1600;
                     let w = img.width, h = img.height;
                     if (w > MAX_SIZE || h > MAX_SIZE) {
                         if (w > h) { h = Math.round((h * MAX_SIZE) / w); w = MAX_SIZE; }
@@ -493,34 +494,99 @@ function HeroSlideForm({ onClose, onSave }) {
                     canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85);
                     URL.revokeObjectURL(url);
                 };
-                img.onerror = () => reject(new Error('Failed to load image for processing'));
+                img.onerror = () => reject(new Error('Failed to load image'));
                 img.src = url;
             });
-
             const processedBlob = await processImage(file);
             const name = `hero-${Date.now()}.jpg`;
-            
             const { error } = await supabase.storage.from('images').upload(name, processedBlob);
             if (error) throw error;
-            
             const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(name);
-            setData({ ...data, image: publicUrl });
-            toast.success('Image uploaded successfully');
+            setData(d => ({ ...d, image: publicUrl }));
+            toast.success('Image uploaded ✓');
         } catch (err) {
-            toast.error('Upload failed: ' + err.message);
+            toast.error('Image upload failed: ' + err.message);
         } finally {
-            setUploading(false);
+            setUploadingImage(false);
         }
     };
 
+    /* ── Video upload ── */
+    const handleVideoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const sizeMB = file.size / 1024 / 1024;
+        if (sizeMB > 100) {
+            toast.error('Video too large. Please use a file under 100 MB.');
+            return;
+        }
+        setUploadingVideo(true);
+        try {
+            const ext = file.name.split('.').pop();
+            const path = `hero-videos/${Date.now()}.${ext}`;
+            const { error } = await supabase.storage.from('images').upload(path, file, { contentType: file.type });
+            if (error) throw error;
+            const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(path);
+            setData(d => ({ ...d, video_url: publicUrl }));
+            toast.success('Video uploaded ✓');
+        } catch (err) {
+            toast.error('Video upload failed: ' + err.message);
+        } finally {
+            setUploadingVideo(false);
+        }
+    };
+
+    const canSave = (data.image || data.video_url) && !uploadingImage && !uploadingVideo;
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+            {/* ── Video upload ── */}
             <div>
-                <label style={labelStyle}>Slide Image</label>
-                <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} style={{ display: 'block', marginBottom: 10 }} />
-                {uploading && <div style={{ fontSize: 12, color: COLORS.muted }}>Uploading... Please wait.</div>}
-                {data.image && <img src={data.image} alt="" style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 6, marginTop: 10 }} />}
+                <label style={labelStyle}>🎬 Background Video (MP4 · WebM) — cinematic autoplay</label>
+                <label style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '9px 16px', borderRadius: 8, border: `1.5px solid ${uploadingVideo ? COLORS.goldBright : COLORS.border}`,
+                    cursor: uploadingVideo ? 'wait' : 'pointer', fontSize: 13, fontWeight: 500,
+                    color: uploadingVideo ? COLORS.goldBright : COLORS.text, background: COLORS.surface2,
+                    marginBottom: 8, transition: 'border-color 0.2s',
+                }}>
+                    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    {uploadingVideo ? 'Uploading video… please wait' : 'Upload video from computer'}
+                    <input type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime" onChange={handleVideoUpload} disabled={uploadingVideo} style={{ display: 'none' }} />
+                </label>
+                {data.video_url && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(139,92,246,0.07)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 8, padding: '8px 12px', marginTop: 6 }}>
+                        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth={2}><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        <span style={{ fontSize: 12, color: '#7c3aed', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{data.video_url}</span>
+                        <button type="button" onClick={() => setData(d => ({ ...d, video_url: '' }))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 16, lineHeight: 1, padding: 2 }}>×</button>
+                    </div>
+                )}
+                <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 4 }}>
+                    Recommended: MP4 under 30 MB for fast loading. Video plays muted &amp; looping on the homepage.
+                </div>
             </div>
+
+            {/* ── Image upload ── */}
+            <div>
+                <label style={labelStyle}>{data.video_url ? '🖼 Fallback Image (shown if video fails)' : '🖼 Slide Image'}</label>
+                <label style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '9px 16px', borderRadius: 8, border: `1.5px solid ${uploadingImage ? COLORS.goldBright : COLORS.border}`,
+                    cursor: uploadingImage ? 'wait' : 'pointer', fontSize: 13, fontWeight: 500,
+                    color: uploadingImage ? COLORS.goldBright : COLORS.text, background: COLORS.surface2,
+                    marginBottom: 8, transition: 'border-color 0.2s',
+                }}>
+                    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                    {uploadingImage ? 'Uploading… please wait' : 'Upload image from computer'}
+                    <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} style={{ display: 'none' }} />
+                </label>
+                {data.image && (
+                    <img src={data.image} alt="" style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginTop: 4, border: `1px solid ${COLORS.border}` }} />
+                )}
+            </div>
+
+            {/* ── Text fields ── */}
             <div>
                 <label style={labelStyle}>Title</label>
                 <input style={inputStyle} value={data.title} onChange={e => setData({ ...data, title: e.target.value })} placeholder="e.g. Durable. Stylish." />
@@ -529,9 +595,10 @@ function HeroSlideForm({ onClose, onSave }) {
                 <label style={labelStyle}>Subtitle (Eyebrow text above title)</label>
                 <input style={inputStyle} value={data.subtitle} onChange={e => setData({ ...data, subtitle: e.target.value })} placeholder="e.g. Discover the perfect design" />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 24 }}>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 8 }}>
                 <button type="button" style={btnSecondary} onClick={onClose}>Cancel</button>
-                <button type="button" style={btnPrimary} onClick={() => onSave(data)} disabled={!data.image || !data.title || uploading}>Save Slide</button>
+                <button type="button" style={{ ...btnPrimary, opacity: canSave ? 1 : 0.5 }} onClick={() => onSave(data)} disabled={!canSave}>Save Slide</button>
             </div>
         </div>
     );
