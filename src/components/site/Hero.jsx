@@ -1,8 +1,48 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { supabase } from "@/api/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
+
+/** Returns true if the URL looks like a video file */
+function isVideoUrl(url) {
+    if (!url) return false;
+    return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url);
+}
+
+/** Fullscreen background video with autoplay, loop, muted */
+function HeroVideo({ src, key: _key }) {
+    const videoRef = useRef(null);
+
+    useEffect(() => {
+        const vid = videoRef.current;
+        if (!vid) return;
+        vid.load();
+        vid.play().catch(() => {/* autoplay blocked — silently ignore */});
+    }, [src]);
+
+    return (
+        <video
+            ref={videoRef}
+            key={src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+            }}
+        >
+            <source src={src} />
+        </video>
+    );
+}
 
 export default function Hero() {
     const [slides, setSlides] = useState([]);
@@ -10,7 +50,10 @@ export default function Hero() {
 
     useEffect(() => {
         async function fetchSlides() {
-            const { data } = await supabase.from('hero_slides').select('*').order('created_at', { ascending: false });
+            const { data } = await supabase
+                .from('hero_slides')
+                .select('*')
+                .order('created_at', { ascending: false });
             if (data && data.length > 0) {
                 setSlides(data);
             }
@@ -22,12 +65,17 @@ export default function Hero() {
         if (slides.length <= 1) return;
         const timer = setInterval(() => {
             setCurrentIndex(prev => (prev + 1) % slides.length);
-        }, 6000);
+        }, 8000); // slightly longer for video slides
         return () => clearInterval(timer);
     }, [slides.length]);
 
     const currentSlide = slides[currentIndex] || null;
     const hasSlides = slides.length > 0;
+
+    // Determine media type of current slide
+    const videoSrc = currentSlide?.video_url || null;
+    const imageSrc = currentSlide?.image || currentSlide?.image_url || null;
+    const isVideo = !!videoSrc;
 
     // Simple parser to allow italicizing parts of the title by wrapping them in asterisks like *Stylish.*
     const renderTitle = (text) => {
@@ -44,38 +92,51 @@ export default function Hero() {
 
     return (
         <section id="top" className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-obsidian">
-            {/* Only render slide images when admin has uploaded them */}
+
+            {/* ── Media layer (video or image) ── */}
             {hasSlides && (
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={currentSlide.id}
-                        initial={{ opacity: 0, scale: 1.05 }}
+                        initial={{ opacity: 0, scale: isVideo ? 1 : 1.05 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 1.2, ease: "easeInOut" }}
+                        transition={{ duration: isVideo ? 0.8 : 1.2, ease: "easeInOut" }}
                         className="absolute inset-0 w-full h-full"
                     >
-                        <img
-                            src={currentSlide.image}
-                            alt="Hero background"
-                            style={{
-                                position: 'absolute',
-                                inset: 0,
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                                objectPosition: 'center',
-                            }}
-                        />
+                        {isVideo ? (
+                            <HeroVideo src={videoSrc} />
+                        ) : imageSrc ? (
+                            <img
+                                src={imageSrc}
+                                alt="Hero background"
+                                style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                }}
+                            />
+                        ) : null}
                     </motion.div>
                 </AnimatePresence>
             )}
 
-            {/* Gradient overlays — shown always (darker when no image) */}
-            {/* Gradient: on mobile full dark overlay so text is readable; on md+ fade right */}
+            {/* ── Gradient overlays ── */}
             <div className={`absolute inset-0 z-10 ${hasSlides ? 'bg-gradient-to-b from-obsidian/70 via-obsidian/50 to-obsidian/80 md:bg-gradient-to-r md:from-obsidian/90 md:via-obsidian/60 md:to-obsidian/30' : 'bg-obsidian/80'}`} />
             <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-transparent z-10" />
 
+            {/* ── Video indicator badge ── */}
+            {isVideo && (
+                <div className="absolute top-6 right-6 z-30 flex items-center gap-2 bg-black/40 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1.5">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-white/70 text-[10px] uppercase tracking-widest font-medium">Live</span>
+                </div>
+            )}
+
+            {/* ── Text content ── */}
             <div className="relative z-20 h-full mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 flex flex-col justify-end md:justify-center pb-16 pt-28 md:py-32">
                 <AnimatePresence mode="wait">
                     <motion.div
@@ -121,15 +182,21 @@ export default function Hero() {
                     </motion.div>
                 </AnimatePresence>
 
-                {/* Dots indicator — only when multiple admin slides exist */}
+                {/* Dots indicator — only when multiple slides */}
                 {slides.length > 1 && (
                     <div className="absolute bottom-12 left-6 lg:left-12 flex gap-3 z-30">
-                        {slides.map((_, idx) => (
+                        {slides.map((slide, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => setCurrentIndex(idx)}
+                                aria-label={`Go to slide ${idx + 1}`}
                                 className={`h-1 transition-all duration-300 ${idx === currentIndex ? 'w-10 bg-white' : 'w-4 bg-white/30 hover:bg-white/50'}`}
-                            />
+                            >
+                                {/* Show small video icon on video slides */}
+                                {isVideoUrl(slide.video_url) && (
+                                    <span className="sr-only">Video</span>
+                                )}
+                            </button>
                         ))}
                     </div>
                 )}

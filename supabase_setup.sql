@@ -50,3 +50,7 @@ create policy "Allow all actions for authenticated admins on inquiries" on inqui
 create policy "Allow all actions for authenticated admins on ai_conversations" on ai_conversations for all to authenticated using (true);
 create policy "Allow all actions for authenticated admins on escalations" on escalations for all to authenticated using (true);
 create policy "Allow all actions for authenticated admins on digest_log" on digest_log for all to authenticated using (true);
+
+-- Hero slides: add video support
+-- Run this if the hero_slides table already exists (Supabase dashboard → SQL editor)
+alter table hero_slides add column if not exists video_url text;
