@@ -3,6 +3,7 @@ import Navbar from "@/components/site/Navbar";
 import Footer from "@/components/site/Footer";
 import WhatsAppFloat from "@/components/site/WhatsAppFloat";
 import CartDrawer from "@/components/site/CartDrawer";
+import CookieBanner from "@/components/site/CookieBanner";
 
 export default function SiteLayout() {
     return (
@@ -14,6 +15,7 @@ export default function SiteLayout() {
             <Footer />
             <WhatsAppFloat />
             <CartDrawer />
+            <CookieBanner />
         </div>
     );
 }

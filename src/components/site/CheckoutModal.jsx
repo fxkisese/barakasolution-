@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useCart } from "@/lib/CartContext";
 import { formatPrice } from "@/lib/siteData";
 import { sendCartCheckoutWhatsApp } from "@/utils/whatsapp";
+import { trackBeginCheckout, trackPurchase, trackWhatsAppClick } from "@/utils/analytics";
 
 export default function CheckoutModal({ open, onOpenChange }) {
     const { cartItems, cartTotal, clearCart } = useCart();
@@ -17,11 +18,16 @@ export default function CheckoutModal({ open, onOpenChange }) {
 
     const handleNext = (e) => {
         e.preventDefault();
-        if (step === 1) setStep(2);
+        if (step === 1) {
+            trackBeginCheckout(cartItems, cartTotal);
+            setStep(2);
+        }
     };
 
     const handleComplete = (e) => {
         e.preventDefault();
+        trackPurchase(cartItems, cartTotal);
+        trackWhatsAppClick('checkout');
         sendCartCheckoutWhatsApp(cartItems, cartTotal, details);
         clearCart();
         setStep(1); // Reset

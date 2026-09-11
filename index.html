@@ -26,6 +26,33 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet" />
     <title>Luxe Craft Furniture — Curated Living, Nairobi</title>
+
+    <!-- Google Analytics 4 — Consent Mode v2 (defaults: denied until visitor accepts) -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        // Set default consent state BEFORE the GA4 script loads
+        gtag('consent', 'default', {
+            analytics_storage: 'denied',
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            wait_for_update: 500
+        });
+        gtag('js', new Date());
+    </script>
+    <!-- Load GA4 async — measurement ID is injected at runtime from env var -->
+    <script>
+        (function () {
+            var id = '__VITE_GA_ID__'; // replaced by the Vite plugin below
+            if (!id || id.startsWith('__')) return; // skip if no ID configured
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+            document.head.appendChild(s);
+            gtag('config', id, { send_page_view: false }); // page views sent manually via usePageTracking
+        })();
+    </script>
 </head>
 
 <body>

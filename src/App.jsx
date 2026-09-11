@@ -5,7 +5,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { CartProvider } from '@/lib/CartContext';
+import { CookieProvider } from '@/lib/CookieContext';
 import ScrollToTop from './components/ScrollToTop';
+import { usePageTracking } from '@/hooks/usePageTracking';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Shop from '@/pages/Shop';
@@ -18,6 +20,7 @@ import TestimonialsPage from '@/pages/TestimonialsPage';
 import Blog from '@/pages/Blog';
 import Terms from '@/pages/Terms';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import CookiePolicy from '@/pages/CookiePolicy';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import AdminPanel from '@/pages/admin/AdminPanel';
@@ -26,6 +29,7 @@ import ProtectedAdminRoute from '@/components/ProtectedAdminRoute';
 
 const AuthenticatedApp = () => {
     const { isLoadingAuth } = useAuth();
+    usePageTracking(); // fires page_view on every route change
 
     if (isLoadingAuth) {
         return (
@@ -51,6 +55,7 @@ const AuthenticatedApp = () => {
                 <Route path="blog" element={<Blog />} />
                 <Route path="terms" element={<Terms />} />
                 <Route path="privacy" element={<PrivacyPolicy />} />
+                <Route path="cookies" element={<CookiePolicy />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
             </Route>
@@ -71,17 +76,19 @@ const AuthenticatedApp = () => {
 
 function App() {
     return (
-        <AuthProvider>
-            <CartProvider>
-                <QueryClientProvider client={queryClientInstance}>
-                    <Router>
-                        <ScrollToTop />
-                        <AuthenticatedApp />
-                    </Router>
-                    <Toaster />
-                </QueryClientProvider>
-            </CartProvider>
-        </AuthProvider>
+        <CookieProvider>
+            <AuthProvider>
+                <CartProvider>
+                    <QueryClientProvider client={queryClientInstance}>
+                        <Router>
+                            <ScrollToTop />
+                            <AuthenticatedApp />
+                        </Router>
+                        <Toaster />
+                    </QueryClientProvider>
+                </CartProvider>
+            </AuthProvider>
+        </CookieProvider>
     )
 }
 

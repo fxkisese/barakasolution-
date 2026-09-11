@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
+import { trackFormSubmit } from "@/utils/analytics";
 
 export default function Newsletter() {
     const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function Newsletter() {
     const submit = (e) => {
         e.preventDefault();
         if (!email) return;
+        trackFormSubmit('newsletter');
         setDone(true);
     };
 

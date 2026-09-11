@@ -1,4 +1,5 @@
 import { Instagram, Facebook, Twitter, MapPin, Phone } from "lucide-react";
+import { useCookies } from "@/lib/CookieContext";
 
 const SHOP_LINKS = [
     { label: "Home", href: "/" },
@@ -15,6 +16,7 @@ const CATEGORY_LINKS = [
 ];
 
 export default function Footer() {
+    const { openPreferences } = useCookies();
     return (
         <footer id="contact" className="scroll-mt-24 bg-obsidian text-silk">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-12 py-20">
@@ -96,9 +98,17 @@ export default function Footer() {
                     <p className="text-silk/40 text-xs">
                         © {new Date().getFullYear()} Luxe Craft Furniture. All rights reserved.
                     </p>
-                    <div className="flex gap-6 text-silk/40 text-xs">
+                <div className="flex flex-wrap gap-6 text-silk/40 text-xs">
                         <a href="/privacy" className="hover:text-silk transition-colors">Privacy Policy</a>
                         <a href="/terms" className="hover:text-silk transition-colors">Terms of Service</a>
+                        <a href="/cookies" className="hover:text-silk transition-colors">Cookie Policy</a>
+                        <button
+                            id="footer-cookie-preferences-btn"
+                            onClick={openPreferences}
+                            className="hover:text-silk transition-colors cursor-pointer text-silk/40 text-xs"
+                        >
+                            Cookie Preferences
+                        </button>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/api/supabaseClient";
 import { toast } from "sonner";
 import { Send, CheckCircle2 } from "lucide-react";
+import { trackFormSubmit } from "@/utils/analytics";
 
 export default function ContactForm() {
     const [name, setName] = useState("");
@@ -31,8 +32,10 @@ export default function ContactForm() {
             if (data?.status === 'auto_handled' && data?.ai_reply) {
                 setAiReply(data.ai_reply);
                 setSuccess(true);
+                trackFormSubmit('contact');
             } else {
                 setSuccess(true);
+                trackFormSubmit('contact');
                 toast.success("Inquiry sent successfully. Our team will get back to you shortly!");
             }
         } catch (err) {

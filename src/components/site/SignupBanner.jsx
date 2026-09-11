@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Tag, ArrowRight, Check, Sparkles, Gift } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { trackFormSubmit } from "@/utils/analytics";
 
 const STORAGE_KEY = "baraka_signup_banner_dismissed";
 
@@ -39,6 +40,7 @@ export default function SignupBanner() {
         }
         setError("");
         setDone(true);
+        trackFormSubmit('signup_banner');
         // Auto-close after 2.5 s on success
         setTimeout(() => dismiss(), 2500);
     };
