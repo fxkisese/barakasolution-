@@ -136,5 +136,8 @@ export function getDeliveryQuote(
         distanceKm,
         fee,
         isFree,
+        // Customer GPS — used to build a Google Maps pin link in the WhatsApp message
+        customerLat,
+        customerLng,
     };
 }

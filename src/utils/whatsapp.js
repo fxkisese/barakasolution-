@@ -110,12 +110,45 @@ export function sendCartCheckoutWhatsApp(cartItems, total, details, deliveryQuot
     msg += `*Customer:* ${details.name}\n`;
     msg += `*Phone:* ${details.phone}\n`;
     if (details.address) msg += `*Address Notes:* ${details.address}\n`;
-    msg += `\n*Items:*\n`;
 
-    cartItems.forEach(item => {
-        msg += `- ${item.quantity}x ${item.name} (${fmt(item.price || 0)})\n`;
+    // ── Delivery location + directions from shop ────────────────────────────
+    if (deliveryQuote?.customerLat != null && deliveryQuote?.customerLng != null) {
+        const { customerLat, customerLng, nearestBranch } = deliveryQuote;
+        const branchLat = nearestBranch?.lat ?? -1.3040;
+        const branchLng = nearestBranch?.lng ?? 36.8695;
+        const branchName = nearestBranch?.shortName || nearestBranch?.name || 'Shop';
+
+        // Pin drop location
+        msg += `*📍 Customer Pin:* https://www.google.com/maps?q=${customerLat},${customerLng}\n`;
+
+        // Directions URL: branch → customer (opens Google Maps turn-by-turn)
+        const directionsUrl = `https://www.google.com/maps/dir/${branchLat},${branchLng}/${customerLat},${customerLng}`;
+        msg += `*🗺️ Directions from ${branchName}:* ${directionsUrl}\n`;
+
+        // Static map image (requires VITE_GOOGLE_MAPS_KEY in .env.local)
+        const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
+        if (mapsKey) {
+            const centerLat = (((Number(branchLat) + Number(customerLat)) / 2)).toFixed(5);
+            const centerLng = (((Number(branchLng) + Number(customerLng)) / 2)).toFixed(5);
+            const staticMapUrl =
+                `https://maps.googleapis.com/maps/api/staticmap` +
+                `?size=600x400` +
+                `&center=${centerLat},${centerLng}` +
+                `&markers=color:green%7Clabel:S%7C${branchLat},${branchLng}` +
+                `&markers=color:red%7Clabel:D%7C${customerLat},${customerLng}` +
+                `&path=color:0x1a73e8CC%7Cweight:4%7C${branchLat},${branchLng}%7C${customerLat},${customerLng}` +
+                `&key=${mapsKey}`;
+            msg += `*🗺️ Map Image:* ${staticMapUrl}\n`;
+        }
+    }
+
+    // ── Items list ──────────────────────────────────────────────────────────
+    msg += `\n*Items:*\n`;
+    cartItems.forEach((item, i) => {
+        msg += `${i + 1}. ${item.quantity}x *${item.name}* — ${fmt(item.price || 0)}\n`;
     });
 
+    // ── Totals ──────────────────────────────────────────────────────────────
     msg += `\n*Subtotal:* ${fmt(total)}`;
 
     if (deliveryQuote) {
@@ -132,5 +165,18 @@ export function sendCartCheckoutWhatsApp(cartItems, total, details, deliveryQuot
 
     msg += `\n\nI would like to complete my payment for this order.`;
 
+    // ── Product photos — bare URLs at the end trigger WhatsApp image previews
+    // WhatsApp renders a rich preview card for the last URL it finds in a message.
+    // Placing each image URL on its own line after all text maximises preview chances.
+    const itemsWithImages = cartItems.filter(item => item.image && String(item.image).startsWith('http'));
+    if (itemsWithImages.length > 0) {
+        msg += `\n\n📸 *Item Photos:*`;
+        itemsWithImages.forEach(item => {
+            // Each image URL on its own line — WhatsApp generates a preview card per URL
+            msg += `\n${item.name}:\n${item.image}`;
+        });
+    }
+
     openWA(ADMIN_PHONE, msg);
 }
+
