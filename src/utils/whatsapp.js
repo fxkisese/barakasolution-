@@ -105,19 +105,32 @@ export function sendGeneralInquiryWhatsApp() {
     openWA(ADMIN_PHONE, msg);
 }
 
-export function sendCartCheckoutWhatsApp(cartItems, total, details) {
+export function sendCartCheckoutWhatsApp(cartItems, total, details, deliveryQuote = null) {
     let msg = `🛍️ *New Store Order — Luxe Craft Furniture*\n\n`;
     msg += `*Customer:* ${details.name}\n`;
     msg += `*Phone:* ${details.phone}\n`;
-    msg += `*Address:* ${details.address}\n\n`;
-    msg += `*Items:*\n`;
-    
+    if (details.address) msg += `*Address Notes:* ${details.address}\n`;
+    msg += `\n*Items:*\n`;
+
     cartItems.forEach(item => {
         msg += `- ${item.quantity}x ${item.name} (${fmt(item.price || 0)})\n`;
     });
-    
-    msg += `\n*Total Amount:* ${fmt(total)}\n\n`;
-    msg += `I would like to complete my payment for this order.`;
-    
+
+    msg += `\n*Subtotal:* ${fmt(total)}`;
+
+    if (deliveryQuote) {
+        if (deliveryQuote.isFree) {
+            msg += `\n*Delivery:* FREE (within ${deliveryQuote.distanceKm}km of ${deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name || 'nearest branch'})`;
+        } else {
+            msg += `\n*Delivery:* ${fmt(deliveryQuote.fee)} (${deliveryQuote.distanceKm}km from ${deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name || 'nearest branch'})`;
+        }
+        const grandTotal = total + (deliveryQuote.fee || 0);
+        msg += `\n*Grand Total:* ${fmt(grandTotal)}`;
+    } else {
+        msg += `\n*Total Amount:* ${fmt(total)}`;
+    }
+
+    msg += `\n\nI would like to complete my payment for this order.`;
+
     openWA(ADMIN_PHONE, msg);
 }
