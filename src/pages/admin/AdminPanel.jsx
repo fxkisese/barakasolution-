@@ -534,19 +534,13 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                                                     )}
 
                                                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                                        {/* Dropdown — pick from existing images */}
-                                                        <select
-                                                            style={{ ...inputStyle, fontSize: 11, padding: '4px 6px', background: COLORS.surface }}
-                                                            value={row.image}
-                                                            onChange={e => updateRow(idx, 'image', e.target.value)}
-                                                            disabled={loadingImages}
-                                                            title="Pick an existing image"
-                                                        >
-                                                            <option value="">{loadingImages ? 'Loading…' : '— Pick existing image —'}</option>
-                                                            {existingImages.map((img, i) => (
-                                                                <option key={i} value={img.url}>{img.label}</option>
-                                                            ))}
-                                                        </select>
+                                                        {/* Visual picker — pick from existing images */}
+                                                        <ImageGridPicker 
+                                                            images={existingImages} 
+                                                            loading={loadingImages} 
+                                                            value={row.image} 
+                                                            onChange={url => updateRow(idx, 'image', url)} 
+                                                        />
 
                                                         {/* Upload new image button */}
                                                         <label
@@ -655,6 +649,57 @@ function BulkTemplateModal({ onClose, onConfirm }) {
     );
 }
 
+/* ---------- Reusable visual image grid picker ---------- */
+function ImageGridPicker({ images, loading, value, onChange }) {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <button 
+                type="button" 
+                style={{ ...btnSecondary, padding: '4px 8px', fontSize: 11, width: '100%', justifyContent: 'center' }}
+                onClick={() => setOpen(true)}
+                disabled={loading}
+            >
+                {loading ? 'Loading…' : '🖼 Browse images'}
+            </button>
+
+            {open && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,8,6,0.7)', padding: 16 }} onClick={() => setOpen(false)}>
+                    <div style={{ background: COLORS.surface, borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
+                        <div style={{ padding: '16px 20px', borderBottom: `1px solid ${COLORS.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: COLORS.surface2 }}>
+                            <h4 style={{ margin: 0, fontSize: 15, fontFamily: fontDisplay, fontWeight: 600, color: COLORS.text }}>Select an Image</h4>
+                            <button onClick={() => setOpen(false)} style={{ ...iconBtnStyle, padding: 4 }}><IconX /></button>
+                        </div>
+                        <div style={{ padding: 20, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 12 }}>
+                            {images.map((img, i) => (
+                                <div 
+                                    key={i} 
+                                    onClick={() => { onChange(img.url); setOpen(false); }}
+                                    style={{ border: `2px solid ${value === img.url ? COLORS.gold : 'transparent'}`, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.15s, border-color 0.15s', background: COLORS.surface2 }}
+                                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                                    title={img.label}
+                                >
+                                    <img src={img.url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
+                                    <div style={{ padding: '6px 8px', fontSize: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: COLORS.text }}>
+                                        {img.label}
+                                    </div>
+                                </div>
+                            ))}
+                            {images.length === 0 && (
+                                <div style={{ gridColumn: '1 / -1', padding: 40, textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>
+                                    No images found.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+}
+
 /* ---------- Reusable existing-image picker (used in ProductForm) ---------- */
 function ExistingImagePicker({ onPick }) {
     const [images, setImages] = useState([]);
@@ -703,18 +748,14 @@ function ExistingImagePicker({ onPick }) {
                     <IconImage style={{ color: COLORS.muted, opacity: 0.4, width: 16, height: 16 }} />
                 </div>
             )}
-            <select
-                style={{ ...inputStyle, fontSize: 13 }}
-                value={selected}
-                onChange={handleChange}
-                disabled={loading}
-                title="Pick an already-uploaded image"
-            >
-                <option value="">{loading ? 'Loading images…' : `— Pick from ${images.length} existing image${images.length !== 1 ? 's' : ''} —`}</option>
-                {images.map((img, i) => (
-                    <option key={i} value={img.url}>{img.label}</option>
-                ))}
-            </select>
+            <div style={{ width: 180 }}>
+                <ImageGridPicker 
+                    images={images} 
+                    loading={loading} 
+                    value={selected} 
+                    onChange={handleChange} 
+                />
+            </div>
         </div>
     );
 }
