@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { supabase } from '@/api/supabaseClient';
 import { useAuth } from '@/lib/AuthContext';
 import { toast } from 'sonner';
@@ -664,8 +665,8 @@ function ImageGridPicker({ images, loading, value, onChange }) {
                 {loading ? 'Loading…' : '🖼 Browse images'}
             </button>
 
-            {open && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,8,6,0.7)', padding: 16 }} onClick={() => setOpen(false)}>
+            {open && createPortal(
+                <div style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,8,6,0.7)', padding: 16 }} onClick={() => setOpen(false)}>
                     <div style={{ background: COLORS.surface, borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
                         <div style={{ padding: '16px 20px', borderBottom: `1px solid ${COLORS.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: COLORS.surface2 }}>
                             <h4 style={{ margin: 0, fontSize: 15, fontFamily: fontDisplay, fontWeight: 600, color: COLORS.text }}>Select an Image</h4>
@@ -675,13 +676,18 @@ function ImageGridPicker({ images, loading, value, onChange }) {
                             {images.map((img, i) => (
                                 <div 
                                     key={i} 
-                                    onClick={() => { onChange(img.url); setOpen(false); }}
+                                    onClick={(e) => { 
+                                        e.preventDefault(); 
+                                        e.stopPropagation(); 
+                                        onChange(img.url); 
+                                        setOpen(false); 
+                                    }}
                                     style={{ border: `2px solid ${value === img.url ? COLORS.gold : 'transparent'}`, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.15s, border-color 0.15s', background: COLORS.surface2 }}
                                     onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
                                     onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                                     title={img.label}
                                 >
-                                    <img src={img.url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
+                                    <img src={img.url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
                                     <div style={{ padding: '6px 8px', fontSize: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: COLORS.text }}>
                                         {img.label}
                                     </div>
@@ -694,7 +700,8 @@ function ImageGridPicker({ images, loading, value, onChange }) {
                             )}
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );
