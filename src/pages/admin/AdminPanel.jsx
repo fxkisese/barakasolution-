@@ -732,8 +732,7 @@ function ExistingImagePicker({ onPick }) {
         })();
     }, []);
 
-    const handleChange = (e) => {
-        const url = e.target.value;
+    const handleChange = (url) => {
         setSelected(url);
         if (url) onPick(url);
     };
