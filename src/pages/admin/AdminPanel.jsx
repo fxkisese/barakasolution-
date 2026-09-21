@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { supabase } from '@/api/supabaseClient';
 import { useAuth } from '@/lib/AuthContext';
 import { toast } from 'sonner';
@@ -665,7 +664,7 @@ function ImageGridPicker({ images, loading, value, onChange }) {
                 {loading ? 'Loading…' : '🖼 Browse images'}
             </button>
 
-            {open && createPortal(
+            {open && (
                 <div style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,8,6,0.7)', padding: 16 }} onClick={() => setOpen(false)}>
                     <div style={{ background: COLORS.surface, borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
                         <div style={{ padding: '16px 20px', borderBottom: `1px solid ${COLORS.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: COLORS.surface2 }}>
@@ -674,24 +673,23 @@ function ImageGridPicker({ images, loading, value, onChange }) {
                         </div>
                         <div style={{ padding: 20, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 12 }}>
                             {images.map((img, i) => (
-                                <div 
+                                <button 
+                                    type="button"
                                     key={i} 
-                                    onClick={(e) => { 
-                                        e.preventDefault(); 
-                                        e.stopPropagation(); 
-                                        onChange(img.url); 
-                                        setOpen(false); 
+                                    onClick={() => { 
+                                        setOpen(false);
+                                        setTimeout(() => onChange(img.url), 0);
                                     }}
-                                    style={{ border: `2px solid ${value === img.url ? COLORS.gold : 'transparent'}`, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.15s, border-color 0.15s', background: COLORS.surface2 }}
+                                    style={{ border: `2px solid ${value === img.url ? COLORS.gold : 'transparent'}`, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.15s, border-color 0.15s', background: COLORS.surface2, padding: 0, margin: 0, outline: 'none', textAlign: 'left', display: 'block', width: '100%' }}
                                     onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
                                     onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                                     title={img.label}
                                 >
-                                    <img src={img.url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
+                                    <img src={img.url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
                                     <div style={{ padding: '6px 8px', fontSize: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: COLORS.text }}>
                                         {img.label}
                                     </div>
-                                </div>
+                                </button>
                             ))}
                             {images.length === 0 && (
                                 <div style={{ gridColumn: '1 / -1', padding: 40, textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>
@@ -700,8 +698,7 @@ function ImageGridPicker({ images, loading, value, onChange }) {
                             )}
                         </div>
                     </div>
-                </div>,
-                document.body
+                </div>
             )}
         </>
     );
