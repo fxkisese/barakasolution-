@@ -301,13 +301,46 @@ function BulkTemplateModal({ onClose, onConfirm }) {
     const [rows, setRows] = useState([]);
     const [saving, setSaving] = useState(false);
 
+    // Existing product images fetched from Supabase
+    const [existingImages, setExistingImages] = useState([]); // [{ url, label }]
+    const [loadingImages, setLoadingImages] = useState(true);
+    const [uploadingRow, setUploadingRow] = useState(null); // index of row being uploaded
+
+    // Fetch all distinct non-empty images from products on mount
+    useEffect(() => {
+        (async () => {
+            setLoadingImages(true);
+            const { data } = await supabase
+                .from('products')
+                .select('image, name')
+                .not('image', 'is', null)
+                .neq('image', '');
+            if (data) {
+                // De-duplicate by URL
+                const seen = new Set();
+                const imgs = [];
+                for (const row of data) {
+                    if (row.image && !seen.has(row.image)) {
+                        seen.add(row.image);
+                        // Use product name as label, truncated
+                        const label = (row.name || '').slice(0, 30) || row.image.split('/').pop().split('?')[0].slice(0, 30);
+                        imgs.push({ url: row.image, label });
+                    }
+                }
+                setExistingImages(imgs);
+            }
+            setLoadingImages(false);
+        })();
+    }, []);
+
     const handleParse = () => {
         const parsed = parseBulkTemplate(rawText);
         if (parsed.length === 0) {
             toast.error('No valid lines found. Check format: SIZE TYPE PRICE [best-seller]');
             return;
         }
-        setRows(parsed);
+        // Add image field to each row (empty by default)
+        setRows(parsed.map(r => ({ ...r, image: '' })));
         setStep(2);
     };
 
@@ -320,6 +353,56 @@ function BulkTemplateModal({ onClose, onConfirm }) {
     };
 
     const removeRow = (idx) => setRows(prev => prev.filter((_, i) => i !== idx));
+
+    // Upload a new image for a specific row
+    const handleRowImageUpload = async (idx, e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploadingRow(idx);
+        try {
+            // Convert to optimised JPEG
+            const processImage = (file) => new Promise((resolve) => {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX = 1200;
+                    let w = img.width, h = img.height;
+                    if (w > MAX || h > MAX) {
+                        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+                        else { w = Math.round(w * MAX / h); h = MAX; }
+                    }
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+                    ctx.drawImage(img, 0, 0, w, h);
+                    canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85);
+                    URL.revokeObjectURL(url);
+                };
+                img.onerror = () => resolve(null);
+                img.src = url;
+            });
+            const blob = await processImage(file);
+            if (!blob) throw new Error('Image processing failed');
+            const fileName = `bulk-rack-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+            const { error } = await supabase.storage.from('images').upload(fileName, blob, { contentType: 'image/jpeg' });
+            if (error) throw error;
+            const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(fileName);
+            // Update this row's image
+            updateRow(idx, 'image', publicUrl);
+            // Also add to the shared pool so other rows can reuse it
+            setExistingImages(prev => {
+                if (prev.find(x => x.url === publicUrl)) return prev;
+                return [{ url: publicUrl, label: rows[idx]?.name?.slice(0, 30) || fileName.slice(0, 30) }, ...prev];
+            });
+            toast.success('Image uploaded ✓');
+        } catch (err) {
+            toast.error('Upload failed: ' + err.message);
+        } finally {
+            setUploadingRow(null);
+            e.target.value = '';
+        }
+    };
 
     const handleConfirm = async () => {
         setSaving(true);
@@ -340,7 +423,7 @@ function BulkTemplateModal({ onClose, onConfirm }) {
         borderRadius: 20,
         padding: '32px',
         width: '100%',
-        maxWidth: step === 2 ? 1000 : 600,
+        maxWidth: step === 2 ? 1160 : 600,
         maxHeight: '92vh',
         overflowY: 'auto',
         boxShadow: '0 24px 80px rgba(0,0,0,0.28)',
@@ -408,24 +491,79 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                 {step === 2 && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                         <div style={{ background: COLORS.greenSoft, border: `1px solid ${COLORS.green}33`, borderRadius: 10, padding: '10px 16px', fontSize: 13, color: COLORS.green, fontWeight: 500 }}>
-                            ✓ {rows.length} product{rows.length !== 1 ? 's' : ''} parsed. Edit any cell below before inserting. Click ✕ on a row to remove it.
+                            ✓ {rows.length} product{rows.length !== 1 ? 's' : ''} parsed. Assign images using the dropdown (pick from existing uploads) or upload a new one per row.
                         </div>
 
                         <div style={{ overflowX: 'auto', borderRadius: 12, border: `1px solid ${COLORS.border}` }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 780 }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 920 }}>
                                 <thead>
                                     <tr style={{ background: COLORS.surface2 }}>
-                                        <th style={{ ...thStyle, width: 220 }}>Name</th>
-                                        <th style={{ ...thStyle, width: 90 }}>Price (KSh)</th>
-                                        <th style={{ ...thStyle, width: 110 }}>Badge</th>
-                                        <th style={{ ...thStyle, width: 160 }}>Dimensions</th>
+                                        <th style={{ ...thStyle, width: 130 }}>Image</th>
+                                        <th style={{ ...thStyle, width: 200 }}>Name</th>
+                                        <th style={{ ...thStyle, width: 88 }}>Price (KSh)</th>
+                                        <th style={{ ...thStyle, width: 100 }}>Badge</th>
+                                        <th style={{ ...thStyle, width: 140 }}>Dimensions</th>
                                         <th style={thStyle}>Description</th>
                                         <th style={{ ...thStyle, width: 36 }}></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {rows.map((row, idx) => (
-                                        <tr key={idx} style={{ background: idx % 2 === 0 ? COLORS.surface : COLORS.surface2 }}>
+                                        <tr key={idx} style={{ background: idx % 2 === 0 ? COLORS.surface : COLORS.surface2, verticalAlign: 'top' }}>
+                                            {/* ── Image cell ── */}
+                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
+                                                    {/* Thumbnail */}
+                                                    {row.image ? (
+                                                        <img
+                                                            src={row.image}
+                                                            alt=""
+                                                            style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8, border: `1px solid ${COLORS.border}` }}
+                                                        />
+                                                    ) : (
+                                                        <div style={{ width: 64, height: 64, borderRadius: 8, background: COLORS.surface3, border: `2px dashed ${COLORS.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                            <IconImage style={{ color: COLORS.muted, opacity: 0.5 }} />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Dropdown — pick from existing images */}
+                                                    <select
+                                                        style={{ ...inputStyle, fontSize: 11, padding: '4px 6px', width: '100%', background: COLORS.surface }}
+                                                        value={row.image}
+                                                        onChange={e => updateRow(idx, 'image', e.target.value)}
+                                                        disabled={loadingImages}
+                                                        title="Select an existing image"
+                                                    >
+                                                        <option value="">{loadingImages ? 'Loading…' : '— Select image —'}</option>
+                                                        {existingImages.map((img, i) => (
+                                                            <option key={i} value={img.url}>{img.label}</option>
+                                                        ))}
+                                                    </select>
+
+                                                    {/* Upload new image button */}
+                                                    <label
+                                                        style={{
+                                                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                                                            width: '100%', padding: '4px 0', border: `1px dashed ${COLORS.gold}`,
+                                                            borderRadius: 6, fontSize: 10, color: COLORS.gold, fontWeight: 600,
+                                                            cursor: uploadingRow === idx ? 'wait' : 'pointer',
+                                                            background: COLORS.goldSoft, letterSpacing: '0.06em',
+                                                            opacity: uploadingRow !== null && uploadingRow !== idx ? 0.5 : 1,
+                                                        }}
+                                                        title="Upload a new image for this row"
+                                                    >
+                                                        {uploadingRow === idx ? '⏳ Uploading…' : '↑ Upload new'}
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            style={{ display: 'none' }}
+                                                            disabled={uploadingRow !== null}
+                                                            onChange={e => handleRowImageUpload(idx, e)}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </td>
+
                                             <td style={{ ...tdStyle, padding: '8px 10px' }}>
                                                 <input
                                                     style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', background: 'transparent' }}
@@ -480,18 +618,19 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                                         </tr>
                                     ))}
                                     {rows.length === 0 && (
-                                        <tr><td colSpan={6} style={{ padding: '24px', textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>All rows removed. Go back to paste again.</td></tr>
+                                        <tr><td colSpan={7} style={{ padding: '24px', textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>All rows removed. Go back to paste again.</td></tr>
                                     )}
                                 </tbody>
                             </table>
                         </div>
 
-                        {/* Fixed category/subcategory info */}
-                        <div style={{ fontSize: 12, color: COLORS.muted, display: 'flex', gap: 16 }}>
+                        {/* Tips */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontSize: 12, color: COLORS.muted }}>
                             <span>📂 Category: <strong>Storage</strong></span>
                             <span>📁 Subcategory: <strong>Shoe Racks</strong></span>
                             <span>✅ Status: <strong>In Stock</strong></span>
-                            <span>🚛 Delivery note: <strong>Free within 10km, Ksh 100/km after</strong></span>
+                            <span>🖼 Images: <strong>{existingImages.length} existing available in dropdown</strong></span>
+                            <span>💡 Tip: one image can be reused across multiple rows</span>
                         </div>
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, paddingTop: 4 }}>
