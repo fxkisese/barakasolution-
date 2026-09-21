@@ -498,8 +498,7 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 920 }}>
                                 <thead>
                                     <tr style={{ background: COLORS.surface2 }}>
-                                        <th style={{ ...thStyle, width: 130 }}>Image</th>
-                                        <th style={{ ...thStyle, width: 200 }}>Name</th>
+                                        <th style={{ ...thStyle, width: 240 }}>Name &amp; Image</th>
                                         <th style={{ ...thStyle, width: 88 }}>Price (KSh)</th>
                                         <th style={{ ...thStyle, width: 100 }}>Badge</th>
                                         <th style={{ ...thStyle, width: 140 }}>Dimensions</th>
@@ -510,66 +509,68 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                                 <tbody>
                                     {rows.map((row, idx) => (
                                         <tr key={idx} style={{ background: idx % 2 === 0 ? COLORS.surface : COLORS.surface2, verticalAlign: 'top' }}>
-                                            {/* ── Image cell ── */}
+                                            {/* ── Name + Image cell (combined) ── */}
                                             <td style={{ ...tdStyle, padding: '8px 10px' }}>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
+                                                {/* Product name input */}
+                                                <input
+                                                    style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', background: 'transparent', marginBottom: 8 }}
+                                                    value={row.name}
+                                                    onChange={e => updateRow(idx, 'name', e.target.value)}
+                                                />
+
+                                                {/* Image picker below the name */}
+                                                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                                                     {/* Thumbnail */}
                                                     {row.image ? (
                                                         <img
                                                             src={row.image}
                                                             alt=""
-                                                            style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8, border: `1px solid ${COLORS.border}` }}
+                                                            style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: `1px solid ${COLORS.border}`, flexShrink: 0 }}
                                                         />
                                                     ) : (
-                                                        <div style={{ width: 64, height: 64, borderRadius: 8, background: COLORS.surface3, border: `2px dashed ${COLORS.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                            <IconImage style={{ color: COLORS.muted, opacity: 0.5 }} />
+                                                        <div style={{ width: 48, height: 48, borderRadius: 6, background: COLORS.surface3, border: `2px dashed ${COLORS.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                                            <IconImage style={{ color: COLORS.muted, opacity: 0.4, width: 16, height: 16 }} />
                                                         </div>
                                                     )}
 
-                                                    {/* Dropdown — pick from existing images */}
-                                                    <select
-                                                        style={{ ...inputStyle, fontSize: 11, padding: '4px 6px', width: '100%', background: COLORS.surface }}
-                                                        value={row.image}
-                                                        onChange={e => updateRow(idx, 'image', e.target.value)}
-                                                        disabled={loadingImages}
-                                                        title="Select an existing image"
-                                                    >
-                                                        <option value="">{loadingImages ? 'Loading…' : '— Select image —'}</option>
-                                                        {existingImages.map((img, i) => (
-                                                            <option key={i} value={img.url}>{img.label}</option>
-                                                        ))}
-                                                    </select>
+                                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                                        {/* Dropdown — pick from existing images */}
+                                                        <select
+                                                            style={{ ...inputStyle, fontSize: 11, padding: '4px 6px', background: COLORS.surface }}
+                                                            value={row.image}
+                                                            onChange={e => updateRow(idx, 'image', e.target.value)}
+                                                            disabled={loadingImages}
+                                                            title="Pick an existing image"
+                                                        >
+                                                            <option value="">{loadingImages ? 'Loading…' : '— Pick existing image —'}</option>
+                                                            {existingImages.map((img, i) => (
+                                                                <option key={i} value={img.url}>{img.label}</option>
+                                                            ))}
+                                                        </select>
 
-                                                    {/* Upload new image button */}
-                                                    <label
-                                                        style={{
-                                                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
-                                                            width: '100%', padding: '4px 0', border: `1px dashed ${COLORS.gold}`,
-                                                            borderRadius: 6, fontSize: 10, color: COLORS.gold, fontWeight: 600,
-                                                            cursor: uploadingRow === idx ? 'wait' : 'pointer',
-                                                            background: COLORS.goldSoft, letterSpacing: '0.06em',
-                                                            opacity: uploadingRow !== null && uploadingRow !== idx ? 0.5 : 1,
-                                                        }}
-                                                        title="Upload a new image for this row"
-                                                    >
-                                                        {uploadingRow === idx ? '⏳ Uploading…' : '↑ Upload new'}
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            disabled={uploadingRow !== null}
-                                                            onChange={e => handleRowImageUpload(idx, e)}
-                                                        />
-                                                    </label>
+                                                        {/* Upload new image button */}
+                                                        <label
+                                                            style={{
+                                                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                                                                padding: '3px 0', border: `1px dashed ${COLORS.gold}`,
+                                                                borderRadius: 5, fontSize: 10, color: COLORS.gold, fontWeight: 600,
+                                                                cursor: uploadingRow === idx ? 'wait' : 'pointer',
+                                                                background: COLORS.goldSoft, letterSpacing: '0.06em',
+                                                                opacity: uploadingRow !== null && uploadingRow !== idx ? 0.5 : 1,
+                                                            }}
+                                                            title="Upload a new image for this row"
+                                                        >
+                                                            {uploadingRow === idx ? '⏳…' : '↑ Upload new'}
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                style={{ display: 'none' }}
+                                                                disabled={uploadingRow !== null}
+                                                                onChange={e => handleRowImageUpload(idx, e)}
+                                                            />
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            </td>
-
-                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
-                                                <input
-                                                    style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', background: 'transparent' }}
-                                                    value={row.name}
-                                                    onChange={e => updateRow(idx, 'name', e.target.value)}
-                                                />
                                             </td>
                                             <td style={{ ...tdStyle, padding: '8px 10px' }}>
                                                 <input
@@ -618,7 +619,7 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                                         </tr>
                                     ))}
                                     {rows.length === 0 && (
-                                        <tr><td colSpan={7} style={{ padding: '24px', textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>All rows removed. Go back to paste again.</td></tr>
+                                        <tr><td colSpan={6} style={{ padding: '24px', textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>All rows removed. Go back to paste again.</td></tr>
                                     )}
                                 </tbody>
                             </table>
@@ -650,6 +651,70 @@ function BulkTemplateModal({ onClose, onConfirm }) {
                     </div>
                 )}
             </div>
+        </div>
+    );
+}
+
+/* ---------- Reusable existing-image picker (used in ProductForm) ---------- */
+function ExistingImagePicker({ onPick }) {
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState('');
+
+    useEffect(() => {
+        (async () => {
+            const { data } = await supabase
+                .from('products')
+                .select('image, name')
+                .not('image', 'is', null)
+                .neq('image', '');
+            if (data) {
+                const seen = new Set();
+                const imgs = [];
+                for (const row of data) {
+                    if (row.image && !seen.has(row.image)) {
+                        seen.add(row.image);
+                        imgs.push({ url: row.image, label: (row.name || '').slice(0, 40) || row.image.split('/').pop().slice(0, 40) });
+                    }
+                }
+                setImages(imgs);
+            }
+            setLoading(false);
+        })();
+    }, []);
+
+    const handleChange = (e) => {
+        const url = e.target.value;
+        setSelected(url);
+        if (url) onPick(url);
+    };
+
+    return (
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 4 }}>
+            {/* Thumbnail preview of currently selected */}
+            {selected ? (
+                <img
+                    src={selected}
+                    alt=""
+                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: `1px solid ${COLORS.border}`, flexShrink: 0 }}
+                />
+            ) : (
+                <div style={{ width: 48, height: 48, borderRadius: 6, background: COLORS.surface3, border: `2px dashed ${COLORS.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <IconImage style={{ color: COLORS.muted, opacity: 0.4, width: 16, height: 16 }} />
+                </div>
+            )}
+            <select
+                style={{ ...inputStyle, fontSize: 13 }}
+                value={selected}
+                onChange={handleChange}
+                disabled={loading}
+                title="Pick an already-uploaded image"
+            >
+                <option value="">{loading ? 'Loading images…' : `— Pick from ${images.length} existing image${images.length !== 1 ? 's' : ''} —`}</option>
+                {images.map((img, i) => (
+                    <option key={i} value={img.url}>{img.label}</option>
+                ))}
+            </select>
         </div>
     );
 }
@@ -851,7 +916,17 @@ function ProductForm({ onSubmit, onCancel, initialData = null }) {
 
                     <div>
                         <label style={labelStyle}>Product Images</label>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
+
+                        {/* ── Quick-pick from existing uploaded images ── */}
+                        <ExistingImagePicker
+                            onPick={(url) => setValues(prev => {
+                                const imgs = [...(prev.images || [])].filter(u => u !== url);
+                                imgs.unshift(url);
+                                return { ...prev, images: imgs, image: imgs[0] };
+                            })}
+                        />
+
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginTop: 10 }}>
                             {(v.images?.length > 0 ? v.images : (v.image ? [v.image] : [])).map((url, i) => (
                                 <div key={i} style={{ position: 'relative' }}>
                                     <img src={url} alt="" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 6, border: `1px solid ${COLORS.border}` }} />
@@ -859,7 +934,7 @@ function ProductForm({ onSubmit, onCancel, initialData = null }) {
                                     <button type="button" onClick={() => { setEditingImageIndex(i); setCurrentCropFile(url); }} style={{ position: 'absolute', bottom: -6, right: -6, background: '#fff', border: `1px solid ${COLORS.border}`, borderRadius: '50%', width: 18, height: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✎</button>
                                 </div>
                             ))}
-                            <label style={{ cursor: uploadingImg ? 'wait' : 'pointer', width: 64, height: 64, border: `2px dashed ${COLORS.border}`, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <label style={{ cursor: uploadingImg ? 'wait' : 'pointer', width: 64, height: 64, border: `2px dashed ${COLORS.border}`, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Upload new image">
                                 <input type="file" accept="image/*" multiple onChange={handleImageUpload} style={{ display: 'none' }} disabled={uploadingImg} />
                                 <span style={{ fontSize: 24, color: COLORS.muted }}>+</span>
                             </label>
