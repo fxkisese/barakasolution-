@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { ArrowUpRight, ShoppingBag, Eye } from "lucide-react";
+import { ArrowUpRight, ShoppingBag, Eye, MessageCircle } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { formatPrice } from "@/lib/siteData";
 import { supabase } from "@/api/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/CartContext";
 import ProductModal from "./ProductModal";
+import { sendProductOrderWhatsApp } from "@/utils/whatsapp";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,17 +65,24 @@ function ProductCard({ product, large = false, onOpen }) {
                         >
                             <button
                                 onClick={(e) => { e.stopPropagation(); addToCart(product); }}
-                                className="flex-1 bg-[#1A1A1A]/95 backdrop-blur-md text-white text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 py-4 hover:bg-[#D4AF37] transition-colors duration-300 border-r border-white/10"
+                                className="flex-1 bg-[#1A1A1A]/95 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-1.5 py-4 hover:bg-[#D4AF37] transition-colors duration-300 border-r border-white/10"
                             >
                                 <ShoppingBag className="w-3.5 h-3.5" strokeWidth={1.8} />
-                                Add to Cart
+                                Add
+                            </button>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); sendProductOrderWhatsApp(product, window.location.href); }}
+                                className="flex-1 bg-[#25D366] text-white text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-1.5 py-4 hover:bg-[#1ebe5d] transition-colors duration-300 border-r border-white/10"
+                            >
+                                <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.8} />
+                                Order
                             </button>
                             <button
                                 onClick={(e) => { e.stopPropagation(); onOpen(product); }}
-                                className="flex-1 bg-[#1A1A1A]/95 backdrop-blur-md text-white text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 py-4 hover:bg-white hover:text-[#1A1A1A] transition-colors duration-300"
+                                className="flex-1 bg-[#1A1A1A]/95 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-1.5 py-4 hover:bg-white hover:text-[#1A1A1A] transition-colors duration-300"
                             >
                                 <Eye className="w-3.5 h-3.5" strokeWidth={1.8} />
-                                Quick View
+                                View
                             </button>
                         </motion.div>
                     )}

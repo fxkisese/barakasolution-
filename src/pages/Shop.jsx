@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, Filter, ShoppingBag, Eye } from "lucide-react";
+import { Search, Filter, ShoppingBag, Eye, MessageCircle } from "lucide-react";
 import { supabase } from "@/api/supabaseClient";
 import { Image } from "@/components/ui/image";
 import { formatPrice } from "@/lib/siteData";
 import { useCart } from "@/lib/CartContext";
 import ProductModal from "@/components/site/ProductModal";
+import { sendProductOrderWhatsApp } from "@/utils/whatsapp";
 
 export default function Shop() {
     const [allProducts, setAllProducts] = useState([]);
@@ -124,13 +125,19 @@ export default function Shop() {
                                         <div className="absolute bottom-0 inset-x-0 flex translate-y-full group-hover:translate-y-0 transition-transform duration-400">
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); addToCart(product); }}
-                                                className="flex-1 bg-[#1A1A1A]/95 text-white text-[11px] uppercase tracking-[0.18em] flex items-center justify-center gap-2 py-3.5 hover:bg-[#D4AF37] transition-colors border-r border-white/10"
+                                                className="flex-1 bg-[#1A1A1A]/95 text-white text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-1.5 py-3.5 hover:bg-[#D4AF37] transition-colors border-r border-white/10"
                                             >
                                                 <ShoppingBag className="w-3.5 h-3.5" strokeWidth={1.8} /> Add
                                             </button>
                                             <button
+                                                onClick={(e) => { e.stopPropagation(); sendProductOrderWhatsApp(product, window.location.href); }}
+                                                className="flex-1 bg-[#25D366] text-white text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-1.5 py-3.5 hover:bg-[#1ebe5d] transition-colors border-r border-white/10"
+                                            >
+                                                <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.8} /> Order
+                                            </button>
+                                            <button
                                                 onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setIsModalOpen(true); }}
-                                                className="flex-1 bg-[#1A1A1A]/95 text-white text-[11px] uppercase tracking-[0.18em] flex items-center justify-center gap-2 py-3.5 hover:bg-white hover:text-[#1A1A1A] transition-colors"
+                                                className="flex-1 bg-[#1A1A1A]/95 text-white text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-1.5 py-3.5 hover:bg-white hover:text-[#1A1A1A] transition-colors"
                                             >
                                                 <Eye className="w-3.5 h-3.5" strokeWidth={1.8} /> View
                                             </button>

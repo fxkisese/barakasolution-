@@ -62,6 +62,63 @@ const fmt = (n) => `KSh ${Number(n || 0).toLocaleString()}`;
 const TRANSPORT_METHODS = ['Truck', 'Pickup Van', 'Courier', 'Manual Arrangement'];
 const DELIVERY_REGIONS = ['Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika', 'Nyeri'];
 
+/* Size code → human-readable dimensions (W × H × D) for shoe racks */
+const SIZE_DIMENSIONS = {
+    '3x6': '0.9m × 1.8m × 0.3m',
+    '4x4': '1.2m × 1.2m × 0.3m',
+    '4x5': '1.2m × 1.5m × 0.3m',
+    '4x6': '1.2m × 1.8m × 0.3m',
+    '5x5': '1.5m × 1.5m × 0.3m',
+    '5x6': '1.5m × 1.8m × 0.3m',
+    '6x6': '1.8m × 1.8m × 0.3m',
+};
+
+/**
+ * Parse a plain-text shoe rack list into product row objects.
+ * Expected line format: <SIZE> <TYPE...> <PRICE> [best-seller]
+ * e.g. "4x4 Sliding 23600 best-seller"
+ */
+function parseBulkTemplate(text) {
+    const rows = [];
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    for (const line of lines) {
+        // Strip badge flag so it doesn't pollute type parsing
+        const hasBestSeller = /best[-\s]?seller/i.test(line);
+        const cleaned = line.replace(/best[-\s]?seller/gi, '').trim();
+        const tokens = cleaned.split(/\s+/);
+        if (tokens.length < 3) continue;
+
+        // First token matching WxH is the size
+        const sizeToken = tokens.find(t => /^\d+x\d+$/i.test(t));
+        if (!sizeToken) continue;
+        const sizeIdx = tokens.indexOf(sizeToken);
+
+        // Last numeric token is the price
+        let priceIdx = -1;
+        for (let i = tokens.length - 1; i >= 0; i--) {
+            if (/^\d+$/.test(tokens[i])) { priceIdx = i; break; }
+        }
+        if (priceIdx < 0 || priceIdx <= sizeIdx) continue;
+
+        const size = sizeToken.toUpperCase();
+        const type = tokens.slice(sizeIdx + 1, priceIdx).join(' ') || 'Open';
+        const price = Number(tokens[priceIdx]);
+        const dimensions = SIZE_DIMENSIONS[sizeToken.toLowerCase()] || '';
+
+        rows.push({
+            name: `${size} Shoe Rack – ${type}`,
+            category: 'Storage',
+            subcategory: 'Shoe Racks',
+            price,
+            badge: hasBestSeller ? 'Best Seller' : '',
+            description: `${size} ${type} Shoe Rack. Sturdy build. Delivery free within 10km of our workshop, then Ksh 100/km beyond that.`,
+            dimensions,
+            in_stock: true,
+        });
+    }
+    return rows;
+}
+
 /* ---------- Inline SVG icons ---------- */
 const ic = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' };
 const IconGauge = (p) => <svg {...ic} {...p}><path d="M4 16a8 8 0 1 1 16 0" /><path d="M12 16 16 10" /><circle cx="12" cy="16" r="1" fill="currentColor" /></svg>;
@@ -232,6 +289,227 @@ function ImageCropperModal({ file, onApply, onCancel }) {
                     <button type="button" style={btnSecondary} onClick={onCancel}>Skip / Cancel</button>
                     <button type="button" style={btnPrimary} onClick={() => onApply(croppedAreaPixels)}>Apply Crop</button>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+/* ---------- Bulk Template Modal ---------- */
+function BulkTemplateModal({ onClose, onConfirm }) {
+    const [step, setStep] = useState(1); // 1 = paste, 2 = preview
+    const [rawText, setRawText] = useState('');
+    const [rows, setRows] = useState([]);
+    const [saving, setSaving] = useState(false);
+
+    const handleParse = () => {
+        const parsed = parseBulkTemplate(rawText);
+        if (parsed.length === 0) {
+            toast.error('No valid lines found. Check format: SIZE TYPE PRICE [best-seller]');
+            return;
+        }
+        setRows(parsed);
+        setStep(2);
+    };
+
+    const updateRow = (idx, field, value) => {
+        setRows(prev => {
+            const next = [...prev];
+            next[idx] = { ...next[idx], [field]: value };
+            return next;
+        });
+    };
+
+    const removeRow = (idx) => setRows(prev => prev.filter((_, i) => i !== idx));
+
+    const handleConfirm = async () => {
+        setSaving(true);
+        await onConfirm(rows);
+        setSaving(false);
+    };
+
+    // Styles specific to this modal
+    const overlayStyle = {
+        position: 'fixed', inset: 0,
+        background: 'rgba(10,8,6,0.75)',
+        backdropFilter: 'blur(4px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        zIndex: 9000, padding: 16,
+    };
+    const panelStyle = {
+        background: COLORS.surface,
+        borderRadius: 20,
+        padding: '32px',
+        width: '100%',
+        maxWidth: step === 2 ? 1000 : 600,
+        maxHeight: '92vh',
+        overflowY: 'auto',
+        boxShadow: '0 24px 80px rgba(0,0,0,0.28)',
+        border: `1px solid ${COLORS.border}`,
+    };
+
+    const HINT_TEXT = `4x4 Open 15000
+4x4 2 Doors 21800
+4x4 Sliding 23600
+4x6 Sliding 32000 best-seller`;
+
+    return (
+        <div style={overlayStyle} onClick={onClose}>
+            <div style={panelStyle} onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, paddingBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
+                    <div>
+                        <div style={{ fontSize: 11, letterSpacing: '0.18em', color: COLORS.gold, textTransform: 'uppercase', marginBottom: 4, fontWeight: 700 }}>
+                            Bulk Import
+                        </div>
+                        <h3 style={{ fontFamily: fontDisplay, fontSize: 20, fontWeight: 700, color: COLORS.text, margin: 0, letterSpacing: '-0.02em' }}>
+                            {step === 1 ? '⚡ Shoe Rack Template' : `Preview — ${rows.length} product${rows.length !== 1 ? 's' : ''}`}
+                        </h3>
+                    </div>
+                    <button onClick={onClose} style={{ ...iconBtnStyle, background: COLORS.surface2, borderRadius: 8, padding: 8 }} aria-label="Close"><IconX /></button>
+                </div>
+
+                {/* ── Step 1: Paste ── */}
+                {step === 1 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                        <div style={{ background: COLORS.goldSoft, border: `1px solid ${COLORS.goldGlow}`, borderRadius: 10, padding: '12px 16px', fontSize: 13, color: COLORS.text, lineHeight: 1.7 }}>
+                            <strong>Format:</strong> <code style={{ fontFamily: fontMono, fontSize: 12 }}>SIZE TYPE PRICE [best-seller]</code><br />
+                            One product per line. Size must be like <code style={{ fontFamily: fontMono, fontSize: 12 }}>4x4</code>, <code style={{ fontFamily: fontMono, fontSize: 12 }}>4x6</code>, etc. Price is the last number. Add <code style={{ fontFamily: fontMono, fontSize: 12 }}>best-seller</code> anywhere to flag it.
+                        </div>
+
+                        <div>
+                            <label style={labelStyle}>Paste your shoe rack list</label>
+                            <textarea
+                                style={{ ...inputStyle, resize: 'vertical', minHeight: 220, fontFamily: fontMono, fontSize: 13, lineHeight: 1.7 }}
+                                value={rawText}
+                                onChange={e => setRawText(e.target.value)}
+                                placeholder={HINT_TEXT}
+                                spellCheck={false}
+                            />
+                            <div style={{ fontSize: 12, color: COLORS.muted, marginTop: 6 }}>
+                                {rawText.split('\n').filter(l => l.trim()).length} lines pasted
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                            <button type="button" style={btnSecondary} onClick={onClose}>Cancel</button>
+                            <button
+                                type="button"
+                                style={{ ...btnPrimary, opacity: rawText.trim() ? 1 : 0.5 }}
+                                onClick={handleParse}
+                                disabled={!rawText.trim()}
+                            >
+                                Parse &amp; Preview →
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ── Step 2: Preview & Edit ── */}
+                {step === 2 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                        <div style={{ background: COLORS.greenSoft, border: `1px solid ${COLORS.green}33`, borderRadius: 10, padding: '10px 16px', fontSize: 13, color: COLORS.green, fontWeight: 500 }}>
+                            ✓ {rows.length} product{rows.length !== 1 ? 's' : ''} parsed. Edit any cell below before inserting. Click ✕ on a row to remove it.
+                        </div>
+
+                        <div style={{ overflowX: 'auto', borderRadius: 12, border: `1px solid ${COLORS.border}` }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 780 }}>
+                                <thead>
+                                    <tr style={{ background: COLORS.surface2 }}>
+                                        <th style={{ ...thStyle, width: 220 }}>Name</th>
+                                        <th style={{ ...thStyle, width: 90 }}>Price (KSh)</th>
+                                        <th style={{ ...thStyle, width: 110 }}>Badge</th>
+                                        <th style={{ ...thStyle, width: 160 }}>Dimensions</th>
+                                        <th style={thStyle}>Description</th>
+                                        <th style={{ ...thStyle, width: 36 }}></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {rows.map((row, idx) => (
+                                        <tr key={idx} style={{ background: idx % 2 === 0 ? COLORS.surface : COLORS.surface2 }}>
+                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
+                                                <input
+                                                    style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', background: 'transparent' }}
+                                                    value={row.name}
+                                                    onChange={e => updateRow(idx, 'name', e.target.value)}
+                                                />
+                                            </td>
+                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
+                                                <input
+                                                    style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', fontFamily: fontMono, background: 'transparent' }}
+                                                    type="number"
+                                                    value={row.price}
+                                                    onChange={e => updateRow(idx, 'price', e.target.value)}
+                                                />
+                                            </td>
+                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
+                                                <select
+                                                    style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', background: 'transparent' }}
+                                                    value={row.badge}
+                                                    onChange={e => updateRow(idx, 'badge', e.target.value)}
+                                                >
+                                                    <option value="">None</option>
+                                                    <option>New</option>
+                                                    <option>Best Seller</option>
+                                                    <option>Sale</option>
+                                                    <option>Limited Stock</option>
+                                                </select>
+                                            </td>
+                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
+                                                <input
+                                                    style={{ ...inputStyle, fontSize: 12, padding: '6px 8px', background: 'transparent' }}
+                                                    value={row.dimensions}
+                                                    onChange={e => updateRow(idx, 'dimensions', e.target.value)}
+                                                    placeholder="e.g. 1.2m × 1.2m × 0.3m"
+                                                />
+                                            </td>
+                                            <td style={{ ...tdStyle, padding: '8px 10px' }}>
+                                                <textarea
+                                                    style={{ ...inputStyle, fontSize: 11, padding: '5px 8px', resize: 'vertical', minHeight: 50, background: 'transparent', lineHeight: 1.4 }}
+                                                    value={row.description}
+                                                    onChange={e => updateRow(idx, 'description', e.target.value)}
+                                                />
+                                            </td>
+                                            <td style={{ ...tdStyle, padding: '8px 6px', textAlign: 'center' }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeRow(idx)}
+                                                    style={{ background: COLORS.rustSoft, border: 'none', borderRadius: 6, width: 26, height: 26, cursor: 'pointer', color: COLORS.rust, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}
+                                                    title="Remove this row"
+                                                >✕</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {rows.length === 0 && (
+                                        <tr><td colSpan={6} style={{ padding: '24px', textAlign: 'center', color: COLORS.muted, fontSize: 13 }}>All rows removed. Go back to paste again.</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Fixed category/subcategory info */}
+                        <div style={{ fontSize: 12, color: COLORS.muted, display: 'flex', gap: 16 }}>
+                            <span>📂 Category: <strong>Storage</strong></span>
+                            <span>📁 Subcategory: <strong>Shoe Racks</strong></span>
+                            <span>✅ Status: <strong>In Stock</strong></span>
+                            <span>🚛 Delivery note: <strong>Free within 10km, Ksh 100/km after</strong></span>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, paddingTop: 4 }}>
+                            <button type="button" style={btnSecondary} onClick={() => setStep(1)}>← Back &amp; Edit</button>
+                            <div style={{ display: 'flex', gap: 12 }}>
+                                <button type="button" style={btnSecondary} onClick={onClose}>Cancel</button>
+                                <button
+                                    type="button"
+                                    style={{ ...btnPrimary, opacity: rows.length > 0 && !saving ? 1 : 0.5 }}
+                                    onClick={handleConfirm}
+                                    disabled={rows.length === 0 || saving}
+                                >
+                                    {saving ? 'Inserting…' : `⚡ Insert ${rows.length} Product${rows.length !== 1 ? 's' : ''}`}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -803,6 +1081,13 @@ function ProductsPage({ products, handleDeleteProduct, openModal, handleBulkUplo
                             ↑ {uploadingBulk ? 'Uploading…' : 'Bulk Upload'}
                             <input type="file" accept="image/*" multiple onChange={handleBulkUpload} style={{ display: 'none' }} disabled={uploadingBulk} />
                         </label>
+                        <button
+                            style={{ ...btnSecondary, borderColor: COLORS.goldBright, color: COLORS.gold }}
+                            onClick={() => openModal('bulk_template')}
+                            title="Paste a list to bulk-generate shoe rack products"
+                        >
+                            ⚡ Shoe Rack Template
+                        </button>
                         <button style={btnPrimary} onClick={() => openModal('product')}>
                             <IconPlus /> Add Product
                         </button>
@@ -1217,6 +1502,29 @@ export default function AdminPanel() {
         e.target.value = '';
     };
 
+    /* ---- Bulk Template CRUD ---- */
+    const handleBulkTemplate = async (rows) => {
+        const payloads = rows.map(r => ({
+            name: r.name,
+            category: r.category,
+            subcategory: r.subcategory || 'Shoe Racks',
+            price: Number(r.price) || 0,
+            in_stock: true,
+            badge: r.badge || null,
+            description: r.description,
+            delivery_nairobi: 600,
+            delivery_outside: JSON.stringify({
+                metadata: { size: r.dimensions },
+            }),
+            image: '',
+        }));
+        const { data: saved, error } = await supabase.from('products').insert(payloads).select();
+        if (error) { toast.error('Bulk insert failed: ' + error.message); return; }
+        setProducts(prev => [...(saved || []), ...prev]);
+        toast.success(`⚡ ${(saved || []).length} shoe rack products added!`);
+        setModal(null);
+    };
+
     /* ---- Sales CRUD ---- */
     const handleSaveSale = async (data) => {
         const { sendReceipt, ...saleData } = data;
@@ -1415,6 +1723,12 @@ export default function AdminPanel() {
                 </div>
 
                 {/* ---- Modals ---- */}
+                {modal === 'bulk_template' && (
+                    <BulkTemplateModal
+                        onClose={() => setModal(null)}
+                        onConfirm={handleBulkTemplate}
+                    />
+                )}
                 {modal === 'product' && <Modal title="Add Product" onClose={() => setModal(null)}><ProductForm onSubmit={handleSaveProduct} onCancel={() => setModal(null)} /></Modal>}
                 {modal?.type === 'edit_product' && <Modal title="Edit Product" onClose={() => setModal(null)}><ProductForm onSubmit={handleSaveProduct} onCancel={() => setModal(null)} initialData={modal.product} /></Modal>}
                 {modal === 'sale' && <Modal title="Record Sale" onClose={() => setModal(null)}><SaleForm onSubmit={handleSaveSale} onCancel={() => setModal(null)} /></Modal>}

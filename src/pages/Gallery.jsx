@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Maximize2, X } from "lucide-react";
+import { Maximize2, X, MessageCircle } from "lucide-react";
 import { supabase } from "@/api/supabaseClient";
 import { Image } from "@/components/ui/image";
+import { sendProductOrderWhatsApp } from "@/utils/whatsapp";
 
 export default function Gallery() {
     const [galleryImages, setGalleryImages] = useState([]);
@@ -100,6 +101,19 @@ export default function Gallery() {
                             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#1A1A1A]/80 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                                 <p className="text-white font-heading text-lg">{image.title || image.name}</p>
                                 <p className="text-white/70 text-xs uppercase tracking-[0.15em] mt-0.5">{image.category}</p>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        sendProductOrderWhatsApp(
+                                            { name: image.title || image.name, price: image.price, category: image.category, image: image.src || image.image },
+                                            window.location.href
+                                        );
+                                    }}
+                                    className="mt-3 inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1ebe5d] text-white text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 transition-colors"
+                                >
+                                    <MessageCircle className="w-3 h-3" strokeWidth={1.8} />
+                                    Order via WhatsApp
+                                </button>
                             </div>
                         </motion.div>
                     ))}
@@ -134,6 +148,19 @@ export default function Gallery() {
                             <div className="text-center mt-4">
                                 <h3 className="text-white font-heading text-xl">{selectedImage.title || selectedImage.name}</h3>
                                 <p className="text-white/50 text-xs uppercase tracking-[0.2em] mt-1">{selectedImage.category}</p>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        sendProductOrderWhatsApp(
+                                            { name: selectedImage.title || selectedImage.name, price: selectedImage.price, category: selectedImage.category, image: selectedImage.src || selectedImage.image },
+                                            window.location.href
+                                        );
+                                    }}
+                                    className="mt-4 inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white text-[12px] uppercase tracking-[0.15em] px-6 py-3 transition-colors"
+                                >
+                                    <MessageCircle className="w-4 h-4" strokeWidth={1.8} />
+                                    Order via WhatsApp
+                                </button>
                             </div>
                         </div>
                     </motion.div>

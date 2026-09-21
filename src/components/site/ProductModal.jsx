@@ -3,7 +3,7 @@ import { MessageCircle, ShoppingBag, ZoomIn } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Image } from "@/components/ui/image";
 import { formatPrice } from "@/lib/siteData";
-import { sendProductInquiryWhatsApp } from "@/utils/whatsapp";
+import { sendProductOrderWhatsApp } from "@/utils/whatsapp";
 import { useCart } from "@/lib/CartContext";
 
 const ZOOM_SCALE = 2.2;
@@ -110,11 +110,11 @@ export default function ProductModal({ isOpen, setIsOpen, product }) {
                                 Add to Cart
                             </button>
                             <button
-                                onClick={() => sendProductInquiryWhatsApp(product)}
-                                className="w-full h-14 border border-obsidian text-obsidian text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 hover:bg-obsidian/5 transition-colors"
+                                onClick={() => sendProductOrderWhatsApp(product, window.location.href)}
+                                className="w-full h-14 bg-[#25D366] text-white text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 hover:bg-[#1ebe5d] transition-colors shadow-sm"
                             >
                                 <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
-                                Inquire via WhatsApp
+                                Order via WhatsApp
                             </button>
                         </div>
                     </div>

@@ -100,6 +100,30 @@ export function sendProductInquiryWhatsApp(product, productUrl) {
     openWA(ADMIN_PHONE, msg);
 }
 
+/**
+ * Direct "Order via WhatsApp" for a single product.
+ * Sends a pre-filled message with item name, price, and image URL.
+ */
+export function sendProductOrderWhatsApp(product, productUrl) {
+    const formattedPrice = `KSh ${Number(product.price || 0).toLocaleString('en-KE', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    })}`;
+    const url = productUrl || (typeof window !== 'undefined' ? window.location.href : '');
+    let msg =
+        `🛒 *I want to order this item:*\n\n` +
+        `*${product.name}*\n` +
+        `*Price:* ${formattedPrice}\n`;
+    if (product.category) msg += `*Category:* ${product.category}\n`;
+    msg += `*Link:* ${url}\n\n`;
+    msg += `Please confirm availability and delivery details. Thank you! 🙏`;
+    // Append image URL on its own line so WhatsApp generates a preview
+    if (product.image && String(product.image).startsWith('http')) {
+        msg += `\n\n${product.image}`;
+    }
+    openWA(ADMIN_PHONE, msg);
+}
+
 export function sendGeneralInquiryWhatsApp() {
     const msg = `Hello Luxe Craft Furniture! I have a general inquiry...`;
     openWA(ADMIN_PHONE, msg);
