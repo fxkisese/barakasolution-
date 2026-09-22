@@ -81,40 +81,99 @@ const SIZE_DIMENSIONS = {
 function parseBulkTemplate(text) {
     const rows = [];
     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    let currentSize = '';
+
     for (const line of lines) {
-        // Strip badge flag so it doesn't pollute type parsing
-        const hasBestSeller = /best[-\s]?seller/i.test(line);
-        const cleaned = line.replace(/best[-\s]?seller/gi, '').trim();
-        const tokens = cleaned.split(/\s+/);
-        if (tokens.length < 3) continue;
+        // Skip obvious non-data lines
+        if (/Shoe Rack Price List/i.test(line)) continue;
 
-        // First token matching WxH is the size
-        const sizeToken = tokens.find(t => /^\d+x\d+$/i.test(t));
-        if (!sizeToken) continue;
-        const sizeIdx = tokens.indexOf(sizeToken);
-
-        // Last numeric token is the price
-        let priceIdx = -1;
-        for (let i = tokens.length - 1; i >= 0; i--) {
-            if (/^\d+$/.test(tokens[i])) { priceIdx = i; break; }
+        // Check if line is a header like "4 by 4 Models" or "4x4 Models"
+        const headerMatch = line.match(/(?:^|\s)(\d+)\s*(?:by|x)\s*(\d+)/i);
+        if (headerMatch && !/ksh/i.test(line) && !line.includes('—')) {
+            currentSize = `${headerMatch[1]}x${headerMatch[2]}`;
+            continue;
         }
-        if (priceIdx < 0 || priceIdx <= sizeIdx) continue;
 
-        const size = sizeToken.toUpperCase();
-        const type = tokens.slice(sizeIdx + 1, priceIdx).join(' ') || 'Open';
-        const price = Number(tokens[priceIdx]);
-        const dimensions = SIZE_DIMENSIONS[sizeToken.toLowerCase()] || '';
+        // Check if line is a Specialty header
+        if (/specialty/i.test(line)) {
+            currentSize = 'Specialty';
+            continue;
+        }
 
-        rows.push({
-            name: `${size} Shoe Rack – ${type}`,
-            category: 'Storage',
-            subcategory: 'Shoe Racks',
-            price,
-            badge: hasBestSeller ? 'Best Seller' : '',
-            description: `${size} ${type} Shoe Rack. Sturdy build. Delivery free within 10km of our workshop, then Ksh 100/km beyond that.`,
-            dimensions,
-            in_stock: true,
-        });
+        // Strip badge flags and emojis
+        const hasBestSeller = /best[-\s]?seller/i.test(line) || /✅/.test(line);
+        const cleaned = line.replace(/\(best[-\s]?seller\)/gi, '').replace(/best[-\s]?seller/gi, '').replace(/✅/g, '').trim();
+        
+        let price = 0;
+        let typeStr = cleaned;
+        let localSize = currentSize;
+
+        // Try extracting price: matches "Ksh 15,000" or just "15000"
+        const priceMatch = cleaned.match(/ksh\s*([\d,]+)|\b([\d,]{4,})\b/i);
+
+        if (priceMatch) {
+            const priceStr = priceMatch[1] || priceMatch[2];
+            price = Number(priceStr.replace(/,/g, ''));
+            // Remove everything from the price onwards to isolate the type name
+            typeStr = cleaned.slice(0, priceMatch.index).replace(/[-—\s]+$/, '').trim();
+            
+            // Backward compatibility for old format: "4x4 Sliding"
+            const oldFormatMatch = typeStr.match(/^(\d+x\d+)\s+(.+)$/i);
+            if (oldFormatMatch) {
+                localSize = oldFormatMatch[1].toUpperCase();
+                typeStr = oldFormatMatch[2];
+            }
+        } else {
+            // Fallback for old space-separated format without Ksh
+            const tokens = cleaned.split(/\s+/);
+            if (tokens.length >= 3) {
+                const sizeToken = tokens.find(t => /^\d+x\d+$/i.test(t));
+                if (sizeToken) {
+                    const sizeIdx = tokens.indexOf(sizeToken);
+                    let priceIdx = -1;
+                    for (let i = tokens.length - 1; i >= 0; i--) {
+                        if (/^\d+$/.test(tokens[i])) { priceIdx = i; break; }
+                    }
+                    if (priceIdx > sizeIdx) {
+                        localSize = sizeToken.toUpperCase();
+                        typeStr = tokens.slice(sizeIdx + 1, priceIdx).join(' ');
+                        price = Number(tokens[priceIdx]);
+                    }
+                }
+            }
+        }
+
+        // Cleanup type string (remove leading hyphens/bullets and trailing periods)
+        let type = typeStr.replace(/^[-•*—]\s*/, '').replace(/\.$/, '').trim();
+
+        if (price > 0 && type) {
+            const size = localSize || 'Unknown Size';
+            
+            if (size === 'Specialty') {
+                rows.push({
+                    name: type,
+                    category: 'Storage',
+                    subcategory: 'Shoe Racks',
+                    price,
+                    badge: hasBestSeller ? 'Best Seller' : '',
+                    description: `${type}. Premium quality. Delivery free within 10km of our workshop.`,
+                    dimensions: '',
+                    in_stock: true,
+                });
+            } else {
+                const dimensions = SIZE_DIMENSIONS[size.toLowerCase()] || '';
+                rows.push({
+                    name: `${size} Shoe Rack – ${type}`,
+                    category: 'Storage',
+                    subcategory: 'Shoe Racks',
+                    price,
+                    badge: hasBestSeller ? 'Best Seller' : '',
+                    description: `${size} ${type} Shoe Rack. Sturdy build. Delivery free within 10km of our workshop, then Ksh 100/km beyond that.`,
+                    dimensions,
+                    in_stock: true,
+                });
+            }
+        }
     }
     return rows;
 }
