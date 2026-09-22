@@ -73,6 +73,32 @@ const SIZE_DIMENSIONS = {
     '6x6': '1.8m × 1.8m × 0.3m',
 };
 
+const SHOE_RACK_TEMPLATES = [
+    { label: '4x4 Open', price: 15000, size: '4x4' },
+    { label: '4x4 2 Doors', price: 21800, size: '4x4' },
+    { label: '4x4 3 Doors', price: 23600, size: '4x4' },
+    { label: '4x4 Sliding', price: 23600, size: '4x4' },
+    { label: '3x6 Open', price: 18000, size: '3x6' },
+    { label: '3x6 Closed', price: 25000, size: '3x6' },
+    { label: '3x6 Sliding', price: 26600, size: '3x6' },
+    { label: '4x6 Open', price: 19000, size: '4x6' },
+    { label: '4x6 Closed', price: 30000, size: '4x6' },
+    { label: '4x6 Sliding', price: 32000, size: '4x6' },
+    { label: '4x5 Open', price: 19000, size: '4x5' },
+    { label: '4x5 Closed', price: 28000, size: '4x5' },
+    { label: '4x5 Sliding', price: 28800, size: '4x5' },
+    { label: '5x5 Open', price: 21500, size: '5x5' },
+    { label: '5x5 Closed', price: 32000, size: '5x5' },
+    { label: '5x5 Sliding', price: 32000, size: '5x5' },
+    { label: '5x6 Open', price: 25600, size: '5x6' },
+    { label: '5x6 Closed', price: 33000, size: '5x6' },
+    { label: '5x6 Sliding', price: 37000, size: '5x6' },
+    { label: '6x6 Open', price: 29000, size: '6x6' },
+    { label: '6x6 4 Doors', price: 45600, size: '6x6' },
+    { label: '6x6 Sliding', price: 50000, size: '6x6' },
+    { label: 'Rotating Shoe Racks', price: 50000, size: 'Specialty' }
+];
+
 /**
  * Parse a plain-text shoe rack list into product row objects.
  * Expected line format: <SIZE> <TYPE...> <PRICE> [best-seller]
@@ -835,15 +861,43 @@ function ProductTemplatePicker({ onPick }) {
     if (!products.length) return null;
 
     return (
-        <div style={{ background: COLORS.goldSoft, border: `1px dashed ${COLORS.goldBright}`, padding: 16, borderRadius: 10, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
+        <div style={{ background: COLORS.goldSoft, border: `1px dashed ${COLORS.goldBright}`, padding: 16, borderRadius: 10, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, flex: 1, minWidth: 300 }}>
             <div style={{ flex: 1, minWidth: 200 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.goldBright, marginBottom: 4 }}>📋 Copy from existing product</div>
                 <div style={{ fontSize: 12, color: COLORS.text }}>Select a product to instantly auto-fill the form below with its details.</div>
             </div>
-            <select style={{ ...inputStyle, width: '100%', maxWidth: 300, background: COLORS.surface }} onChange={handleChange} defaultValue="">
+            <select style={{ ...inputStyle, width: '100%', maxWidth: 300, background: COLORS.surface }} onChange={handleChange} value="">
                 <option value="" disabled>-- Select product to copy --</option>
                 {products.map(p => (
                     <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+            </select>
+        </div>
+    );
+}
+
+/* ---------- Reusable Shoe Rack Quick-Fill Picker ---------- */
+function ShoeRackTemplatePicker({ onPick }) {
+    const handleChange = (e) => {
+        const idx = e.target.value;
+        if (idx === '') return;
+        const tpl = SHOE_RACK_TEMPLATES[idx];
+        if (tpl) {
+            onPick(tpl);
+            e.target.value = '';
+        }
+    };
+
+    return (
+        <div style={{ background: COLORS.greenSoft, border: `1px dashed ${COLORS.green}`, padding: 16, borderRadius: 10, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, flex: 1, minWidth: 300 }}>
+            <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.green, marginBottom: 4 }}>👟 Shoe Rack Quick-Fill</div>
+                <div style={{ fontSize: 12, color: COLORS.text }}>Select a standard shoe rack to auto-fill its price and details.</div>
+            </div>
+            <select style={{ ...inputStyle, width: '100%', maxWidth: 300, background: COLORS.surface }} onChange={handleChange} value="">
+                <option value="" disabled>-- Select standard model --</option>
+                {SHOE_RACK_TEMPLATES.map((t, i) => (
+                    <option key={i} value={i}>{t.label} (KSh {t.price.toLocaleString()})</option>
                 ))}
             </select>
         </div>
@@ -968,36 +1022,58 @@ function ProductForm({ onSubmit, onCancel, initialData = null }) {
             }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     
-                    <ProductTemplatePicker onPick={(prod) => {
-                        let meta = {}, out = {};
-                        try {
-                            const p = JSON.parse(prod.delivery_outside || '{}') || {};
-                            if (p.metadata) { meta = p.metadata; const { metadata: _m, ...rest } = p; out = rest; }
-                            else out = p;
-                        } catch(e) {}
-                        
-                        setValues(prev => ({
-                            ...prev,
-                            name: prod.name ? prod.name + ' (Copy)' : prev.name,
-                            category: prod.category || prev.category,
-                            subcategory: prod.subcategory || prev.subcategory,
-                            price: prod.price || prev.price,
-                            description: prod.description || prev.description,
-                            in_stock: prod.in_stock ?? prev.in_stock,
-                            featured: prod.featured ?? prev.featured,
-                            image: prod.image || prev.image,
-                            badge: prod.badge || prev.badge,
-                            rating: prod.rating || prev.rating,
-                            review_count: prod.review_count || prev.review_count,
-                            delivery_nairobi: prod.delivery_nairobi || prev.delivery_nairobi,
-                            transport_method: prod.transport_method || prev.transport_method,
-                            size: meta.size || prod.size || prev.size,
-                            piece_price: meta.piece_price || prod.piece_price || prev.piece_price,
-                            images: meta.images?.length ? meta.images : (prod.image ? [prod.image] : prev.images || []),
-                            combo_items: meta.combo_items || prev.combo_items || []
-                        }));
-                        setOutsidePrices(out);
-                    }} />
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+                        <ProductTemplatePicker onPick={(prod) => {
+                            let meta = {}, out = {};
+                            try {
+                                const p = JSON.parse(prod.delivery_outside || '{}') || {};
+                                if (p.metadata) { meta = p.metadata; const { metadata: _m, ...rest } = p; out = rest; }
+                                else out = p;
+                            } catch(e) {}
+                            
+                            setValues(prev => ({
+                                ...prev,
+                                name: prod.name ? prod.name + ' (Copy)' : prev.name,
+                                category: prod.category || prev.category,
+                                subcategory: prod.subcategory || prev.subcategory,
+                                price: prod.price || prev.price,
+                                description: prod.description || prev.description,
+                                in_stock: prod.in_stock ?? prev.in_stock,
+                                featured: prod.featured ?? prev.featured,
+                                image: prod.image || prev.image,
+                                badge: prod.badge || prev.badge,
+                                rating: prod.rating || prev.rating,
+                                review_count: prod.review_count || prev.review_count,
+                                delivery_nairobi: prod.delivery_nairobi || prev.delivery_nairobi,
+                                transport_method: prod.transport_method || prev.transport_method,
+                                size: meta.size || prod.size || prev.size,
+                                piece_price: meta.piece_price || prod.piece_price || prev.piece_price,
+                                images: meta.images?.length ? meta.images : (prod.image ? [prod.image] : prev.images || []),
+                                combo_items: meta.combo_items || prev.combo_items || []
+                            }));
+                            setOutsidePrices(out);
+                        }} />
+
+                        <ShoeRackTemplatePicker onPick={(tpl) => {
+                            const isSpecialty = tpl.size === 'Specialty';
+                            const dims = isSpecialty ? '' : (SIZE_DIMENSIONS[tpl.size.toLowerCase()] || '');
+                            const type = isSpecialty ? tpl.label : tpl.label.split(' ').slice(1).join(' ');
+                            const name = isSpecialty ? tpl.label : `${tpl.size} Shoe Rack – ${type}`;
+                            const desc = isSpecialty 
+                                ? `${tpl.label}. Premium quality. Delivery free within 10km of our workshop.`
+                                : `${tpl.size} ${type} Shoe Rack. Sturdy build. Delivery free within 10km of our workshop, then Ksh 100/km beyond that.`;
+                                
+                            setValues(prev => ({
+                                ...prev,
+                                name,
+                                category: 'Storage',
+                                subcategory: 'Shoe Racks',
+                                price: tpl.price,
+                                description: desc,
+                                size: dims || tpl.size
+                            }));
+                        }} />
+                    </div>
 
                     <div><label style={labelStyle}>Product name *</label><input style={inputStyle} value={v.name} onChange={set('name')} required placeholder="e.g. Chesterfield Sofa Set" /></div>
 
