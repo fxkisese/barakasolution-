@@ -738,27 +738,55 @@ function ExistingImagePicker({ onPick }) {
     };
 
     return (
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 4 }}>
-            {/* Thumbnail preview of currently selected */}
-            {selected ? (
-                <img
-                    src={selected}
-                    alt=""
-                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: `1px solid ${COLORS.border}`, flexShrink: 0 }}
-                />
-            ) : (
-                <div style={{ width: 48, height: 48, borderRadius: 6, background: COLORS.surface3, border: `2px dashed ${COLORS.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <IconImage style={{ color: COLORS.muted, opacity: 0.4, width: 16, height: 16 }} />
-                </div>
-            )}
-            <div style={{ width: 180 }}>
-                <ImageGridPicker 
-                    images={images} 
-                    loading={loading} 
-                    value={selected} 
-                    onChange={handleChange} 
-                />
+        <div style={{ marginBottom: 4 }}>
+            <ImageGridPicker 
+                images={images} 
+                loading={loading} 
+                value={selected} 
+                onChange={handleChange} 
+            />
+        </div>
+    );
+}
+
+/* ---------- Reusable Product Template Picker ---------- */
+function ProductTemplatePicker({ onPick }) {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            const { data } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+            if (data) setProducts(data);
+            setLoading(false);
+        })();
+    }, []);
+
+    const handleChange = (e) => {
+        const id = e.target.value;
+        if (!id) return;
+        const prod = products.find(p => p.id === id);
+        if (prod) {
+            onPick(prod);
+            e.target.value = ''; // Reset dropdown
+        }
+    };
+
+    if (loading) return null;
+    if (!products.length) return null;
+
+    return (
+        <div style={{ background: COLORS.goldSoft, border: `1px dashed ${COLORS.goldBright}`, padding: 16, borderRadius: 10, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
+            <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.goldBright, marginBottom: 4 }}>📋 Copy from existing product</div>
+                <div style={{ fontSize: 12, color: COLORS.text }}>Select a product to instantly auto-fill the form below with its details.</div>
             </div>
+            <select style={{ ...inputStyle, width: '100%', maxWidth: 300, background: COLORS.surface }} onChange={handleChange} defaultValue="">
+                <option value="" disabled>-- Select product to copy --</option>
+                {products.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+            </select>
         </div>
     );
 }
@@ -880,6 +908,38 @@ function ProductForm({ onSubmit, onCancel, initialData = null }) {
                 });
             }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    
+                    <ProductTemplatePicker onPick={(prod) => {
+                        let meta = {}, out = {};
+                        try {
+                            const p = JSON.parse(prod.delivery_outside || '{}') || {};
+                            if (p.metadata) { meta = p.metadata; const { metadata: _m, ...rest } = p; out = rest; }
+                            else out = p;
+                        } catch(e) {}
+                        
+                        setValues(prev => ({
+                            ...prev,
+                            name: prod.name ? prod.name + ' (Copy)' : prev.name,
+                            category: prod.category || prev.category,
+                            subcategory: prod.subcategory || prev.subcategory,
+                            price: prod.price || prev.price,
+                            description: prod.description || prev.description,
+                            in_stock: prod.in_stock ?? prev.in_stock,
+                            featured: prod.featured ?? prev.featured,
+                            image: prod.image || prev.image,
+                            badge: prod.badge || prev.badge,
+                            rating: prod.rating || prev.rating,
+                            review_count: prod.review_count || prev.review_count,
+                            delivery_nairobi: prod.delivery_nairobi || prev.delivery_nairobi,
+                            transport_method: prod.transport_method || prev.transport_method,
+                            size: meta.size || prod.size || prev.size,
+                            piece_price: meta.piece_price || prod.piece_price || prev.piece_price,
+                            images: meta.images?.length ? meta.images : (prod.image ? [prod.image] : prev.images || []),
+                            combo_items: meta.combo_items || prev.combo_items || []
+                        }));
+                        setOutsidePrices(out);
+                    }} />
+
                     <div><label style={labelStyle}>Product name *</label><input style={inputStyle} value={v.name} onChange={set('name')} required placeholder="e.g. Chesterfield Sofa Set" /></div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
