@@ -313,6 +313,69 @@ function Modal({ title, onClose, children }) {
     );
 }
 
+/* ---------- Bulk Delete Confirm Modal ---------- */
+function BulkDeleteConfirmModal({ count, onConfirm, onCancel, deleting }) {
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = ''; };
+    }, []);
+    return (
+        <div onClick={onCancel} style={{ position: 'fixed', inset: 0, background: 'rgba(10,8,6,0.75)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9500, padding: 16 }}>
+            <div onClick={e => e.stopPropagation()} style={{ background: COLORS.surface, borderRadius: 20, padding: '36px 32px', width: '100%', maxWidth: 440, boxShadow: '0 24px 80px rgba(0,0,0,0.28)', border: `1px solid ${COLORS.border}` }}>
+                <div style={{ width: 52, height: 52, borderRadius: '50%', background: COLORS.rustSoft, border: `1.5px solid ${COLORS.rust}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                    <IconTrash style={{ color: COLORS.rust, width: 22, height: 22 }} />
+                </div>
+                <h3 style={{ fontFamily: fontDisplay, fontSize: 20, fontWeight: 700, color: COLORS.text, margin: '0 0 10px', letterSpacing: '-0.02em' }}>
+                    Delete {count} product{count !== 1 ? 's' : ''}?
+                </h3>
+                <p style={{ fontSize: 14, color: COLORS.muted, margin: '0 0 28px', lineHeight: 1.6 }}>
+                    This will permanently remove {count} product{count !== 1 ? 's' : ''} from the database. This cannot be undone.
+                </p>
+                <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                        disabled={deleting}
+                        style={{ ...btnSecondary, opacity: deleting ? 0.5 : 1 }}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onConfirm}
+                        disabled={deleting}
+                        style={{
+                            background: COLORS.rust,
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 10,
+                            padding: '10px 22px',
+                            fontWeight: 600,
+                            fontSize: 13,
+                            cursor: deleting ? 'wait' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            fontFamily: fontBody,
+                            opacity: deleting ? 0.7 : 1,
+                            transition: 'opacity 0.15s',
+                        }}
+                    >
+                        {deleting ? (
+                            <>
+                                <span style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+                                Deleting…
+                            </>
+                        ) : (
+                            <><IconTrash style={{ width: 15, height: 15 }} /> Delete {count}</>  
+                        )}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ---------- Image Cropper ---------- */
 function ImageCropperModal({ file, onApply, onCancel }) {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -1519,17 +1582,73 @@ function DashboardPage({ products, sales, credit, expenses, setActiveTab }) {
 }
 
 /* ---------- Products ---------- */
-function ProductsPage({ products, handleDeleteProduct, openModal, handleBulkUpload, uploadingBulk }) {
+function ProductsPage({ products, handleDeleteProduct, handleBulkDeleteProducts, openModal, handleBulkUpload, uploadingBulk }) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
+    const [selectedIds, setSelectedIds] = useState(new Set());
+    const [showBulkConfirm, setShowBulkConfirm] = useState(false);
+    const [bulkDeleting, setBulkDeleting] = useState(false);
+
     const cats = ['All', ...Array.from(new Set(products.map(p => p.category).filter(Boolean)))];
     const filtered = products.filter(p => (category === 'All' || p.category === category) && (p.name || '').toLowerCase().includes(search.toLowerCase()));
+
+    // Clear selection when filters change
+    useEffect(() => { setSelectedIds(new Set()); }, [search, category]);
+
+    const filteredIds = filtered.map(p => p.id);
+    const selectedCount = selectedIds.size;
+    const allVisibleSelected = filteredIds.length > 0 && filteredIds.every(id => selectedIds.has(id));
+    const someVisibleSelected = filteredIds.some(id => selectedIds.has(id)) && !allVisibleSelected;
+
+    const toggleSelectAll = () => {
+        if (allVisibleSelected) {
+            // Deselect all visible
+            setSelectedIds(prev => {
+                const next = new Set(prev);
+                filteredIds.forEach(id => next.delete(id));
+                return next;
+            });
+        } else {
+            // Select all visible
+            setSelectedIds(prev => {
+                const next = new Set(prev);
+                filteredIds.forEach(id => next.add(id));
+                return next;
+            });
+        }
+    };
+
+    const toggleSelectRow = (id) => {
+        setSelectedIds(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id); else next.add(id);
+            return next;
+        });
+    };
+
+    const handleBulkDeleteConfirmed = async () => {
+        setBulkDeleting(true);
+        const success = await handleBulkDeleteProducts(Array.from(selectedIds));
+        setBulkDeleting(false);
+        if (success) {
+            setSelectedIds(new Set());
+            setShowBulkConfirm(false);
+        }
+    };
+
+    // Indeterminate checkbox ref
+    const selectAllRef = React.useRef(null);
+    useEffect(() => {
+        if (selectAllRef.current) {
+            selectAllRef.current.indeterminate = someVisibleSelected;
+        }
+    }, [someVisibleSelected]);
 
     return (
         <div>
             <PageHeader eyebrow="Inventory" title="Products"
                 action={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                         <label style={{ ...btnSecondary, cursor: uploadingBulk ? 'wait' : 'pointer' }}>
                             ↑ {uploadingBulk ? 'Uploading…' : 'Bulk Upload'}
                             <input type="file" accept="image/*" multiple onChange={handleBulkUpload} style={{ display: 'none' }} disabled={uploadingBulk} />
@@ -1547,8 +1666,10 @@ function ProductsPage({ products, handleDeleteProduct, openModal, handleBulkUplo
                     </div>
                 }
             />
-            <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-                <div style={{ position: 'relative', flex: 1 }}>
+
+            {/* ── Filters ── */}
+            <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
                     <IconSearch style={{ position: 'absolute', left: 12, top: 11, color: COLORS.muted, pointerEvents: 'none' }} />
                     <input style={{ ...inputStyle, paddingLeft: 36 }} placeholder="Search products…" value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
@@ -1556,35 +1677,167 @@ function ProductsPage({ products, handleDeleteProduct, openModal, handleBulkUplo
                     {cats.map(c => <option key={c}>{c}</option>)}
                 </select>
             </div>
+
+            {/* ── Bulk action bar ── */}
+            {selectedCount > 0 && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '10px 16px',
+                    marginBottom: 12,
+                    background: `linear-gradient(135deg, ${COLORS.rustSoft}, rgba(220,38,38,0.06))`,
+                    border: `1.5px solid ${COLORS.rust}33`,
+                    borderRadius: 12,
+                    flexWrap: 'wrap',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 10,
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 2px 12px rgba(220,38,38,0.08)',
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 160 }}>
+                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: COLORS.rust, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+                            {selectedCount}
+                        </div>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.rust }}>
+                            {selectedCount} product{selectedCount !== 1 ? 's' : ''} selected
+                        </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                        <button
+                            type="button"
+                            onClick={() => setSelectedIds(new Set())}
+                            style={{ ...btnSecondary, padding: '7px 16px', fontSize: 13 }}
+                        >
+                            Clear
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShowBulkConfirm(true)}
+                            style={{
+                                background: COLORS.rust,
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: 10,
+                                padding: '7px 16px',
+                                fontWeight: 600,
+                                fontSize: 13,
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 7,
+                                fontFamily: fontBody,
+                            }}
+                        >
+                            <IconTrash style={{ width: 15, height: 15 }} />
+                            Delete selected
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Table ── */}
             <div style={cardStyle}>
                 <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 500 }}>
-                        <thead><tr style={{ background: COLORS.surface2 }}>
-                            <th style={thStyle}>Product</th><th style={thStyle}>Category</th><th style={thStyle}>Price</th><th style={thStyle}>Status</th><th style={{ ...thStyle, textAlign: 'right' }}>Actions</th>
-                        </tr></thead>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 520 }}>
+                        <thead>
+                            <tr style={{ background: COLORS.surface2 }}>
+                                <th style={{ ...thStyle, width: 44, padding: '13px 8px 13px 16px' }}>
+                                    <input
+                                        ref={selectAllRef}
+                                        type="checkbox"
+                                        id="products-select-all"
+                                        checked={allVisibleSelected}
+                                        onChange={toggleSelectAll}
+                                        style={{ width: 16, height: 16, cursor: 'pointer', accentColor: COLORS.rust }}
+                                        aria-label="Select all visible products"
+                                    />
+                                </th>
+                                <th style={thStyle}>Product</th>
+                                <th style={thStyle}>Category</th>
+                                <th style={thStyle}>Price</th>
+                                <th style={thStyle}>Status</th>
+                                <th style={{ ...thStyle, textAlign: 'right' }}>Actions</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            {filtered.map(p => (
-                                <tr key={p.id} style={{ background: COLORS.surface }}>
-                                    <td style={tdStyle}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                            {p.image ? <img src={p.image} alt={p.name} style={{ width: 40, height: 40, borderRadius: 6, objectFit: 'cover', border: `1px solid ${COLORS.border}` }} /> : <div style={{ width: 40, height: 40, borderRadius: 6, background: COLORS.surface2 }} />}
-                                            <span style={{ fontWeight: 500 }}>{p.name}</span>
-                                        </div>
-                                    </td>
-                                    <td style={{ ...tdStyle, color: COLORS.muted }}>{p.category}</td>
-                                    <td style={{ ...tdStyle, fontFamily: fontMono }}>{p.price ? fmt(p.price) : 'POA'}</td>
-                                    <td style={tdStyle}><Badge color={p.in_stock ? COLORS.green : COLORS.rust}>{p.in_stock ? 'In Stock' : 'Out of Stock'}</Badge></td>
-                                    <td style={{ ...tdStyle, textAlign: 'right' }}>
-                                        <button style={{ ...iconBtnStyle, color: COLORS.gold, marginRight: 8 }} onClick={() => openModal({ type: 'edit_product', product: p })}><IconEdit /></button>
-                                        <button style={{ ...iconBtnStyle, color: COLORS.rust }} onClick={() => handleDeleteProduct(p.id)}><IconTrash /></button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filtered.length === 0 && <tr><td colSpan={5}><EmptyRow text="No products found. Add one above." /></td></tr>}
+                            {filtered.map(p => {
+                                const isSelected = selectedIds.has(p.id);
+                                return (
+                                    <tr
+                                        key={p.id}
+                                        style={{
+                                            background: isSelected
+                                                ? 'rgba(220,38,38,0.05)'
+                                                : COLORS.surface,
+                                            borderLeft: isSelected ? `3px solid ${COLORS.rust}` : '3px solid transparent',
+                                            transition: 'background 0.15s, border-color 0.15s',
+                                        }}
+                                    >
+                                        <td
+                                            style={{ ...tdStyle, width: 44, padding: '15px 8px 15px 16px' }}
+                                            onClick={e => e.stopPropagation()}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={isSelected}
+                                                onChange={e => { e.stopPropagation(); toggleSelectRow(p.id); }}
+                                                onClick={e => e.stopPropagation()}
+                                                style={{ width: 16, height: 16, cursor: 'pointer', accentColor: COLORS.rust }}
+                                                aria-label={`Select ${p.name}`}
+                                            />
+                                        </td>
+                                        <td style={tdStyle}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                                {p.image
+                                                    ? <img src={p.image} alt={p.name} style={{ width: 40, height: 40, borderRadius: 6, objectFit: 'cover', border: `1px solid ${COLORS.border}`, flexShrink: 0 }} />
+                                                    : <div style={{ width: 40, height: 40, borderRadius: 6, background: COLORS.surface2, flexShrink: 0 }} />}
+                                                <span style={{ fontWeight: 500 }}>{p.name}</span>
+                                            </div>
+                                        </td>
+                                        <td style={{ ...tdStyle, color: COLORS.muted }}>{p.category}</td>
+                                        <td style={{ ...tdStyle, fontFamily: fontMono }}>{p.price ? fmt(p.price) : 'POA'}</td>
+                                        <td style={tdStyle}><Badge color={p.in_stock ? COLORS.green : COLORS.rust}>{p.in_stock ? 'In Stock' : 'Out of Stock'}</Badge></td>
+                                        <td style={{ ...tdStyle, textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                            <button
+                                                style={{ ...iconBtnStyle, color: COLORS.gold, marginRight: 8 }}
+                                                onClick={e => { e.stopPropagation(); openModal({ type: 'edit_product', product: p }); }}
+                                                aria-label={`Edit ${p.name}`}
+                                            >
+                                                <IconEdit />
+                                            </button>
+                                            <button
+                                                style={{ ...iconBtnStyle, color: COLORS.rust }}
+                                                onClick={e => { e.stopPropagation(); handleDeleteProduct(p.id); }}
+                                                aria-label={`Delete ${p.name}`}
+                                            >
+                                                <IconTrash />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            {filtered.length === 0 && (
+                                <tr><td colSpan={6}><EmptyRow text="No products found. Add one above." /></td></tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {/* ── Bulk delete confirmation modal ── */}
+            {showBulkConfirm && (
+                <BulkDeleteConfirmModal
+                    count={selectedCount}
+                    onConfirm={handleBulkDeleteConfirmed}
+                    onCancel={() => !bulkDeleting && setShowBulkConfirm(false)}
+                    deleting={bulkDeleting}
+                />
+            )}
+
+            {/* Spinner keyframe (injected once) */}
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
     );
 }
@@ -1890,6 +2143,58 @@ export default function AdminPanel() {
         toast.success('Product deleted.');
     };
 
+    /**
+     * Bulk-delete products by ID array.
+     * Batches into groups of 50 to avoid Supabase .in() query length limits.
+     * Also removes associated images from the 'images' storage bucket when possible.
+     * Returns true on full success, false if any error occurred.
+     */
+    const handleBulkDeleteProducts = async (ids) => {
+        if (!ids.length) return false;
+        const BATCH = 50;
+        const errors = [];
+
+        // Optionally delete storage images for these products
+        const productsToDelete = products.filter(p => ids.includes(p.id));
+        const imagePaths = productsToDelete
+            .map(p => {
+                if (!p.image) return null;
+                try {
+                    // Extract the storage path from the public URL
+                    // Public URLs look like: https://<project>.supabase.co/storage/v1/object/public/images/<path>
+                    const url = new URL(p.image);
+                    const match = url.pathname.match(/\/object\/public\/images\/(.+)$/);
+                    return match ? match[1] : null;
+                } catch { return null; }
+            })
+            .filter(Boolean);
+
+        if (imagePaths.length > 0) {
+            // Batch image removals in groups of 50 too
+            for (let i = 0; i < imagePaths.length; i += BATCH) {
+                const chunk = imagePaths.slice(i, i + BATCH);
+                // Non-fatal — we still delete the DB rows even if storage cleanup fails
+                await supabase.storage.from('images').remove(chunk);
+            }
+        }
+
+        // Delete DB rows in batches
+        for (let i = 0; i < ids.length; i += BATCH) {
+            const chunk = ids.slice(i, i + BATCH);
+            const { error } = await supabase.from('products').delete().in('id', chunk);
+            if (error) errors.push(error.message);
+        }
+
+        if (errors.length > 0) {
+            toast.error(`Delete failed: ${errors[0]}`);
+            return false;
+        }
+
+        setProducts(prev => prev.filter(p => !ids.includes(p.id)));
+        toast.success(`${ids.length} product${ids.length !== 1 ? 's' : ''} deleted.`);
+        return true;
+    };
+
     const handleBulkUpload = async (e) => {
         const files = Array.from(e.target.files);
         if (!files.length) return;
@@ -2087,7 +2392,7 @@ export default function AdminPanel() {
         if (loading) return <div style={{ padding: 48, textAlign: 'center', color: COLORS.muted }}>Loading…</div>;
         switch (activeTab) {
             case 'dashboard': return <DashboardPage products={products} sales={sales} credit={credit} expenses={expenses} setActiveTab={setActiveTab} />;
-            case 'products': return <ProductsPage products={products} handleDeleteProduct={handleDeleteProduct} openModal={t => setModal(t)} handleBulkUpload={handleBulkUpload} uploadingBulk={uploadingBulk} />;
+            case 'products': return <ProductsPage products={products} handleDeleteProduct={handleDeleteProduct} handleBulkDeleteProducts={handleBulkDeleteProducts} openModal={t => setModal(t)} handleBulkUpload={handleBulkUpload} uploadingBulk={uploadingBulk} />;
             case 'sales': return <SalesPage sales={sales} openModal={t => setModal(t)} handleDeleteSale={handleDeleteSale} />;
             case 'credit': return <CreditPage credit={credit} openModal={t => setModal(t)} handleDeleteCredit={handleDeleteCredit} handleRecordPayment={handleRecordPayment} />;
             case 'expenses': return <ExpensesPage expenses={expenses} openModal={t => setModal(t)} handleDeleteExpense={handleDeleteExpense} />;
