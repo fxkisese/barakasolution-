@@ -52,7 +52,7 @@ export default function ProductModal({ isOpen, setIsOpen, product }) {
                         style={{ cursor: zoomed ? "zoom-out" : "zoom-in" }}
                     >
                         <Image
-                            src={product.image_url}
+                            src={product.image_url || product.image}
                             alt={product.name}
                             className="w-full h-full object-cover pointer-events-none"
                             fittingType="fill"

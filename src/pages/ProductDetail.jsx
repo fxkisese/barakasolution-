@@ -60,9 +60,9 @@ export default function ProductDetail() {
                     animate={{ opacity: 1, x: 0 }}
                     className="relative aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden bg-secondary"
                 >
-                    {product.image_url && (
+                    {(product.image_url || product.image) && (
                         <img
-                            src={product.image_url}
+                            src={product.image_url || product.image}
                             alt={product.name}
                             className="object-cover w-full h-full"
                         />
