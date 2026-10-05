@@ -80,7 +80,7 @@ export function sendAddToCartWhatsApp(product) {
         `*Item:* ${product.name}\n` +
         `*Category:* ${product.category || 'N/A'}\n` +
         `*Price:* ${fmt(product.price || 0)}\n` +
-        (product.image ? `*Product Image:* ${product.image}\n` : '') +
+        (product.image_url ? `*Product Image:* ${product.image_url}\n` : '') +
         `\nPlease let me know the next steps.`;
     openWA(ADMIN_PHONE, msg);
 }
@@ -118,8 +118,8 @@ export function sendProductOrderWhatsApp(product, productUrl) {
     msg += `*Link:* ${url}\n\n`;
     msg += `Please confirm availability and delivery details. Thank you! 🙏`;
     // Append image URL on its own line so WhatsApp generates a preview
-    if (product.image && String(product.image).startsWith('http')) {
-        msg += `\n\n${product.image}`;
+    if (product.image_url && String(product.image_url).startsWith('http')) {
+        msg += `\n\n${product.image_url}`;
     }
     openWA(ADMIN_PHONE, msg);
 }
@@ -192,12 +192,12 @@ export function sendCartCheckoutWhatsApp(cartItems, total, details, deliveryQuot
     // ── Product photos — bare URLs at the end trigger WhatsApp image previews
     // WhatsApp renders a rich preview card for the last URL it finds in a message.
     // Placing each image URL on its own line after all text maximises preview chances.
-    const itemsWithImages = cartItems.filter(item => item.image && String(item.image).startsWith('http'));
+    const itemsWithImages = cartItems.filter(item => item.image_url && String(item.image_url).startsWith('http'));
     if (itemsWithImages.length > 0) {
         msg += `\n\n📸 *Item Photos:*`;
         itemsWithImages.forEach(item => {
             // Each image URL on its own line — WhatsApp generates a preview card per URL
-            msg += `\n${item.name}:\n${item.image}`;
+            msg += `\n${item.name}:\n${item.image_url}`;
         });
     }
 

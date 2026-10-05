@@ -116,7 +116,7 @@ export default function Shop() {
                                 >
                                     <div className="relative aspect-[4/5] overflow-hidden bg-[#F4F0EB]">
                                         <Image
-                                            src={product.image}
+                                            src={product.image_url}
                                             alt={product.name}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                             fittingType="fill"

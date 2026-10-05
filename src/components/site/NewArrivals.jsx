@@ -35,7 +35,7 @@ function ProductCard({ product, large = false, onOpen }) {
         >
             <div className={`relative overflow-hidden bg-[#F4F0EB] ${large ? "aspect-[3/4]" : "aspect-[4/5]"} rounded-none`}>
                 <Image
-                    src={product.image}
+                    src={product.image_url}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                     fittingType="fill"
