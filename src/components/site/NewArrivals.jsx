@@ -147,7 +147,7 @@ export default function NewArrivals() {
                 .from('products')
                 .select('*')
                 .order('created_at', { ascending: false })
-                .limit(8);
+                .limit(16);
 
             if (data && !error) {
                 setLiveProducts(data);
@@ -161,7 +161,8 @@ export default function NewArrivals() {
 
     const heroProduct = liveProducts[0];
     const stackProducts = liveProducts.slice(1, 3);
-    const remainingProducts = liveProducts.slice(3);
+    const firstRowProducts = liveProducts.slice(3, 7);
+    const secondRowProducts = liveProducts.slice(7);
 
     return (
         <section id="arrivals" className="scroll-mt-24 bg-[#FAFAF8] py-24 md:py-36">
@@ -224,10 +225,19 @@ export default function NewArrivals() {
                             </div>
                         )}
 
-                        {/* Bottom row: remaining products in 4 columns */}
-                        {remainingProducts.length > 0 && (
+                        {/* Bottom row 1: first 4 remaining products */}
+                        {firstRowProducts.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                {remainingProducts.map((p) => (
+                                {firstRowProducts.map((p) => (
+                                    <ProductCard key={p.id || p.name} product={p} onOpen={openProductModal} />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Bottom row 2: next batch of products */}
+                        {secondRowProducts.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                {secondRowProducts.map((p) => (
                                     <ProductCard key={p.id || p.name} product={p} onOpen={openProductModal} />
                                 ))}
                             </div>
