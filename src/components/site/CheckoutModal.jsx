@@ -148,7 +148,7 @@ export default function CheckoutModal({ open, onOpenChange }) {
                                 </div>
                                 {deliveryQuote && !deliveryQuote.isFree && (
                                     <p className="text-[10px] text-stone-400">
-                                        {deliveryQuote.distanceKm} km from {deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name}
+                                        {deliveryQuote.distanceKm} km {deliveryQuote.distanceSource === 'road' ? 'by road' : 'est.'} from {deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name}
                                     </p>
                                 )}
 

@@ -139,8 +139,8 @@ export function sendCartCheckoutWhatsApp(cartItems, total, details, deliveryQuot
     // ── Delivery location + directions from shop ────────────────────────────
     if (deliveryQuote?.customerLat != null && deliveryQuote?.customerLng != null) {
         const { customerLat, customerLng, nearestBranch } = deliveryQuote;
-        const branchLat = nearestBranch?.lat ?? -1.3040;
-        const branchLng = nearestBranch?.lng ?? 36.8695;
+        const branchLat = nearestBranch?.lat ?? -1.2922833;
+        const branchLng = nearestBranch?.lng ?? 36.8859225;
         const branchName = nearestBranch?.shortName || nearestBranch?.name || 'Shop';
 
         // Pin drop location
@@ -177,10 +177,12 @@ export function sendCartCheckoutWhatsApp(cartItems, total, details, deliveryQuot
     msg += `\n*Subtotal:* ${fmt(total)}`;
 
     if (deliveryQuote) {
+        const branch = deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name || 'nearest branch';
+        const how = deliveryQuote.distanceSource === 'road' ? 'by road' : 'est.';
         if (deliveryQuote.isFree) {
-            msg += `\n*Delivery:* FREE (within ${deliveryQuote.distanceKm}km of ${deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name || 'nearest branch'})`;
+            msg += `\n*Delivery:* FREE (${deliveryQuote.distanceKm}km ${how} from ${branch}, within ${deliveryQuote.freeRadiusKm}km free radius)`;
         } else {
-            msg += `\n*Delivery:* ${fmt(deliveryQuote.fee)} (${deliveryQuote.distanceKm}km from ${deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name || 'nearest branch'})`;
+            msg += `\n*Delivery:* ${fmt(deliveryQuote.fee)} (${deliveryQuote.distanceKm}km ${how} from ${branch}; ${deliveryQuote.billableKm}km × KES ${deliveryQuote.ratePerKm}/km)`;
         }
         const grandTotal = total + (deliveryQuote.fee || 0);
         msg += `\n*Grand Total:* ${fmt(grandTotal)}`;

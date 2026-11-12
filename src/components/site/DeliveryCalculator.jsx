@@ -14,6 +14,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { Search, MapPin, Loader2, CheckCircle2, AlertTriangle, Navigation } from 'lucide-react';
 import { getDeliveryQuote } from '@/utils/deliveryUtils';
+import { getRoadDistancesKm } from '@/utils/routing';
 import { useDeliverySettings } from '@/hooks/useDeliverySettings';
 
 // ─── Fix Leaflet default marker icon (Vite/webpack asset issue) ──────────────
@@ -98,20 +99,43 @@ export default function DeliveryCalculator({ onQuoteReady }) {
     // Quote state
     const [quote, setQuote]               = useState(null);
     const [quoteError, setQuoteError]     = useState('');
+    const [quoteLoading, setQuoteLoading] = useState(false);
 
     // ── Compute quote whenever customerPos changes ────────────────────────────
+    // Road distance comes from OSRM (see utils/routing.js). If routing fails
+    // the quote falls back to a straight-line estimate so checkout never blocks.
     useEffect(() => {
         if (!customerPos || settingsLoading) return;
-        try {
-            const q = getDeliveryQuote(customerPos.lat, customerPos.lng, branches, freeRadiusKm, ratePerKm);
-            setQuote(q);
-            setQuoteError('');
-            onQuoteReady?.(q);
-        } catch (err) {
-            setQuoteError('Could not calculate fee. Please try a different location.');
-            setQuote(null);
-            onQuoteReady?.(null);
-        }
+        let cancelled = false;
+        const controller = new AbortController();
+
+        setQuoteLoading(true);
+        setQuoteError('');
+        setQuote(null);
+        onQuoteReady?.(null);
+
+        (async () => {
+            try {
+                const roadKm = await getRoadDistancesKm(
+                    customerPos.lat, customerPos.lng, branches, { signal: controller.signal },
+                );
+                if (cancelled) return;
+                const q = getDeliveryQuote(
+                    customerPos.lat, customerPos.lng, branches, freeRadiusKm, ratePerKm, roadKm,
+                );
+                setQuote(q);
+                onQuoteReady?.(q);
+            } catch {
+                if (cancelled) return;
+                setQuoteError('Could not calculate fee. Please try a different location.');
+                setQuote(null);
+                onQuoteReady?.(null);
+            } finally {
+                if (!cancelled) setQuoteLoading(false);
+            }
+        })();
+
+        return () => { cancelled = true; controller.abort(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerPos, branches, freeRadiusKm, ratePerKm, settingsLoading]);
 
@@ -305,6 +329,13 @@ export default function DeliveryCalculator({ onQuoteReady }) {
                 </div>
             )}
 
+            {quoteLoading && !quoteError && (
+                <div className="flex items-center gap-2 p-3 bg-stone-50 border border-stone-200 rounded-sm text-xs text-stone-500">
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                    Calculating road distance…
+                </div>
+            )}
+
             {quote && !quoteError && (
                 <div className={`p-4 rounded-sm border ${quote.isFree
                     ? 'bg-emerald-50 border-emerald-200'
@@ -313,14 +344,19 @@ export default function DeliveryCalculator({ onQuoteReady }) {
                     <div className="flex items-start justify-between gap-2">
                         <div>
                             <p className="text-xs text-stone-500 mb-0.5">
-                                {quote.distanceKm} km from {quote.nearestBranch.shortName || quote.nearestBranch.name}
+                                {quote.distanceKm} km {quote.distanceSource === 'road' ? 'by road' : '(estimated)'} from {quote.nearestBranch.shortName || quote.nearestBranch.name}
                             </p>
                             <p className={`font-semibold text-base ${quote.isFree ? 'text-emerald-700' : 'text-obsidian'}`}>
                                 {quote.isFree ? 'Free Delivery' : `KES ${quote.fee.toLocaleString()}`}
                             </p>
                             {!quote.isFree && (
                                 <p className="text-[11px] text-stone-400 mt-0.5">
-                                    {quote.distanceKm - 10} km beyond free radius × KES 100/km
+                                    {quote.billableKm} km beyond the {quote.freeRadiusKm} km free radius × KES {quote.ratePerKm}/km
+                                </p>
+                            )}
+                            {quote.distanceSource !== 'road' && (
+                                <p className="text-[11px] text-amber-600 mt-0.5">
+                                    Road routing unavailable — fee estimated from straight-line distance.
                                 </p>
                             )}
                         </div>

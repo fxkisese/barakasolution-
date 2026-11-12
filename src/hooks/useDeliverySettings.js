@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/api/supabaseClient';
-import { BRANCHES } from '@/utils/deliveryUtils';
+import { BRANCHES, DEFAULT_FREE_RADIUS_KM, DEFAULT_RATE_PER_KM } from '@/utils/deliveryUtils';
 
 const DEFAULTS = {
-    freeRadiusKm: 10,
-    ratePerKm: 100,
+    freeRadiusKm: DEFAULT_FREE_RADIUS_KM,
+    ratePerKm: DEFAULT_RATE_PER_KM,
     branches: BRANCHES,
     loading: false,
 };
