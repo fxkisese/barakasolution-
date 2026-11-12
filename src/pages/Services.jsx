@@ -51,7 +51,7 @@ export default function Services() {
                         <span className="italic font-normal text-basalt">from concept to install</span>
                     </h1>
                     <p className="text-basalt text-lg leading-relaxed max-w-xl">
-                        Beyond supplying premium furniture and décor, Baraka Solutions offers a complete service — ensuring your project is executed flawlessly from the first sketch to the final installation.
+                        Beyond supplying premium furniture and décor, Luxe Craft Furniture offers a complete service — ensuring your project is executed flawlessly from the first sketch to the final installation.
                     </p>
                 </motion.div>
             </section>

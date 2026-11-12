@@ -43,13 +43,13 @@ export default function Navbar() {
 
                 <div className="flex items-center gap-5 shrink-0 pl-4">
                     <div className="text-[14px] text-silk font-medium tracking-wide">
-                        info@barakasolutions.com | +254 797 624196
+                        info@luxecraftfurniture.com | +254 797 624196
                     </div>
                     <div className="flex items-center gap-2 text-white">
                         <a href="https://facebook.com" target="_blank" rel="noreferrer" className="bg-[#3b5998] p-1.5 rounded-full hover:opacity-80 transition-opacity">
                             <Facebook size={14} fill="currentColor" />
                         </a>
-                        <a href="https://instagram.com/barakasolutions" target="_blank" rel="noreferrer" className="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-1.5 rounded-full hover:opacity-80 transition-opacity">
+                        <a href="https://instagram.com/luxecraft_furniture" target="_blank" rel="noreferrer" className="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-1.5 rounded-full hover:opacity-80 transition-opacity">
                             <Instagram size={14} />
                         </a>
                         <a href="https://youtube.com" target="_blank" rel="noreferrer" className="bg-[#ff0000] p-1.5 rounded-full hover:opacity-80 transition-opacity">
@@ -130,7 +130,7 @@ export default function Navbar() {
                     {/* Contact Info */}
                     <div className="pt-6 border-t border-silk/10 text-center flex flex-col gap-4 pb-12">
                         <div className="text-[13px] text-silk font-medium">
-                            info@barakasolutions.com <br/> +254 797 624196
+                            info@luxecraftfurniture.com <br/> +254 797 624196
                         </div>
                         <div className="flex items-center justify-center gap-4 text-white">
                             <a href="#" className="bg-[#3b5998] p-2 rounded-full"><Facebook size={16} fill="currentColor" /></a>

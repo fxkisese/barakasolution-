@@ -1,5 +1,5 @@
 /**
- * cookies.js — lightweight cookie read/write helpers for Baraka Solutions.
+ * cookies.js — lightweight cookie read/write helpers for Luxe Craft Furniture.
  *
  * Consent cookie structure (JSON, stored under CONSENT_COOKIE_NAME):
  *   { analytics: boolean, advertising: boolean, version: number }
@@ -8,7 +8,7 @@
  * they just exist as part of normal site operation (auth session, cart state, etc.)
  */
 
-export const CONSENT_COOKIE_NAME = 'baraka_cookie_consent';
+export const CONSENT_COOKIE_NAME = 'luxecraft_cookie_consent';
 const CONSENT_VERSION = 1;
 const CONSENT_EXPIRY_DAYS = 180;
 

@@ -4,8 +4,8 @@ import { Settings } from "lucide-react";
 
 const COOKIE_TABLE = [
     {
-        name: "baraka_cookie_consent",
-        provider: "Baraka Solutions",
+        name: "luxecraft_cookie_consent",
+        provider: "Luxe Craft Furniture",
         purpose: "Stores your cookie consent preferences so you are not asked again on every visit.",
         type: "Necessary",
         duration: "180 days",
@@ -75,7 +75,7 @@ export default function CookiePolicy() {
                 <section>
                     <h2 className="font-heading text-xl text-obsidian mb-3">How we use cookies</h2>
                     <p className="leading-relaxed text-sm mb-4">
-                        Baraka Solutions uses cookies for three purposes:
+                        Luxe Craft Furniture uses cookies for three purposes:
                     </p>
                     <div className="grid sm:grid-cols-3 gap-4">
                         {[

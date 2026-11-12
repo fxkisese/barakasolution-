@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
 
                 <section>
                     <p className="leading-relaxed">
-                        Baraka Solutions ("<strong>we</strong>", "<strong>us</strong>", "<strong>our</strong>") is committed to protecting your personal information and your right to privacy. This Privacy Policy explains what information we collect, how we use it, and what rights you have in relation to it.
+                        Luxe Craft Furniture ("<strong>we</strong>", "<strong>us</strong>", "<strong>our</strong>") is committed to protecting your personal information and your right to privacy. This Privacy Policy explains what information we collect, how we use it, and what rights you have in relation to it.
                     </p>
                     <p className="mt-3 leading-relaxed">
                         By using our website at{" "}

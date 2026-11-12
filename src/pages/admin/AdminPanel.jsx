@@ -2455,7 +2455,7 @@ export default function AdminPanel() {
                     {/* Top bar */}
                     <header style={{ background: COLORS.surface, borderBottom: `1px solid ${COLORS.border}`, padding: '0 24px', display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0, height: 60 }}>
                         <button onClick={() => setSidebarOpen(o => !o)} style={{ ...iconBtnStyle, background: COLORS.surface2, borderRadius: 8, padding: 7 }}><IconMenu /></button>
-                        <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, fontWeight: 500 }}>Baraka Solutions — Admin Console</span>
+                        <span style={{ fontSize: 13, color: COLORS.muted, flex: 1, fontWeight: 500 }}>Luxe Craft Furniture — Admin Console</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <span style={{ fontSize: 11, fontFamily: fontMono, color: COLORS.muted, letterSpacing: '0.05em' }}>{new Date().toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
                             {/* Admin email badge */}

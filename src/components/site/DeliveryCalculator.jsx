@@ -74,7 +74,7 @@ async function geocodeAddress(query) {
     });
     const res = await fetch(
         `https://nominatim.openstreetmap.org/search?${params}`,
-        { headers: { 'Accept-Language': 'en', 'User-Agent': 'BarakaSolutionsApp/1.0' } }
+        { headers: { 'Accept-Language': 'en', 'User-Agent': 'LuxeCraftFurnitureApp/1.0' } }
     );
     if (!res.ok) throw new Error('Geocoding request failed');
     return res.json(); // Array of { lat, lon, display_name, ... }

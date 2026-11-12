@@ -1,6 +1,6 @@
 /**
  * deliveryUtils.js
- * Pure, testable delivery fee calculation functions for Baraka Solutions.
+ * Pure, testable delivery fee calculation functions for Luxe Craft Furniture.
  * No API calls — all math is local.
  */
 

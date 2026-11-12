@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { X, Tag, ArrowRight, Check, Sparkles, Gift } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
 import { trackFormSubmit } from "@/utils/analytics";
 
-const STORAGE_KEY = "baraka_signup_banner_dismissed";
+const STORAGE_KEY = "luxecraft_signup_banner_dismissed";
 
 const OFFERS = [
     { icon: Gift,     label: "500 KES Off",     desc: "Your first order"              },
@@ -143,7 +142,7 @@ export default function SignupBanner() {
                                         <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
                                             <Check className="w-5 h-5 text-emerald-600" strokeWidth={2.5} />
                                         </div>
-                                        <p className="text-obsidian font-medium text-sm">You're in! Welcome to Baraka Solutions.</p>
+                                        <p className="text-obsidian font-medium text-sm">You're in! Welcome to Luxe Craft Furniture.</p>
                                         <p className="text-stone-400 text-xs">Check your inbox for your discount code.</p>
                                     </motion.div>
                                 ) : (

@@ -12,8 +12,8 @@ const contactDetails = [
     {
         icon: Mail,
         label: "Email",
-        lines: ["info@barakasolutions.com"],
-        href: "mailto:info@barakasolutions.com",
+        lines: ["info@luxecraftfurniture.com"],
+        href: "mailto:info@luxecraftfurniture.com",
     },
     {
         icon: Clock,
@@ -69,7 +69,7 @@ export default function Contact() {
                                     return (
                                         <Wrapper 
                                             key={item.label} 
-                                            href={item.href}
+                                            href={item.href ?? undefined}
                                             className={`flex items-start gap-4 p-4 rounded border border-transparent hover:border-obsidian/10 hover:bg-slate-50 transition-all group ${item.href ? 'cursor-pointer' : ''}`}
                                         >
                                             <div className="w-10 h-10 bg-obsidian flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -144,7 +144,7 @@ export default function Contact() {
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Baraka Solutions location"
+                    title="Luxe Craft Furniture location"
                 />
             </section>
         </div>

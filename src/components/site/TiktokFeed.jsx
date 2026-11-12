@@ -38,7 +38,7 @@ export default function TiktokFeed() {
                         Watch Us on TikTok
                     </h2>
                     <p className="text-basalt text-base font-body">
-                        Follow <a href="https://www.tiktok.com/@barakasolutions" target="_blank" rel="noreferrer" className="text-obsidian font-medium hover:underline">@barakasolutions</a> for our latest content and more.
+                        Follow <a href="https://www.tiktok.com/@luxecraftfurniture" target="_blank" rel="noreferrer" className="text-obsidian font-medium hover:underline">@luxecraftfurniture</a> for our latest content and more.
                     </p>
                 </motion.div>
 
@@ -46,14 +46,14 @@ export default function TiktokFeed() {
                     <div className="w-full flex justify-center">
                         <blockquote 
                             className="tiktok-embed" 
-                            cite="https://www.tiktok.com/@barakasolutions" 
-                            data-unique-id="barakasolutions" 
+                            cite="https://www.tiktok.com/@luxecraftfurniture" 
+                            data-unique-id="luxecraftfurniture" 
                             data-embed-from="embed_page" 
                             data-embed-type="creator" 
                             style={{ maxWidth: '780px', minWidth: '288px' }}
                         > 
                             <section> 
-                                <a target="_blank" href="https://www.tiktok.com/@barakasolutions?refer=creator_embed" rel="noreferrer">@barakasolutions</a> 
+                                <a target="_blank" href="https://www.tiktok.com/@luxecraftfurniture?refer=creator_embed" rel="noreferrer">@luxecraftfurniture</a> 
                             </section> 
                         </blockquote> 
                     </div>

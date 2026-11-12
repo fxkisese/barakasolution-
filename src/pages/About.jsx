@@ -58,7 +58,7 @@ export default function About() {
                             <motion.img
                                 key={currentSlide}
                                 src={slides[currentSlide].image_url}
-                                alt="About Baraka Solutions"
+                                alt="About Luxe Craft Furniture"
                                 className="absolute inset-0 object-cover w-full h-full"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
