@@ -42,14 +42,14 @@ export default function TiktokFeed() {
                     </p>
                 </motion.div>
 
-                <div className="w-full min-h-[400px] flex items-center justify-center pt-8">
+                <div className="w-full min-h-[600px] flex items-center justify-center pt-8">
                     <div className="w-full flex justify-center">
                         <blockquote 
                             className="tiktok-embed" 
                             cite="https://www.tiktok.com/@barakasolutions" 
                             data-unique-id="barakasolutions" 
                             data-embed-type="creator" 
-                            style={{ maxWidth: '780px', minWidth: '288px' }}
+                            style={{ width: '100%', maxWidth: '1200px', minWidth: '288px' }}
                         > 
                             <section> 
                                 <a target="_blank" href="https://www.tiktok.com/@barakasolutions?refer=creator_embed" rel="noreferrer">@barakasolutions</a> 
