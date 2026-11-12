@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, Upload, Video, Image as ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Video } from "lucide-react";
 import { supabase } from "@/api/supabaseClient";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";

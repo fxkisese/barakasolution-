@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronDown, ChevronUp, Shield, BarChart2, Target, Lock } from "lucide-react";
+import { ChevronDown, ChevronUp, Shield, BarChart2, Target, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCookies } from "@/lib/CookieContext";
 
