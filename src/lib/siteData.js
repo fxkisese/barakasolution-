@@ -6,7 +6,7 @@
 export const SOCIAL_LINKS = {
     instagram: "https://instagram.com/luxecraft_furniture",
     tiktok: "https://www.tiktok.com/@barakasolutions",
-    facebook: "",
+    facebook: "https://www.facebook.com/share/r/1GtBkVpJxs/",
     youtube: "",
 };
 

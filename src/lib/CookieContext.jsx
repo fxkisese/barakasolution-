@@ -15,6 +15,13 @@ import { getConsent, setConsent, acceptAll, rejectAll } from '@/lib/cookies';
 
 const CookieContext = createContext(null);
 
+/**
+ * Meta Pixel / dataset id. Pixel ids are public by nature (they ship in every
+ * page), so the business id is the default; VITE_META_PIXEL_ID overrides it.
+ * The pixel only loads after the visitor accepts advertising cookies.
+ */
+const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || '1138966419302216';
+
 /* ─── gtag consent-mode helper ─────────────────────────────────── */
 function updateGtagConsent(prefs) {
     if (typeof window.gtag !== 'function') return;
@@ -66,7 +73,7 @@ export function CookieProvider({ children }) {
     useEffect(() => {
         updateGtagConsent(consent);
 
-        const pixelId = import.meta.env.VITE_META_PIXEL_ID;
+        const pixelId = META_PIXEL_ID;
         if (consent?.advertising && pixelId) {
             loadMetaPixel(pixelId);
         }
@@ -78,7 +85,7 @@ export function CookieProvider({ children }) {
         setShowBanner(false);
         updateGtagConsent(prefs);
 
-        const pixelId = import.meta.env.VITE_META_PIXEL_ID;
+        const pixelId = META_PIXEL_ID;
         if (prefs.advertising && pixelId) {
             loadMetaPixel(pixelId);
         }
@@ -91,7 +98,7 @@ export function CookieProvider({ children }) {
         setShowBanner(false);
         updateGtagConsent(prefs);
 
-        const pixelId = import.meta.env.VITE_META_PIXEL_ID;
+        const pixelId = META_PIXEL_ID;
         if (pixelId) loadMetaPixel(pixelId);
     }, []);
 
