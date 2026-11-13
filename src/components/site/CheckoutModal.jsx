@@ -1,10 +1,55 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCart } from "@/lib/CartContext";
 import { formatPrice } from "@/lib/siteData";
+import { supabase } from "@/api/supabaseClient";
 import { sendCartCheckoutWhatsApp } from "@/utils/whatsapp";
 import { trackBeginCheckout, trackPurchase, trackWhatsAppClick } from "@/utils/analytics";
-import DeliveryCalculator from "@/components/site/DeliveryCalculator";
+
+// Leaflet + the map tiles are heavy; only load them when checkout opens.
+const DeliveryCalculator = lazy(() => import("@/components/site/DeliveryCalculator"));
+
+/**
+ * Persist the order so it shows up in the admin Orders page and Dashboard.
+ * Fire-and-forget on purpose: the WhatsApp hand-off must stay inside the
+ * click handler (awaiting first would let browsers block the new tab), and a
+ * failed insert should never stop the customer from reaching us.
+ */
+function saveOrder(cartItems, subtotal, details, deliveryQuote, grandTotal) {
+    const items = cartItems.map((i) => ({
+        id: i.id,
+        name: i.name,
+        price: Number(i.price) || 0,
+        quantity: i.quantity,
+        image: i.image_url || i.image || null,
+    }));
+    const delivery = deliveryQuote
+        ? {
+            distance_km: deliveryQuote.distanceKm,
+            source: deliveryQuote.distanceSource,
+            branch: deliveryQuote.nearestBranch?.shortName || deliveryQuote.nearestBranch?.name || null,
+            lat: deliveryQuote.customerLat ?? null,
+            lng: deliveryQuote.customerLng ?? null,
+        }
+        : null;
+
+    supabase
+        .from("orders")
+        .insert({
+            customer_name: details.name,
+            customer_phone: details.phone,
+            items,
+            subtotal,
+            delivery_fee: deliveryQuote?.fee ?? null,
+            delivery,
+            total: grandTotal,
+            notes: details.address || null,
+            status: "new",
+        })
+        .then(({ error }) => {
+            if (error) console.warn("[checkout] order not saved:", error.message);
+        });
+}
 
 export default function CheckoutModal({ open, onOpenChange }) {
     const { cartItems, cartTotal, clearCart } = useCart();
@@ -32,6 +77,7 @@ export default function CheckoutModal({ open, onOpenChange }) {
 
     const handleComplete = (e) => {
         e.preventDefault();
+        saveOrder(cartItems, cartTotal, details, deliveryQuote, grandTotal);
         trackPurchase(cartItems, grandTotal);
         trackWhatsAppClick('checkout');
         sendCartCheckoutWhatsApp(cartItems, cartTotal, details, deliveryQuote);
@@ -100,7 +146,9 @@ export default function CheckoutModal({ open, onOpenChange }) {
 
                             {/* Delivery calculator (map + address search) */}
                             <div className="border-t border-stone-100 pt-5">
-                                <DeliveryCalculator onQuoteReady={setDeliveryQuote} />
+                                <Suspense fallback={<p className="text-xs text-stone-400 py-6 text-center">Loading map…</p>}>
+                                    <DeliveryCalculator onQuoteReady={setDeliveryQuote} />
+                                </Suspense>
                             </div>
 
                             <button
@@ -165,7 +213,7 @@ export default function CheckoutModal({ open, onOpenChange }) {
                             <div className="border hairline p-4 rounded-sm">
                                 <label className="flex items-center gap-3 cursor-pointer">
                                     <input type="radio" name="payment" defaultChecked className="w-4 h-4 accent-obsidian" />
-                                    <span className="font-body text-obsidian">Pay via M-Pesa / Card Link</span>
+                                    <span className="font-body text-obsidian">Pay on confirmation via WhatsApp <span className="text-basalt text-sm">(M-Pesa, bank transfer or cash)</span></span>
                                 </label>
                             </div>
 

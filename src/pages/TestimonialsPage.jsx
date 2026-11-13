@@ -6,37 +6,37 @@ export default function TestimonialsPage() {
         {
             name: "Sarah Mwangi",
             role: "Homeowner",
-            content: "Luxe Craft Furniture completely transformed my bathroom. The frameless shower cubicle they installed is not only beautiful but incredibly sturdy. Their team was professional and cleaned up perfectly after the job.",
+            content: "Luxe Craft Furniture completely transformed my living room. The L-shaped sofa is exactly the fabric and size I asked for, and it is as comfortable as it is beautiful. Delivery and setup were smooth and the team left everything spotless.",
             rating: 5
         },
         {
             name: "David Ochieng",
             role: "Interior Designer",
-            content: "As a designer, I need partners I can trust. Luxe Craft Furniture has been my go-to for custom mirrors and glass partitions for over two years. Their attention to detail and ability to execute complex custom designs is unmatched in Nairobi.",
+            content: "As a designer, I need partners I can trust. Luxe Craft Furniture has been my go-to for custom wardrobes and dining sets for over two years. Their attention to detail and ability to execute complex designs is unmatched in Nairobi.",
             rating: 5
         },
         {
             name: "Amina Hassan",
             role: "Boutique Owner",
-            content: "The custom LED mirrors installed in my boutique have become a major talking point for my customers. Excellent quality and the lighting is perfect. Highly recommend!",
+            content: "The display shelving and reception desk they built for my boutique have become a talking point with customers. Excellent finish, and the proportions are perfect for the space. Highly recommend!",
             rating: 5
         },
         {
             name: "Kevin Mutua",
-            role: "Gym Manager",
-            content: "We needed a full wall of mirrors for our new gym branch. The team from Luxe Craft Furniture handled the large-scale installation seamlessly. Safe, perfectly aligned, and delivered exactly on time.",
+            role: "Operations Manager",
+            content: "We needed reception furniture and staff lockers for our new branch. The team from Luxe Craft Furniture handled the order seamlessly — well made, delivered on time and assembled in a single afternoon.",
             rating: 5
         },
         {
             name: "Grace Kariuki",
             role: "Office Manager",
-            content: "We hired Luxe Craft Furniture to partition our open-plan office. The frosted glass solution they provided gave us the privacy we needed without losing natural light. Great service from start to finish.",
+            content: "We hired Luxe Craft Furniture to furnish our open-plan office with workstations and executive desks. Solid build, comfortable chairs and a service that was easy from start to finish.",
             rating: 4
         },
         {
             name: "James Njoroge",
             role: "Homeowner",
-            content: "I ordered a custom glass coffee table. The finishing on the edges is flawless. You can really tell they take pride in their craftsmanship. Will definitely order from them again.",
+            content: "I ordered a custom oak dining table. The finishing on the edges and joints is flawless. You can really tell they take pride in their craftsmanship. Will definitely order from them again.",
             rating: 5
         }
     ];

@@ -12,6 +12,7 @@ import {
 import Cropper from 'react-easy-crop';
 import InquiriesPage from '@/components/admin/InquiriesPage';
 import AboutSlides from '@/pages/admin/AboutSlides';
+import DeliverySettings from '@/pages/admin/DeliverySettings';
 
 /* ---------- Constants ---------- */
 const CATEGORIES = ['Living Room', 'Bedroom', 'Dining', 'Office', 'Storage', 'Combo Items'];
@@ -2081,6 +2082,7 @@ const NAV = [
     { id: 'inquiries', label: 'Inquiries (AI)', icon: IconChat },
     { id: 'hero', label: 'Hero Slides', icon: IconImage },
     { id: 'about_slides', label: 'About Slides', icon: IconImage },
+    { id: 'delivery', label: 'Delivery Pricing', icon: IconBanknote },
 ];
 
 export default function AdminPanel() {
@@ -2399,6 +2401,7 @@ export default function AdminPanel() {
             case 'messages': return <MessagesPage credit={credit} sales={sales} />;
             case 'inquiries': return <InquiriesPage />;
             case 'about_slides': return <AboutSlides />;
+            case 'delivery': return <DeliverySettings />;
             case 'hero': return (
                 <div>
                     <PageHeader eyebrow="Website" title="Hero Slides"

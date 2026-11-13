@@ -1,5 +1,12 @@
-import { Instagram, Facebook, Twitter, MapPin, Phone } from "lucide-react";
+import { Instagram, Facebook, Youtube, MapPin, Phone } from "lucide-react";
 import { useCookies } from "@/lib/CookieContext";
+import { SOCIAL_LINKS } from "@/lib/siteData";
+
+const SOCIALS = [
+    { key: "instagram", Icon: Instagram, label: "Instagram" },
+    { key: "facebook",  Icon: Facebook,  label: "Facebook" },
+    { key: "youtube",   Icon: Youtube,   label: "YouTube" },
+].filter((s) => SOCIAL_LINKS[s.key]);
 
 const SHOP_LINKS = [
     { label: "Home", href: "/" },
@@ -30,14 +37,12 @@ export default function Footer() {
                             Elevating spaces with premium furniture and decor. We blend modern elegance with structural integrity for unmatched aesthetic solutions.
                         </p>
                         <div className="mt-6 flex gap-3">
-                            {[
-                                { Icon: Instagram, label: "Instagram" },
-                                { Icon: Facebook, label: "Facebook" },
-                                { Icon: Twitter, label: "Twitter" },
-                            ].map(({ Icon, label }) => (
+                            {SOCIALS.map(({ key, Icon, label }) => (
                                 <a
-                                    key={label}
-                                    href="#top"
+                                    key={key}
+                                    href={SOCIAL_LINKS[key]}
+                                    target="_blank"
+                                    rel="noreferrer"
                                     aria-label={label}
                                     className="grid place-items-center w-10 h-10 border border-silk/15 text-silk/70 hover:bg-white hover:border-white hover:text-obsidian transition-colors"
                                 >

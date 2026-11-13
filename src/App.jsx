@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -23,20 +24,25 @@ import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import CookiePolicy from '@/pages/CookiePolicy';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import AdminPanel from '@/pages/admin/AdminPanel';
 import SiteLayout from '@/components/site/SiteLayout';
 import ProtectedAdminRoute from '@/components/ProtectedAdminRoute';
+
+// The admin panel (plus its PDF/canvas libraries) is only loaded on /admin,
+// keeping it out of the storefront bundle.
+const AdminPanel = lazy(() => import('@/pages/admin/AdminPanel'));
+
+const Spinner = () => (
+    <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+    </div>
+);
 
 const AuthenticatedApp = () => {
     const { isLoadingAuth } = useAuth();
     usePageTracking(); // fires page_view on every route change
 
     if (isLoadingAuth) {
-        return (
-            <div className="fixed inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-            </div>
-        );
+        return <Spinner />;
     }
 
     return (
@@ -65,7 +71,9 @@ const AuthenticatedApp = () => {
                 path="/admin/*"
                 element={
                     <ProtectedAdminRoute>
-                        <AdminPanel />
+                        <Suspense fallback={<Spinner />}>
+                            <AdminPanel />
+                        </Suspense>
                     </ProtectedAdminRoute>
                 }
             />

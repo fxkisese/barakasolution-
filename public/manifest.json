@@ -1,0 +1,12 @@
+{
+  "name": "Luxe Craft Furniture",
+  "short_name": "Luxe Craft",
+  "description": "Furniture, decor and home accessories from Nairobi, Kenya.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f4",
+  "theme_color": "#1A1A1A",
+  "icons": [
+    { "src": "/logo.png", "sizes": "any", "type": "image/png" }
+  ]
+}

@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { Menu, X, Search, ShoppingCart, Facebook, Instagram, Youtube, ChevronDown } from "lucide-react";
-import { MEGA_MENU_LINKS } from "@/lib/siteData";
+import { MEGA_MENU_LINKS, SOCIAL_LINKS } from "@/lib/siteData";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 import SearchDialog from "./SearchDialog";
+
+// Only networks with a URL configured in siteData are rendered.
+const SOCIALS = [
+    { key: "facebook",  label: "Facebook",  Icon: Facebook,  cls: "bg-[#3b5998]", fill: true },
+    { key: "instagram", label: "Instagram", Icon: Instagram, cls: "bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]", fill: false },
+    { key: "youtube",   label: "YouTube",   Icon: Youtube,   cls: "bg-[#ff0000]", fill: true },
+].filter((s) => SOCIAL_LINKS[s.key]);
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
@@ -46,15 +53,11 @@ export default function Navbar() {
                         info@luxecraftfurniture.com | +254 797 624196
                     </div>
                     <div className="flex items-center gap-2 text-white">
-                        <a href="https://facebook.com" target="_blank" rel="noreferrer" className="bg-[#3b5998] p-1.5 rounded-full hover:opacity-80 transition-opacity">
-                            <Facebook size={14} fill="currentColor" />
-                        </a>
-                        <a href="https://instagram.com/luxecraft_furniture" target="_blank" rel="noreferrer" className="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-1.5 rounded-full hover:opacity-80 transition-opacity">
-                            <Instagram size={14} />
-                        </a>
-                        <a href="https://youtube.com" target="_blank" rel="noreferrer" className="bg-[#ff0000] p-1.5 rounded-full hover:opacity-80 transition-opacity">
-                            <Youtube size={14} fill="currentColor" />
-                        </a>
+                        {SOCIALS.map(({ key, label, Icon, cls, fill }) => (
+                            <a key={key} href={SOCIAL_LINKS[key]} target="_blank" rel="noreferrer" aria-label={label} className={`${cls} p-1.5 rounded-full hover:opacity-80 transition-opacity`}>
+                                <Icon size={14} fill={fill ? "currentColor" : "none"} />
+                            </a>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -133,9 +136,11 @@ export default function Navbar() {
                             info@luxecraftfurniture.com <br/> +254 797 624196
                         </div>
                         <div className="flex items-center justify-center gap-4 text-white">
-                            <a href="#" className="bg-[#3b5998] p-2 rounded-full"><Facebook size={16} fill="currentColor" /></a>
-                            <a href="#" className="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-2 rounded-full"><Instagram size={16} /></a>
-                            <a href="#" className="bg-[#ff0000] p-2 rounded-full"><Youtube size={16} fill="currentColor" /></a>
+                            {SOCIALS.map(({ key, label, Icon, cls, fill }) => (
+                                <a key={key} href={SOCIAL_LINKS[key]} target="_blank" rel="noreferrer" aria-label={label} className={`${cls} p-2 rounded-full`}>
+                                    <Icon size={16} fill={fill ? "currentColor" : "none"} />
+                                </a>
+                            ))}
                         </div>
                     </div>
                 </div>

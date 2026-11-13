@@ -1,34 +1,28 @@
 # AGENTS.md
 
-## Project Context
+## Project context
 
-This is a Base44 app repository. Treat it as user-owned application code, keep changes focused on the user's request, and preserve existing project conventions.
+React + Vite storefront and admin panel for Luxe Craft Furniture, backed by
+Supabase (Postgres, Auth, Storage, Edge Functions) and hosted on Vercel.
+Treat it as user-owned application code, keep changes focused on the request,
+and preserve existing conventions. Start with `README.md` for setup, environment
+variables and the migration list.
 
-Start with `README.md` for local setup, environment variables, and publish workflow.
+## Key files
 
-## Base44 References
+- `src/api/supabaseClient.js` — the only backend client; import it everywhere.
+- `src/pages/admin/AdminPanel.jsx` — admin shell (nav in `NAV`, pages in `renderPage`).
+- `src/utils/deliveryUtils.js`, `src/utils/routing.js` — delivery fee maths and OSRM routing.
+- `src/lib/siteData.js` — social links, menu, shared content.
+- `supabase/migrations/` — schema and RLS policies, applied in numeric order.
+- `supabase/functions/` — Edge Functions (service role; secrets in the dashboard).
+- `.env.local` — local-only values; never commit secrets.
 
-- CLI overview: https://docs.base44.com/developers/references/cli/get-started/overview.md
-- Agent skills: https://docs.base44.com/developers/backend/overview/skills.md
+## Working notes
 
-If your agent supports Agent Skills, install or update Base44 skills before Base44-specific work:
-
-```bash
-npx skills add base44/skills
-```
-
-## Key Files
-
-- `src/`: frontend application source.
-- `src/api/base44Client.js`: frontend Base44 SDK client.
-- `vite.config.js`: Vite config and Base44 Vite plugin setup.
-- `.env.local`: local-only environment values; never commit secrets.
-
-## Working Notes
-
-- Use `base44 dev` as the default local development command when you need the local Base44 backend. It can run the backend and frontend together.
-- When docs or code mention the frontend being started automatically, that usually means the Base44 project config includes `site.serveCommand`, for example `"serveCommand": "npm run dev"` in `base44/config.jsonc`.
-- Use `npm run dev` only for frontend-only work against the hosted Base44 backend.
-- Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
-- Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
-- Run the relevant checks from `package.json` before finishing code changes.
+- `npm run dev` for the frontend against the hosted Supabase project.
+- Schema changes go in a new numbered migration file; never edit an applied one.
+- Every table in `public` must have RLS enabled. Storefront reads use public
+  SELECT policies; admin writes rely on `public.is_admin()`.
+- Any `VITE_*` variable is public in the bundle; secrets belong in Edge Functions.
+- Run `npm run lint`, `npm run build` and `npm test` before finishing code changes.

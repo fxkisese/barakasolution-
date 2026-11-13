@@ -1,6 +1,15 @@
 // Centralised content for the Luxe Craft Furniture flagship.
 // All product/category images come from the Supabase admin panel.
 
+// Social profiles shown in the header and footer.
+// Leave a value empty ("") to hide that icon everywhere.
+export const SOCIAL_LINKS = {
+    instagram: "https://instagram.com/luxecraft_furniture",
+    tiktok: "https://www.tiktok.com/@barakasolutions",
+    facebook: "",
+    youtube: "",
+};
+
 export const MEGA_MENU_LINKS = [
     { label: "Home",        href: "/",          hasDropdown: false },
     { label: "Shop",        href: "/shop",       hasDropdown: false },

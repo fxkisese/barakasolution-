@@ -9,16 +9,16 @@ export default function Terms() {
                 <p>By accessing and using the Luxe Craft Furniture website, you accept and agree to be bound by the terms and provision of this agreement. In addition, when using these particular services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">2. Orders and Custom Projects</h2>
-                <p>All custom glass and mirror projects require a minimum deposit of 60% before any cutting, polishing, or assembly begins. The remaining 40% is due upon successful delivery and/or installation. Custom orders cannot be canceled once production has commenced.</p>
+                <p>All custom furniture orders require a minimum deposit of 60% before production begins. The remaining 40% is due on delivery. Custom orders cannot be cancelled once production has commenced. Orders placed through our online shop may be cancelled at no charge before dispatch.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">3. Measurement Accuracy</h2>
-                <p>If you choose to provide your own measurements for custom cuts, Luxe Craft Furniture is not liable if the glass does not fit. We highly recommend utilizing our professional consultation and measurement service to ensure absolute accuracy.</p>
+                <p>If you choose to provide your own measurements for a custom piece, Luxe Craft Furniture is not liable if the finished piece does not fit the intended space. We highly recommend our professional consultation and measurement service to ensure absolute accuracy.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">4. Warranty and Liability</h2>
-                <p>We provide a 1-year warranty on installation and electrical components (e.g., LED strips). We do not cover accidental damage, scratches, or breakages that occur after safe installation and handover to the client.</p>
+                <p>We provide a 1-year warranty against manufacturing defects in frames, joints, hardware and finishes. We do not cover normal wear and tear, fabric fading, misuse, or accidental damage that occurs after delivery and handover to the client.</p>
 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">5. Delivery Policy</h2>
-                <p>We offer delivery services around Nairobi, Kyumvi, and surrounding areas. It is the customer's responsibility to ensure that the delivery route at the destination is clear and safe for handling fragile materials.</p>
+                <p>We deliver around Nairobi, Kyumvi, and surrounding areas. Delivery is free within our free-delivery radius of the nearest branch and charged per kilometre beyond it; the exact fee is shown at checkout before you confirm your order. It is the customer's responsibility to ensure that access routes, doorways and stairwells at the destination can accommodate the items being delivered.</p>
                 
                 <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4">6. Modifications</h2>
                 <p>We reserve the right to modify these Terms of Service at any time. We will notify our clients of any significant changes via our website or email.</p>

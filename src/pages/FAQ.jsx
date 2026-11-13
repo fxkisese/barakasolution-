@@ -5,11 +5,11 @@ import { Plus, Minus, MessageCircle } from "lucide-react";
 const faqs = [
     {
         question: "How long does a custom order take?",
-        answer: "Custom orders typically take 3 to 7 working days depending on complexity, materials, and finishing required. We'll give you an exact timeline during your consultation.",
+        answer: "Custom orders typically take 3 to 7 working days depending on the piece, fabric or finish chosen, and current workshop load. We'll give you an exact timeline during your consultation.",
     },
     {
-        question: "Do you offer delivery and installation?",
-        answer: "Yes — we offer safe delivery and professional installation across Nairobi and surrounding areas. For major pieces like wardrobes, shower cubicles, or large mirrors, our expert team ensures secure and precise fitting.",
+        question: "Do you offer delivery and assembly?",
+        answer: "Yes — we deliver across Nairobi and surrounding areas, and our team assembles large pieces like wardrobes, beds and dining sets on site. Delivery is free within a short radius of our nearest branch and charged per kilometre beyond that; the checkout shows your exact fee before you confirm.",
     },
     {
         question: "What are your payment terms?",
@@ -17,15 +17,15 @@ const faqs = [
     },
     {
         question: "Do your products come with a warranty?",
-        answer: "Yes. We offer a 1-year warranty on installation workmanship and LED lighting components for our smart mirrors. Glass breakage after safe installation is not covered under warranty.",
+        answer: "Yes. All our furniture comes with a 1-year warranty against manufacturing defects in frames, joints, hardware and finishes. Normal wear, fabric fading, misuse and accidental damage after delivery are not covered.",
     },
     {
         question: "Can I visit your showroom?",
-        answer: "Absolutely. Visit our main branch at Kyumvi or our pickup point at Whitehouse Footbridge. Our team is always ready to guide you through physical samples and product catalogs.",
+        answer: "Absolutely. Visit our main showroom at Whitehouse Footbridge in Tena Estate, or our Kyumvi branch on Mombasa Road for quick orders and pickups. Our team is always ready to guide you through fabric samples, finishes and product catalogs.",
     },
     {
         question: "Do you handle large commercial projects?",
-        answer: "Yes, we regularly handle commercial contracts — office glass partitions, storefronts, gym mirror walls, and full interior fit-outs. Contact us to discuss your commercial requirements.",
+        answer: "Yes — we furnish offices, reception areas, restaurants, hotels and rental apartments, from executive desks and office chairs to full fit-outs. Contact us to discuss volume pricing and timelines.",
     },
     {
         question: "How do I place an order?",

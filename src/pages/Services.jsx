@@ -5,12 +5,12 @@ const services = [
     {
         icon: PenTool,
         title: "Custom Design Solutions",
-        description: "From bespoke shelving units to custom-cut glass coffee tables, we bring your unique vision to life with precision craftsmanship and flawless finishes.",
+        description: "From bespoke wardrobes and beds to custom-sized sofas, dining sets and shelving, we build to your measurements, fabric and finish with precision craftsmanship.",
     },
     {
         icon: Wrench,
-        title: "Professional Installation",
-        description: "Our expert team provides safe, precise installation for all pieces — from frameless shower cubicles and partitions to large wall mirrors and wardrobes.",
+        title: "Assembly & Fitting",
+        description: "Our team assembles and fits every piece on site — wardrobes, beds, TV units and office workstations — so your space is ready to use the moment we leave.",
     },
     {
         icon: Truck,
@@ -20,7 +20,7 @@ const services = [
     {
         icon: ShieldCheck,
         title: "Consultation & Measurement",
-        description: "On-site consultation and accurate measurement services to ensure every piece fits your space perfectly — before a single cut is made.",
+        description: "On-site consultation and accurate measurement services to ensure every piece fits your space perfectly — before production begins.",
     },
 ];
 
